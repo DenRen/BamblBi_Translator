@@ -6,6 +6,37 @@
 #include <cstring>
 #include "main_lib.h"
 
+void bprintf8 (__uint32_t num) {
+    char arr[8] = {0};
+    for (int i = 0; i < 8; i++, num /= 2)
+        arr[i] = num % 2 + '0';
+
+    for (int i = 0; i < 4; i++) {
+        char temp = arr[i];
+        arr[i] = arr[7 - i];
+        arr[7 - i] = temp;
+    }
+
+    for (int i = 0; i < 8; i++)
+        printf ("%c", arr[i]);
+    printf ("\n");
+}
+
+void bprintf32 (__uint32_t num) {
+    char arr[32] = {0};
+    for (int i = 0; i < 32; i++, num /= 2)
+        arr[i] = num % 2 + '0';
+
+    for (int i = 0; i < 16; i++) {
+        char temp = arr[i];
+        arr[i] = arr[31 - i];
+        arr[31 - i] = temp;
+    }
+
+    for (int i = 0; i < 32; i++)
+        printf ("%c", arr[i]);
+    printf ("\n");
+}
 char *readfile (const char *path, __uint32_t *size) {
     if (path == nullptr)
         throw std::runtime_error ("Empty path");

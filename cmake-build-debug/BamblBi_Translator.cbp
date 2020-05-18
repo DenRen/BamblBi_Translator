@@ -84,6 +84,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_commands.h">
+			<Option target="BamblBi_Translator"/>
+		</Unit>
+		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/JMPs.h">
+			<Option target="BamblBi_Translator"/>
+		</Unit>
 		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/SourceCodeNasm.cpp">
 			<Option target="BamblBi_Translator"/>
 		</Unit>

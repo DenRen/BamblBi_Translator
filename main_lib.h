@@ -9,6 +9,9 @@
 #include <zconf.h>
 #include "SourceCodeNasm.h"
 
+void bprintf8  (__uint32_t num);
+void bprintf32 (__uint32_t num);
+
 char *readfile (const char *path, __uint32_t *size);                    // Max 4 Gb file
 void writefile (const char *path, const char *data, __uint32_t size);   // Max 4 Gb file
 
