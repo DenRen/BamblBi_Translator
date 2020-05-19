@@ -1,0 +1,10 @@
+//
+// Created by tester on 19.05.2020.
+//
+
+#ifndef BAMBLBI_TRANSLATOR_ASM_OPCODE_H
+#define BAMBLBI_TRANSLATOR_ASM_OPCODE_H
+
+
+
+#endif //BAMBLBI_TRANSLATOR_ASM_OPCODE_H

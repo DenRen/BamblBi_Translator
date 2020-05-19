@@ -2,7 +2,8 @@
 #include <cstdlib>
 #include <cctype>
 #include "main_lib.h"
-#include "ASM_commands.h"
+#include "ASM_MC_new.h"
+#include "ASM_commands_name.h"
 
 int main () {
 
@@ -17,7 +18,7 @@ int main () {
 
         printf ("\n");
     }*/
-
+    /*
 #define FUNC(arg) NOT(arg)
 
     printf ("%x\n", FUNC (rax));
@@ -43,6 +44,11 @@ return 0;
     printf ("%x\n", FUNC2(rax, rbp));
 
     printf ("%x\n", FUNC2(rsi, rsi));
+*/
+
+    printf ("%x\n", _REX (0b0100));
+    printf ("%x\n", _w | 0b01000000);
+    bprintf32 (0x4c2b08);
 
     return 0;
 }

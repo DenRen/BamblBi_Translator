@@ -21,7 +21,6 @@ struct __line_words {   // Array from words
     __word *words;
 };
 
-
 class SourceCodeNasm {
 public:
     __line_words *lines_code;

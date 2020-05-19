@@ -2,8 +2,10 @@
 // Created by tester on 19.05.2020.
 //
 
-#ifndef BAMBLBI_TRANSLATOR_JMPS_H
-#define BAMBLBI_TRANSLATOR_JMPS_H
+#ifndef BAMBLBI_TRANSLATOR_ASM_MC_JMPS_H
+#define BAMBLBI_TRANSLATOR_ASM_MC_JMPS_H
+
+namespace nasmmc {
 
 /*
  jmp -128   | e97cffffff    // far
@@ -47,4 +49,6 @@
 #define JECXZ            0x67e3
 #define JRCXZ            0x00e3
 
-#endif //BAMBLBI_TRANSLATOR_JMPS_H
+}
+
+#endif //BAMBLBI_TRANSLATOR_ASM_MC_JMPS_H

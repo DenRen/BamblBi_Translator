@@ -84,10 +84,28 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_commands.h">
+		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_Lib/ASM_ModR_M.h">
 			<Option target="BamblBi_Translator"/>
 		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/JMPs.h">
+		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_Lib/ASM_Opcode.h">
+			<Option target="BamblBi_Translator"/>
+		</Unit>
+		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_Lib/ASM_Prefixes.cpp">
+			<Option target="BamblBi_Translator"/>
+		</Unit>
+		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_Lib/ASM_Prefixes.h">
+			<Option target="BamblBi_Translator"/>
+		</Unit>
+		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_Lib/ASM_Registers.h">
+			<Option target="BamblBi_Translator"/>
+		</Unit>
+		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_Lib/ASM_SIB.h">
+			<Option target="BamblBi_Translator"/>
+		</Unit>
+		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_MC_new.h">
+			<Option target="BamblBi_Translator"/>
+		</Unit>
+		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_commands_name.h">
 			<Option target="BamblBi_Translator"/>
 		</Unit>
 		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/SourceCodeNasm.cpp">
