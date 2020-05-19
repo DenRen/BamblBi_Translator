@@ -10,50 +10,17 @@ int main () {
     const char path_asm[] = "../asm/test2.s";
     SourceCodeNasm code (path_asm);
 
-    /*
-    for (int i = 0; i < code.number_lines; i++) {
-        __word *words = code.lines_code[i].words;
-        for (int j = 0; j < code.lines_code[i].size; j++)
-            printf ("%s", words[j].word);
+    if (Translate (code))
+        fprintf (stderr, "Fail\n");
 
-        printf ("\n");
-    }*/
-    /*
-#define FUNC(arg) NOT(arg)
+    printf ("%x\n", mulrm8 | ah | 0b11000000);
 
-    printf ("%x\n", FUNC (rax));
-    printf ("%x\n", FUNC (rbx));
-    printf ("%x\n", FUNC (rcx));
-    printf ("%x\n", FUNC (rdx));
-    printf ("%x\n", FUNC (rsi));
-    printf ("%x\n", FUNC (rdi));
-    printf ("%x\n", FUNC (rsp));
-    printf ("%x\n", FUNC (rbp));
-
-    printf ("\n");
-return 0;
-#define FUNC2(argl, argr) AND (argl, argr)
-
-    printf ("%x\n", FUNC2(rax, rax));
-    printf ("%x\n", FUNC2(rax, rbx));
-    printf ("%x\n", FUNC2(rax, rcx));
-    printf ("%x\n", FUNC2(rax, rdx));
-    printf ("%x\n", FUNC2(rax, rsi));
-    printf ("%x\n", FUNC2(rax, rdi));
-    printf ("%x\n", FUNC2(rax, rsp));
-    printf ("%x\n", FUNC2(rax, rbp));
-
-    printf ("%x\n", FUNC2(rsi, rsi));
-*/
-
-    printf ("%x\n", _REX (0b0100));
-    printf ("%x\n", _w | 0b01000000);
-    bprintf32 (0x4c2b08);
-
+    bprintf (mulrm8 | ah | 0b11000000, 8 * 3, true);
     return 0;
 }
 
-
+// 010010001 11101111 1100000
+// 010010001 11101101 1100000
 
 
 

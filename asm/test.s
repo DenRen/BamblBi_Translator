@@ -3,15 +3,10 @@ global _start
 section .text
 
 _start:
-    mov cx, 8
-L1:
-    dec cx
-    loope L1
-    loopne L1
-    loopz L1
-    loopnz L1
+    
+    add rax, -15
 
-    nop
+	nop
 	nop
     nop
 	sub rax, 0x3C
@@ -23,3 +18,7 @@ func:
     mov rax, rcx
     inc rax
     ret
+
+section .rodata
+
+str567 dw "Hello", 0x0

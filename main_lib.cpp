@@ -6,37 +6,26 @@
 #include <cstring>
 #include "main_lib.h"
 
-void bprintf8 (__uint32_t num) {
-    char arr[8] = {0};
-    for (int i = 0; i < 8; i++, num /= 2)
+void bprintf (__uint32_t num, unsigned pow, bool periodically) {
+    char arr[pow] = {0};
+    for (int i = 0; i < pow; i++, num /= 2)
         arr[i] = num % 2 + '0';
 
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < pow / 2; i++) {
         char temp = arr[i];
-        arr[i] = arr[7 - i];
-        arr[7 - i] = temp;
+        arr[i] = arr[pow - i - 1];
+        arr[pow - i - 1] = temp;
     }
 
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < pow; i++) {
         printf ("%c", arr[i]);
+
+        if (i != 0 && i % 8 == 0 && periodically)
+            printf (" ");
+    }
     printf ("\n");
 }
 
-void bprintf32 (__uint32_t num) {
-    char arr[32] = {0};
-    for (int i = 0; i < 32; i++, num /= 2)
-        arr[i] = num % 2 + '0';
-
-    for (int i = 0; i < 16; i++) {
-        char temp = arr[i];
-        arr[i] = arr[31 - i];
-        arr[31 - i] = temp;
-    }
-
-    for (int i = 0; i < 32; i++)
-        printf ("%c", arr[i]);
-    printf ("\n");
-}
 char *readfile (const char *path, __uint32_t *size) {
     if (path == nullptr)
         throw std::runtime_error ("Empty path");
@@ -244,6 +233,10 @@ __word *getWordsFromLine (char *line, __uint8_t *quantity_words) {
     *quantity_words = num_words;
 
     return (__word *) realloc (words, num_words * sizeof (__word));
+}
+
+int Translate (SourceCodeNasm code) {
+    return 0;
 }
 
 #undef MAX_WORDS_IN_LINE
