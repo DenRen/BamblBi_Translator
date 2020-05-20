@@ -87,6 +87,9 @@
 		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_Lib/ASM_ModR_M.h">
 			<Option target="BamblBi_Translator"/>
 		</Unit>
+		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_Lib/ASM_Opcode.cpp">
+			<Option target="BamblBi_Translator"/>
+		</Unit>
 		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_Lib/ASM_Opcode.h">
 			<Option target="BamblBi_Translator"/>
 		</Unit>
