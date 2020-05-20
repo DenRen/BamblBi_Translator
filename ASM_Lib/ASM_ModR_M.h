@@ -33,7 +33,7 @@ namespace mrm {     // ModeR/M
              #====#====#====#====#====#====#====#====#
    ModR/M =  #   Mod   #  Reg/Opcode  #      R/M     #  <-- 1 byte
              #====#====#====#====#====#====#====#====#
-                   2            3              3
+                   2          3              3
 */
 __uint8_t ModR_M (__uint8_t mod, __uint8_t reg2_opcode, __uint8_t reg1_memory) {
     assert (mod < 4);

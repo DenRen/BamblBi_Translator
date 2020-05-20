@@ -5,41 +5,41 @@
 #ifndef BAMBLBI_TRANSLATOR_ASM_OPCODE_H
 #define BAMBLBI_TRANSLATOR_ASM_OPCODE_H
 
-// TODO ????????? ?? 64
+// TODO rewrite in 64
 
 // [MOV]----------------------------------------------------------------------------------------------------------------
 
-//                                         Opcode	Mnemonic	        Description
-#define movrm8_r8       0x88            // 88 /r	MOV r/m8,  r8	    Move r8 to r/m8.
-#define movrm16_r16     0x89            // 89 /r	MOV r/m16, r16	    Move r16 to r/m16.
-#define movrm32_r32     movrm16_r16     // 89 /r	MOV r/m32, r32	    Move r32 to r/m32.
-#define movrm64_r64     movrm16_r16     // 89 /r	MOV r/m64, r64	    Move r64 to r/m64.
+//                                         Opcode	    Mnemonic	        Description
+#define movrm8_r8           0x88            // 88 /r	MOV r/m8,  r8	    Move r8 to r/m8.
+#define movrm16_r16         0x89            // 89 /r	MOV r/m16, r16	    Move r16 to r/m16.
+#define movrm32_r32         movrm16_r16     // 89 /r	MOV r/m32, r32	    Move r32 to r/m32.
+#define movrm64_r64         movrm16_r16     // 89 /r	MOV r/m64, r64	    Move r64 to r/m64.
 
-#define movr8_rm8       0x8a            // 8A /r	MOV r8,  r/m8	    Move r/m8 to r8.
-#define movr16_rm16     0x8b            // 8B /r	MOV r16, r/m16	    Move r/m16 to r16.
-#define movr32_rm32     movr16_rm16     // 8B /r	MOV r32, r/m32	    Move r/m32 to r32.
-#define movr64_rm64     movr16_rm16     // 8B /r	MOV r64, r/m64	    Move r/m64 to r64.
+#define movr8_rm8           0x8a            // 8A /r	MOV r8,  r/m8	    Move r/m8 to r8.
+#define movr16_rm16         0x8b            // 8B /r	MOV r16, r/m16	    Move r/m16 to r16.
+#define movr32_rm32         movr16_rm16     // 8B /r	MOV r32, r/m32	    Move r/m32 to r32.
+#define movr64_rm64         movr16_rm16     // 8B /r	MOV r64, r/m64	    Move r/m64 to r64.
 
-#define movrm8_sr       0x8c            // 8C /r	MOV r/m16, Sreg**	Move segment register to r/m16.
-#define movsr_rm8       0x8e            // 8E /r	MOV Sreg, r/m16**	Move r/m16 to segment register.
+#define movrm8_sr           0x8c            // 8C /r	MOV r/m16, Sreg**	Move segment register to r/m16.
+#define movsr_rm8           0x8e            // 8E /r	MOV Sreg, r/m16**	Move r/m16 to segment register.
 
-#define movr8_moffs8    0xa0            // A0	    MOV AL, moffs8*	    Move byte at (seg:offset) to AL.
-#define movr16_moffs16  0xa1            // A1	    MOV AX, moffs16*	Move word at (seg:offset) to AX.
-#define movr32_moffs32  0xa1            // A1	    MOV EAX, moffs32*	Move dword at (seg:offset) to EAX.
+#define movr8_moffs8        0xa0            // A0	    MOV AL, moffs8*	    Move byte at (seg:offset) to AL.
+#define movr16_moffs16      0xa1            // A1	    MOV AX, moffs16*	Move word at (seg:offset) to AX.
+#define movr32_moffs32      0xa1            // A1	    MOV EAX, moffs32*	Move dword at (seg:offset) to EAX.
 
-#define movmoffs8_r8    0xa2            // A2	    MOV moffs8*, AL	    Move AL to (seg:offset).
-#define movmoffs16_r16  0xa3            // A3	    MOV moffs16*, AX	Move AX to (seg:offset).
-#define movmoffs32_r32  0xa3            // A3	    MOV moffs32*, EAX	Move EAX to (seg:offset).
+#define movmoffs8_r8        0xa2            // A2	    MOV moffs8*, AL	    Move AL to (seg:offset).
+#define movmoffs16_r16      0xa3            // A3	    MOV moffs16*, AX	Move AX to (seg:offset).
+#define movmoffs32_r32      0xa3            // A3	    MOV moffs32*, EAX	Move EAX to (seg:offset).
 
-#define movr8_i8       0x88            // B0+ rb	MOV r8, imm8	    Move imm8 to r8.
-#define movr16_i16     0x89            // B8+ rw	MOV r16, imm16	    Move imm16 to r16.
-#define movr32_i32     movrm16_r16     // B8+ rd	MOV r32, imm32	    Move imm32 to r32.
-#define movr64_i64     movrm16_r16     // B8+ rd	MOV r32, imm32	    Move imm32 to r32.
+#define movr8_i8            0x88            // B0+ rb	MOV r8, imm8	    Move imm8 to r8.
+#define movr16_i16          0x89            // B8+ rw	MOV r16, imm16	    Move imm16 to r16.
+#define movr32_i32          movrm16_r16     // B8+ rd	MOV r32, imm32	    Move imm32 to r32.
+#define movr64_i64          movrm16_r16     // B8+ rd	MOV r32, imm32	    Move imm32 to r32.
 
-#define movrm8_i8      0x8a            // C6 /0	    MOV r/m8, imm8	    Move imm8 to r/m8.
-#define movrm16_i16    0x8b            // C7 /0	    MOV r/m16, imm16	Move imm16 to r/m16.
-#define movrm32_i32    movr16_rm16     // C7 /0	    MOV r/m32, imm32	Move imm32 to r/m32.
-#define movrm64_i64    movr16_rm16     // C7 /0	    MOV r/m32, imm32	Move imm32 to r/m32.
+#define movrm8_i8           0x8a            // C6 /0	MOV r/m8, imm8	    Move imm8 to r/m8.
+#define movrm16_i16         0x8b            // C7 /0	MOV r/m16, imm16	Move imm16 to r/m16.
+#define movrm32_i32         movr16_rm16     // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
+#define movrm64_i64         movr16_rm16     // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
 
 // [ADD]----------------------------------------------------------------------------------------------------------------
 
@@ -138,7 +138,129 @@
 #define idivrm32            0xf738      // F7 /7	IDIV r/m32      Signed divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
 #define idivrm64            0xf738      // F7 /7	IDIV r/m32      Signed divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
 
-// []----------------------------------------------------------------------------------------------------------------
+// TODO XOR, OR, AND, NOT, NEG, INC, DEC
 
+// [Jcc]----------------------------------------------------------------------------------------------------------------
+
+#define ja_s        0x77        // 77 cb	JA rel8	J   ump short if above (CF=0 and ZF=0)
+#define jae_s       0x73        // 73 cb	JAE rel8	Jump short if above or equal (CF=0)
+#define jb_s        0x72        // 72 cb	JB rel8	    Jump short if below (CF=1)
+#define jbe_s       0x76        // 76 cb	JBE rel8	Jump short if below or equal (CF=1 or ZF=1)
+#define jc_s        0x72        // 72 cb	JC rel8	    Jump short if carry (CF=1)
+#define jcxz_s      0xe3        // E3 cb	JCXZ rel8	Jump short if CX register is 0
+#define jecxz_s     0xe3        // E3 cb	JECXZ rel8	Jump short if ECX register is 0
+#define je_s        0x74        // 74 cb	JE rel8	    Jump short if equal (ZF=1)
+#define jg_s        0x7f        // 7F cb	JG rel8	    Jump short if greater (ZF=0 and SF=OF)
+#define jge_s       0x7d        // 7D cb	JGE rel8	Jump short if greater or equal (SF=OF)
+#define jl_s        0x7c        // 7C cb	JL rel8	    Jump short if less (SF<>OF)
+#define jle_s       0x7e        // 7E cb	JLE rel8	Jump short if less or equal (ZF=1 or SF<>OF)
+#define jna_s       0x76        // 76 cb	JNA rel8	Jump short if not above (CF=1 or ZF=1)
+#define jnae_s      0x72        // 72 cb	JNAE rel8	Jump short if not above or equal (CF=1)
+#define jnb_s       0x73        // 73 cb	JNB rel8	Jump short if not below (CF=0)
+#define jnbe_s      0x77        // 77 cb	JNBE rel8	Jump short if not below or equal (CF=0 and ZF=0)
+#define jnc_s       0x73        // 73 cb	JNC rel8	Jump short if not carry (CF=0).
+#define jne_s       0x75        // 75 cb	JNE rel8	Jump short if not equal (ZF=0)
+#define jng_s       0x7e        // 7E cb	JNG rel8	Jump short if not greater (ZF=1 or SF<>OF)
+#define jnge_s      0x7c        // 7C cb	JNGE rel8	Jump short if not greater or equal (SF<>OF)
+#define jnl_s       0x7d        // 7D cb	JNL rel8	Jump short if not less (SF=OF)
+#define jnle_s      0x7f        // 7F cb	JNLE rel8	Jump short if not less or equal (ZF=0 and SF=OF)
+#define jno_s       0x71        // 71 cb	JNO rel8	Jump short if not overflow (OF=0)
+#define jnp_s       0x7b        // 7B cb	JNP rel8	Jump short if not parity (PF=0)
+#define jns_s       0x79        // 79 cb	JNS rel8	Jump short if not sign (SF=0)
+#define jnz_s       0x75        // 75 cb	JNZ rel8	Jump short if not zero (ZF=0)
+#define jo_s        0x70        // 70 cb	JO rel8	    Jump short if overflow (OF=1)
+#define jp_s        0x7a        // 7A cb	JP rel8	    Jump short if parity (PF=1)
+#define jpe_s       0x7a        // 7A cb	JPE rel8	Jump short if parity even (PF=1)
+#define jpo_s       0x7b        // 7B cb	JPO rel8	Jump short if parity odd (PF=0)
+#define js_s        0x78        // 78 cb	JS rel8	    Jump short if sign (SF=1).0
+#define jz_s        0x74        // 74 cb	JZ rel8	    Jump short if zero (ZF = 1)
+
+#define ja_n        0x0f87      // 0F 87 cw/cd	JA rel16/32	    Jump near if above (CF=0 and ZF=0)
+#define jae         0x0f83      // 0F 83 cw/cd	JAE rel16/32	Jump near if above or equal (CF=0)
+#define jb_n        0x0f82      // 0F 82 cw/cd	JB rel16/32	    Jump near if below (CF=1)
+#define jbe_n       0x0f86      // 0F 86 cw/cd	JBE rel16/32	Jump near if below or equal (CF=1 or ZF=1)
+#define jc_n        0x0f82      // 0F 82 cw/cd	JC rel16/32	    Jump near if carry (CF=1)
+#define jcxz_n      0x0f84      // 0F 84 cw/cd	JE rel16/32	    Jump near if equal (ZF=1)
+#define jecxz_n     0x0f84      // 0F 84 cw/cd	JZ rel16/32	    Jump near if 0 (ZF=1)
+#define je_n        0x0f8f      // 0F 8F cw/cd	JG rel16/32	    Jump near if greater (ZF=0 and SF=OF)
+#define jg_n        0x0f8d      // 0F 8D cw/cd	JGE rel16/32	Jump near if greater or equal (SF=OF)
+#define jge_n       0x0f8c      // 0F 8C cw/cd	JL rel16/32	    Jump near if less (SF<>OF)
+#define jl_n        0x0f8e      // 0F 8E cw/cd	JLE rel16/32	Jump near if less or equal (ZF=1 or SF<>OF)
+#define jle_n       0x0f86      // 0F 86 cw/cd	JNA rel16/32	Jump near if not above (CF=1 or ZF=1)
+#define jna_n       0x0f82      // 0F 82 cw/cd	JNAE rel16/32	Jump near if not above or equal (CF=1)
+#define jnae_n      0x0f83      // 0F 83 cw/cd	JNB rel16/32	Jump near if not below (CF=0)
+#define jnb_n       0x0f87      // 0F 87 cw/cd	JNBE rel16/32	Jump near if not below or equal (CF=0 and ZF=0)
+#define jnbe_n      0x0f83      // 0F 83 cw/cd	JNC rel16/32	Jump near if not carry (CF=0)
+#define jnc_n       0x0f85      // 0F 85 cw/cd	JNE rel16/32	Jump near if not equal (ZF=0)
+#define jne_n       0x0f8e      // 0F 8E cw/cd	JNG rel16/32	Jump near if not greater (ZF=1 or SF<>OF)
+#define jng_n       0x0f8c      // 0F 8C cw/cd	JNGE rel16/32	Jump near if not greater or equal (SF<>OF)
+#define jnge_n      0x0f8d      // 0F 8D cw/cd	JNL rel16/32	Jump near if not less (SF=OF)
+#define jnl_n       0x0f8f      // 0F 8F cw/cd	JNLE rel16/32	Jump near if not less or equal (ZF=0 and SF=OF)
+#define jnle_n      0x0f81      // 0F 81 cw/cd	JNO rel16/32	Jump near if not overflow (OF=0)
+#define jno_n       0x0f8b      // 0F 8B cw/cd	JNP rel16/32	Jump near if not parity (PF=0)
+#define jnp_n       0x0f89      // 0F 89 cw/cd	JNS rel16/32	Jump near if not sign (SF=0)
+#define jns_n       0x0f85      // 0F 85 cw/cd	JNZ rel16/32	Jump near if not zero (ZF=0)
+#define jnz_n       0x0f80      // 0F 80 cw/cd	JO rel16/32	    Jump near if overflow (OF=1)
+#define jo_n        0x0f8a      // 0F 8A cw/cd	JP rel16/32	    Jump near if parity (PF=1)
+#define jp_n        0x0f8a      // 0F 8A cw/cd	JPE rel16/32	Jump near if parity even (PF=1)
+#define jpe_n       0x0f8b      // 0F 8B cw/cd	JPO rel16/32	Jump near if parity odd (PF=0)
+#define jpo_n       0x0f88      // 0F 88 cw/cd	JS rel16/32	    Jump near if sign (SF=1)
+#define js_n        0x0f84      // 0F 84 cw/cd	JZ rel16/32	    Jump near if 0 (ZF=1)
+
+// [JMP]----------------------------------------------------------------------------------------------------------------
+
+#define jmp_rel8	    0xeb       // EB cb	JMP rel8	Jump short, relative, displacement relative to next instruction.
+#define jmp_rel16	    0xe9       // E9 cw	JMP rel16	Jump near, relative, displacement relative to next instruction.
+#define jmp_rel32	    0xe9       // E9 cd	JMP rel32	Jump near, relative, displacement relative to next instruction.
+#define jmp_rm16	    0xff20     // FF /4	JMP r/m16	Jump near, absolute indirect, address given in r/m16.
+#define jmp_rm32	    0xff20     // FF /4	JMP r/m32	Jump near, absolute indirect, address given in r/m32.
+#define jmp_ptr16_16    0xea       // EA cd	JMP ptr16:16	Jump far, absolute, address given in operand.
+#define jmp_ptr16_32    0xea       // EA cp	JMP ptr16:32	Jump far, absolute, address given in operand.
+#define jmp_m16_16	    0xff28     // FF /5	JMP m16:16	Jump far, absolute indirect, address given in m16:16.
+#define jmp_m16_32	    0xff28     // FF /5	JMP m16:32	Jump far, absolute indirect, address given in m16:32.
+
+
+// [RET]----------------------------------------------------------------------------------------------------------------
+
+#define ret_near        0xc3       // C3	    RET	Near return to calling procedure.
+#define ret_far 0xcb    CB	       // RET	    Far return to calling procedure.
+#define ret_ni16 0xc2   C2 iw	   // RET imm16	Near return to calling procedure and pop imm16 bytes from stack.
+#define ret_nf16 0xca   CA iw	   // RET imm16	Far return to calling procedure and pop imm16 bytes from stack.
+
+// [PUSH]---------------------------------------------------------------------------------------------------------------
+
+#define push_rm16       0xff30     // FF /6	    Push r/m16
+#define push_rm32       0xff30     // FF /6	    Push r/m32
+#define push_r16        0x50       // 50+rw	    Push r16
+#define push_r32        0x50       // 50+rd	    Push r32
+#define push_i8         0x6a       // 6A	    Push imm8
+#define push_i16        0x68       // 68	    Push imm16
+#define push_i32        0x68       // 68	    Push imm32
+#define push_cs         0x0e       // 0E	    Push CS
+#define push_ss         0x16       // 16	    Push SS
+#define push_ds         0x1e       // 1E	    Push DS
+#define push_es         0x06       // 06	    Push ES
+#define push_fs         0x0f       // 0F A0	    Push FS
+#define push_gs         0x0f       // 0F A8	    Push GS
+
+// [PUSH]---------------------------------------------------------------------------------------------------------------
+
+#define pop_m16         0x8f       // 8F /0		Pop top of stack into m16; increment stack pointer.
+#define pop_m32         0x8f       // 8F /0		Pop top of stack into m32; increment stack pointer.
+#define pop_m64         0x8f       // 8F /0		Pop top of stack into m64; increment stack pointer.
+
+#define pop_r16         0x58       // 58+ rw    Pop top of stack into r16; increment stack pointer.
+#define pop_r32         0x58       // 58+ rd    Pop top of stack into r32; increment stack pointer.
+#define pop_r64         0x58       // 58+ rd    Pop top of stack into r32; increment stack pointer.
+
+#define pop_ds          0x1f       // 1F	    Pop top of stack into DS; increment stack pointer.
+#define pop_es          0x07       // 07	    Pop top of stack into ES; increment stack pointer.
+#define pop_ss          0x17       // 17	    Pop top of stack into SS; increment stack pointer.
+#define pop_fs          0x0fa1     // 0F A1	    Pop top of stack into FS; increment stack pointer.
+#define pop_gs          0x0fa9     // 0F A9	    Pop top of stack into GS; increment stack pointer.
+
+// [PUSH]---------------------------------------------------------------------------------------------------------------
+// [PUSH]---------------------------------------------------------------------------------------------------------------
+// [PUSH]---------------------------------------------------------------------------------------------------------------
 
 #endif //BAMBLBI_TRANSLATOR_ASM_OPCODE_H

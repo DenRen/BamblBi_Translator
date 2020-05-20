@@ -4,7 +4,8 @@ section .text
 
 _start:
     
-    add rax, -15
+    idiv r14
+    mov rsi, rdi
 
 	nop
 	nop

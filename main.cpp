@@ -13,9 +13,12 @@ int main () {
     if (Translate (code))
         fprintf (stderr, "Fail\n");
 
-    printf ("%x\n", mulrm8 | ah | 0b11000000);
+    //printf ("%x\n", (_REX (_w) << 8 * 3) | (imulr_rm32 << 8) | 0b11000000 | (esi << 3) | edi);
+    printf ("%x\n", (_REX (_w, _b) << 8 * 2) | idivrm64 | 0b11000000 | reg::r14);
 
     bprintf (mulrm8 | ah | 0b11000000, 8 * 3, true);
+
+    printf ("%x\n", 0b11000000 | rdi | (rsi << 3));
     return 0;
 }
 
