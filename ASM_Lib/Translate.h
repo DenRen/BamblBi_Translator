@@ -11,6 +11,8 @@
 enum type_arg {
     arg_empty,
     arg_reg,
+    arg_exreg, // r8, r9, ...
+    arg_sreg,
     arg_mem,
     arg_imm,
     arg_label
@@ -49,5 +51,7 @@ struct  _cmd_t {
     __uint8_t getSize (int sizeDisp = 0, int sizeImm = 0);
     __word buildMC (int sizeDisp = 0, int sizeImm = 0);
 };
+
+__word genCmd (opcode::__cmd command, arg_t *args, int quant_args);
 
 #endif //BAMBLBI_TRANSLATOR_TRANSLATE_H

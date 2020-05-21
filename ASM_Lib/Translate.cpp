@@ -72,36 +72,42 @@ int Translate (SourceCodeNasm code) {
                     args[i - 1].type = arg_imm;
                     args[i - 1].arg = (__int64_t) arg;  // In special function it will be encoding
 
-                } else if (arg[0] == '[')
+                } else if (arg[0] == '[') {
+
                     printf ("Memory");
 
-                else {
+                } else {
                     for (int j = reg::quant_reg - 1; j >= 0; j--)   // Arg register
                         if (!strcmp (arg, reg::_name_reg[j])) {
                             args[i - 1].type = arg_reg;
                             args[i - 1].arg = j;
 
-                                 if (isnumber (arg[1])) args[i - 1].sparseness = 65;    // r8
+                                 if (isnumber (arg[1])) args[i - 1].sparseness = 65;    // eax
                             else if (arg[0] == 'r')     args[i - 1].sparseness = 64;    // rax
                             else if (arg[0] == 'e')     args[i - 1].sparseness = 32;    // eax
                             else if (arg[1] == 'l')     args[i - 1].sparseness = 8;     // al
                             else if (arg[1] == 'h')     args[i - 1].sparseness = 8;     // ah
                             else                        args[i - 1].sparseness = 16;    // ax
+
+                            //if (isnumber (arg[1])) args[i - 1].type = arg_exreg;
+
                             break;
                         }
-
                 }
             }
 
             __word MC_cmd = createComand (command, args, i - 1);
-            free (MC_cmd.word);
+            if (MC_cmd.word != nullptr) {
+                printf ("%x\n", *(__uint32_t *) MC_cmd.word);
+                free (MC_cmd.word);
+            }
         }
-
     }
 
     return 0;
 }
 
+#define ARG(arg1, arg2) (args[0].type == arg1 && args[1].type == arg2)
 
 __word createComand (__uint8_t command, arg_t *args, int quant_args) {
     switch (command) {
@@ -109,46 +115,32 @@ __word createComand (__uint8_t command, arg_t *args, int quant_args) {
             assert (quant_args == 2);
             assert (args != nullptr && args + 1 != nullptr);
 
-#define ARG(arg1, arg2) (args[0].type == arg1 && args[1].type == arg2)
 
             if (ARG (arg_mem, arg_reg) || ARG (arg_reg, arg_reg)) {
-                _cmd_t cmd = {};
-
-                if (args[0].sparseness == 8) {
-                    cmd.Opcode = opcode::mov::movrm8_r8;
-
-                } else if (args[0].sparseness == 16) {
-                    cmd.Opcode = opcode::mov::movrm16_r16;
-
-                    cmd.LegPref = _p66h;
-                    cmd.LegPref_On = true;
-                } else {
-                    cmd.Opcode = opcode::mov::movrm64_r64;
-
-                    cmd.REXPref_On = true;
-                    cmd.REXPref = _REX (_w);
-
-                    if (args[0].sparseness == 65) cmd.REXPref |= _REX (_b);
-
-                    if (args[1].sparseness == 65) cmd.REXPref |= _REX (_r);
-                }
-
-                if (args[0].type == arg_reg) {
-                    cmd.ModR_M = ModR_M (mrm::reg, reg::reg[args[1].arg], reg::reg[args[0].arg]);
-                    cmd.ModR_M_On = true;
-                } else {
-                    // Memory
-                }
-
-                __word mc = cmd.buildMC (0, 0);
-                printf ("%x\n", *(__uint32_t *) mc.word);
-                return mc;
+                if (args[0].sparseness == 8)
+                    return genCmd (opcode::mov::movrm8_r8, args, quant_args);
+                else
+                    return genCmd (opcode::mov::movrm64_r64, args, quant_args);
             }
 
             break;
         case opcode::_cmds::ADD:
+
+            if (ARG (arg_mem, arg_reg) || ARG (arg_reg, arg_reg)) {
+                if (args[0].sparseness == 8)
+                    return genCmd (opcode::add::addrm8_r8, args, quant_args);
+                else
+                    return genCmd (opcode::add::addrm64_r64, args, quant_args);
+            }
+
             break;
         case opcode::_cmds::SUB:
+            if (ARG (arg_mem, arg_reg) || ARG (arg_reg, arg_reg)) {
+                if (args[0].sparseness == 8)
+                    return genCmd (opcode::sub::subrm8_r8, args, quant_args);
+                else
+                    return genCmd (opcode::sub::subrm64_r64, args, quant_args);
+            }
             break;
         case opcode::_cmds::MUL:
             break;
@@ -236,4 +228,49 @@ __word _cmd_t::buildMC (int sizeDisp, int sizeImm) {
     }
 
     return mc;
+}
+
+__word genCmd (opcode::__cmd command, arg_t *args, int quant_args) {
+    _cmd_t cmd = {};
+
+    cmd.Opcode = command;
+    if (args != nullptr) {
+
+        // Legacy and REX prefixes
+        if (args[0].sparseness == 16) {
+
+            cmd.LegPref = _p66h;
+            cmd.LegPref_On = true;
+
+        } else if (args[0].sparseness > 16) {
+
+            cmd.REXPref_On = true;
+            cmd.REXPref = _REX (_w);
+
+            if (args[0].sparseness == 65) cmd.REXPref |= _REX (_b);
+
+            if (quant_args > 1) {
+
+                if (args[1].sparseness == 65) cmd.REXPref |= _REX (_r);
+
+            }
+        }
+
+        //
+        if (quant_args == 2) {
+            if (args[0].type == arg_reg || args[1].type == arg_reg) {
+                cmd.ModR_M = ModR_M (mrm::reg, reg::reg[args[1].arg], reg::reg[args[0].arg]);
+                cmd.ModR_M_On = true;
+            }
+        }
+
+        /*
+        if else {
+            // Memory
+        }*/
+
+        return cmd.buildMC (0, 0);
+    }
+
+    return {0, nullptr};
 }

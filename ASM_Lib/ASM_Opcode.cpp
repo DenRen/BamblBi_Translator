@@ -32,18 +32,18 @@ namespace opcode {
 
     // [MOV]----------------------------------------------------------------------------------------------------------------
     namespace mov {
-    __cmd movrm8_r8 (0x88, 1);      // 88 /r	MOV r/m8,  r8	    Move r8 to r/m8.
-    __cmd movrm16_r16 (0x89, 1);      // 89 /r	MOV r/m16, r16	    Move r16 to r/m16.
-    __cmd movrm32_r32 (0x89, 1);      // 89 /r	MOV r/m32, r32	    Move r32 to r/m32.
-    __cmd movrm64_r64 (0x89, 1);      // 89 /r	MOV r/m64, r64	    Move r64 to r/m64.
+    __cmd movrm8_r8   (0x88, 1);        // 88 /r	MOV r/m8,  r8	    Move r8 to r/m8.
+    __cmd movrm16_r16 (0x89, 1);        // 89 /r	MOV r/m16, r16	    Move r16 to r/m16.
+    __cmd movrm32_r32 (0x89, 1);        // 89 /r	MOV r/m32, r32	    Move r32 to r/m32.
+    __cmd movrm64_r64 (0x89, 1);        // 89 /r	MOV r/m64, r64	    Move r64 to r/m64.
 
-    __cmd movr8_rm8 (0x8a, 1);      // 8A /r	MOV r8,  r/m8	    Move r/m8 to r8.
-    __cmd movr16_rm16 (0x8b, 1);      // 8B /r	MOV r16, r/m16	    Move r/m16 to r16.
-    __cmd movr32_rm32 (0x8b, 1);      // 8B /r	MOV r32, r/m32	    Move r/m32 to r32.
-    __cmd movr64_rm64 (0x8b, 1);      // 8B /r	MOV r64, r/m64	    Move r/m64 to r64.
+    __cmd movr8_rm8 (0x8a, 1);          // 8A /r	MOV r8,  r/m8	    Move r/m8 to r8.
+    __cmd movr16_rm16 (0x8b, 1);        // 8B /r	MOV r16, r/m16	    Move r/m16 to r16.
+    __cmd movr32_rm32 (0x8b, 1);        // 8B /r	MOV r32, r/m32	    Move r/m32 to r32.
+    __cmd movr64_rm64 (0x8b, 1);        // 8B /r	MOV r64, r/m64	    Move r/m64 to r64.
 
-    __cmd movrm8_sr (0x8c, 1);      // 8C /r	MOV r/m16, Sreg**	Move segment register to r/m16.
-    __cmd movsr_rm8 (0x8e, 1);      // 8E /r	MOV Sreg, r/m16**	Move r/m16 to segment register.
+    __cmd movrm8_sr (0x8c, 1);          // 8C /r	MOV r/m16, Sreg**	Move segment register to r/m16.
+    __cmd movsr_rm8 (0x8e, 1);          // 8E /r	MOV Sreg, r/m16**	Move r/m16 to segment register.
 
     __cmd movr8_moffs8 (0xa0, 1);      // A0	    MOV AL, moffs8*	    Move byte at (seg:offset) to AL.
     __cmd movr16_moffs16 (0xa1, 1);      // A1	    MOV AX, moffs16*	Move word at (seg:offset) to AX.
@@ -258,11 +258,9 @@ namespace opcode {
     // [RET]----------------------------------------------------------------------------------------------------------------
     namespace ret {
         __cmd ret_near (0xc3, 1);       // C3	    RET	Near return to calling procedure.
-        __cmd ret_far (0xcb, 1);       // CB       RET	Far return to calling procedure.
-        __cmd ret_ni16 (0xc2,
-                        1);       // C2 iw    RET imm16	Near return to calling procedure and pop imm16 bytes from stack.
-        __cmd ret_nf16 (0xca,
-                        1);       // CA iw    RET imm16	Far return to calling procedure and pop imm16 bytes from stack.
+        __cmd ret_far  (0xcb, 1);       // CB       RET	Far return to calling procedure.
+        __cmd ret_ni16 (0xc2, 1);       // C2 iw    RET imm16	Near return to calling procedure and pop imm16 bytes from stack.
+        __cmd ret_nf16 (0xca, 1);       // CA iw    RET imm16	Far return to calling procedure and pop imm16 bytes from stack.
     }
     // [PUSH]---------------------------------------------------------------------------------------------------------------
     namespace push {
