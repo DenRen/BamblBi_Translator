@@ -235,8 +235,5 @@ __word *getWordsFromLine (char *line, __uint8_t *quantity_words) {
     return (__word *) realloc (words, num_words * sizeof (__word));
 }
 
-int Translate (SourceCodeNasm code) {
-    return 0;
-}
 
 #undef MAX_WORDS_IN_LINE

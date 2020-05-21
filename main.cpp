@@ -2,17 +2,15 @@
 #include <cstdlib>
 #include <cctype>
 #include "main_lib.h"
-#include "ASM_MC_new.h"
-#include "ASM_commands_name.h"
+#include "ASM_Lib/Translate.h"
 
 int main () {
 
-    const char path_asm[] = "../asm/test2.s";
+    const char path_asm[] = "../asm/test.s";
     SourceCodeNasm code (path_asm);
 
     if (Translate (code))
         fprintf (stderr, "Fail\n");
-
 
     return 0;
 }

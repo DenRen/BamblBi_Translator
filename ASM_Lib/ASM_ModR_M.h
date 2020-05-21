@@ -6,6 +6,7 @@
 #define BAMBLBI_TRANSLATOR_ASM_MODR_M_H
 
 #include <cassert>
+#include "zlib.h"
 
 namespace mrm {     // ModeR/M
     enum mod {

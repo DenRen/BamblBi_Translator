@@ -5,6 +5,7 @@
 #ifndef BAMBLBI_TRANSLATOR_SOURCECODENASM_H
 #define BAMBLBI_TRANSLATOR_SOURCECODENASM_H
 
+#include "zlib.h"
 
 struct __word {
     __int8_t len;

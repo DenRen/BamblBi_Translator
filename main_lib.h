@@ -25,5 +25,4 @@ __line *SplitLines (char *lines, __uint32_t *num_lines, __int64_t size_buf = -1)
 __line_words *getWordsFromLines (__line *lines, __uint32_t num_lines);
 __word       *getWordsFromLine (char *line, __uint8_t *quantity_words);
 
-int Translate (SourceCodeNasm code);
 #endif //BAMBLBI_TRANSLATOR_MAIN_LIB_H

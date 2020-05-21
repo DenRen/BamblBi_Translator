@@ -36,6 +36,6 @@
 #define _b  0b0001
 
 
-__uint8_t _REX (__uint8_t type1, __uint8_t type2 = 0, __uint8_t type3 = 0, __uint8_t type4 = 0);
+__uint8_t _REX (__uint8_t type1 = 0, __uint8_t type2 = 0, __uint8_t type3 = 0, __uint8_t type4 = 0);
 
 #endif //BAMBLBI_TRANSLATOR_ASM_PREFIXES_H

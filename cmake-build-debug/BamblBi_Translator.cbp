@@ -105,6 +105,21 @@
 		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_Lib/ASM_SIB.h">
 			<Option target="BamblBi_Translator"/>
 		</Unit>
+		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_Lib/NameCommands.cpp">
+			<Option target="BamblBi_Translator"/>
+		</Unit>
+		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_Lib/NameCommands.h">
+			<Option target="BamblBi_Translator"/>
+		</Unit>
+		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_Lib/Opcodes.cpp">
+			<Option target="BamblBi_Translator"/>
+		</Unit>
+		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_Lib/Translate.cpp">
+			<Option target="BamblBi_Translator"/>
+		</Unit>
+		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_Lib/Translate.h">
+			<Option target="BamblBi_Translator"/>
+		</Unit>
 		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_MC_new.h">
 			<Option target="BamblBi_Translator"/>
 		</Unit>

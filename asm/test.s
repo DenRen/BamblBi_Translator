@@ -1,3 +1,4 @@
+mov dh, bl
 global _start
 
 section .text
