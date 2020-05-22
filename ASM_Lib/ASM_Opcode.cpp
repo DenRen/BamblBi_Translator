@@ -49,19 +49,19 @@ namespace opcode {
     __cmd movr16_moffs16 (0xa1, 1);      // A1	    MOV AX, moffs16*	Move word at (seg:offset) to AX.
     __cmd movr32_moffs32 (0xa1, 1);      // A1	    MOV EAX, moffs32*	Move dword at (seg:offset) to EAX.
 
-    __cmd movmoffs8_r8 (0xa2, 1);      // A2	    MOV moffs8*, AL	    Move AL to (seg:offset).
+    __cmd movmoffs8_r8   (0xa2, 1);      // A2	    MOV moffs8*, AL	    Move AL to (seg:offset).
     __cmd movmoffs16_r16 (0xa3, 1);      // A3	    MOV moffs16*, AX	Move AX to (seg:offset).
     __cmd movmoffs32_r32 (0xa3, 1);      // A3	    MOV moffs32*, EAX	Move EAX to (seg:offset).
 
-    __cmd movr8_i8 (0x88, 1);      // B0+ rb	MOV r8, imm8	    Move imm8 to r8.
-    __cmd movr16_i16 (0x89, 1);      // B8+ rw	MOV r16, imm16	    Move imm16 to r16.
-    __cmd movr32_i32 (0x89, 1);      // B8+ rd	MOV r32, imm32	    Move imm32 to r32.
-    __cmd movr64_i64 (0x89, 1);      // B8+ rd	MOV r32, imm32	    Move imm32 to r32.
+    __cmd movr8_i8   (0xb0, 1);      // B0+ rb	MOV r8, imm8	    Move imm8 to r8.
+    __cmd movr16_i16 (0xb8, 1);      // B8+ rw	MOV r16, imm16	    Move imm16 to r16.
+    __cmd movr32_i32 (0xb8, 1);      // B8+ rd	MOV r32, imm32	    Move imm32 to r32.
+    __cmd movr64_i64 (0xb8, 1);      // B8+ rd	MOV r32, imm32	    Move imm32 to r32.
 
-    __cmd movrm8_i8 (0x8a, 1);      // C6 /0	MOV r/m8, imm8	    Move imm8 to r/m8.
-    __cmd movrm16_i16 (0x8b, 1);      // C7 /0	MOV r/m16, imm16	Move imm16 to r/m16.
-    __cmd movrm32_i32 (0x8b, 1);      // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
-    __cmd movrm64_i64 (0x8b, 1);      // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
+    __cmd movrm8_i8   (0xc6, 1);      // C6 /0	MOV r/m8, imm8	    Move imm8 to r/m8.
+    __cmd movrm16_i16 (0xc7, 1);      // C7 /0	MOV r/m16, imm16	Move imm16 to r/m16.
+    __cmd movrm32_i32 (0xc7, 1);      // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
+    __cmd movrm64_i64 (0xc7, 1);      // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
 }
     // [ADD]----------------------------------------------------------------------------------------------------------------
     namespace add {
@@ -124,46 +124,33 @@ namespace opcode {
     }
     // [DIV]----------------------------------------------------------------------------------------------------------------
     namespace div {
-        __cmd divrm8 (0xf630,
-                      1);    // F6 /6	DIV r/m8	Unsigned divide AX by r/m8, with result stored in AL = Quotient, AH = Remainder
-        __cmd divrm16 (0xf730,
-                       1);    // F7 /6	DIV r/m16	Unsigned divide DX:AX by r/m16, with result stored in AX = Quotient, DX = Remainder
-        __cmd divrm32 (0xf730,
-                       1);    // F7 /6	DIV r/m32	Unsigned divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
-        __cmd divrm64 (0xf730,
-                       1);    // F7 /6	DIV r/m32	Unsigned divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
+        __cmd divrm8  (0xf630, 1);    // F6 /6	DIV r/m8	Unsigned divide AX by r/m8, with result stored in AL = Quotient, AH = Remainder
+        __cmd divrm16 (0xf730, 1);    // F7 /6	DIV r/m16	Unsigned divide DX:AX by r/m16, with result stored in AX = Quotient, DX = Remainder
+        __cmd divrm32 (0xf730, 1);    // F7 /6	DIV r/m32	Unsigned divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
+        __cmd divrm64 (0xf730, 1);    // F7 /6	DIV r/m32	Unsigned divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
     }
     // [IMUL]----------------------------------------------------------------------------------------------------------------
     namespace imul {
-        __cmd imulrm8 (0xf628, 1);     // F6 /5	IMUL r/m8	            AX = AL * r/m byte
+        __cmd imulrm8  (0xf628, 1);     // F6 /5	IMUL r/m8	            AX = AL * r/m byte
         __cmd imulrm16 (0xf728, 1);     // F7 /5	IMUL r/m16	            DX:AX = AX * r/m word
         __cmd imulrm32 (0xf728, 1);     // F7 /5	IMUL r/m32	            EDX:EAX = EAX * r/m doubleword
         __cmd imulrm64 (0xf728, 1);     // F7 /5	IMUL r/m32	            EDX:EAX = EAX * r/m doubleword
 
-        __cmd imulr_rm16 (0x0faf, 2);      // 0F AF /r	IMUL r16, r/m16	        word register = word register * r/m word
-        __cmd imulr_rm32 (0x0faf,
-                          2);      // 0F AF /r	IMUL r32, r/m32	        doubleword register = doubleword register * r/m doubleword
-        __cmd imulr_rm64 (0x0faf,
-                          2);      // 0F AF /r	IMUL r32, r/m32	        doubleword register = doubleword register * r/m doubleword
+        __cmd imulr_rm16 (0x0faf, 2);   // 0F AF /r	IMUL r16, r/m16	        word register = word register * r/m word
+        __cmd imulr_rm32 (0x0faf, 2);   // 0F AF /r	IMUL r32, r/m32	        doubleword register = doubleword register * r/m doubleword
+        __cmd imulr_rm64 (0x0faf, 2);   // 0F AF /r	IMUL r32, r/m32	        doubleword register = doubleword register * r/m doubleword
 
-        __cmd imulr16_i8 (0x6b,
-                          1);        // 6B /r ib	IMUL r16, r/m16, imm8	word register = r/m16 * sign-extended immediate byte
-        __cmd imulr32_i8 (0x6b,
-                          1);        // 6B /r ib	IMUL r32, r/m32, imm8	doubleword register = r/m32 * sign-extended immediate byte
-        __cmd imulr64_i8 (0x6b,
-                          1);        // 6B /r ib	IMUL r32, r/m32, imm8	doubleword register = r/m32 * sign-extended immediate byte
+        __cmd imulr16_rm_i8 (0x6b, 1);  // 6B /r ib	IMUL r16, r/m16, imm8	word register = r/m16 * sign-extended immediate byte
+        __cmd imulr32_rm_i8 (0x6b, 1);  // 6B /r ib	IMUL r32, r/m32, imm8	doubleword register = r/m32 * sign-extended immediate byte
+        __cmd imulr64_rm_i8 (0x6b, 1);  // 6B /r ib	IMUL r32, r/m32, imm8	doubleword register = r/m32 * sign-extended immediate byte
 
-        __cmd imulr_rm_i16 (0x69, 1);        // 69 /r iw	IMUL r16, r/m16, imm16	word register = r/m16 * immediate word
-        __cmd imulr_rm_i32 (0x69,
-                            1);        // 69 /r id	IMUL r32, r/m32, imm32	doubleword register = r/m32 * immediate doubleword
-        __cmd imulr_rm_i64 (0x69,
-                            1);        // 69 /r id	IMUL r32, r/m32, imm32	doubleword register = r/m32 * immediate doubleword
+        __cmd imulr_rm_i16 (0x69, 1);   // 69 /r iw	IMUL r16, r/m16, imm16	word register = r/m16 * immediate word
+        __cmd imulr_rm_i32 (0x69, 1);   // 69 /r id	IMUL r32, r/m32, imm32	doubleword register = r/m32 * immediate doubleword
+        __cmd imulr_rm_i64 (0x69, 1);   // 69 /r id	IMUL r32, r/m32, imm32	doubleword register = r/m32 * immediate doubleword
 
-        __cmd imulr_i16 (0x69, 1);        // 69 /r iw	IMUL r16, imm16	        word register = r/m16 * immediate word
-        __cmd imulr_i32 (0x69,
-                         1);        // 69 /r id	IMUL r32, imm32	        doubleword register = r/m32 * immediate doubleword
-        __cmd imulr_i64 (0x69,
-                         1);        // 69 /r id	IMUL r32, imm32	        doubleword register = r/m32 * immediate doubleword
+        __cmd imulr_i16 (0x69, 1);      // 69 /r iw	IMUL r16, imm16	        word register = r/m16 * immediate word
+        __cmd imulr_i32 (0x69, 1);      // 69 /r id	IMUL r32, imm32	        doubleword register = r/m32 * immediate doubleword
+        __cmd imulr_i64 (0x69, 1);      // 69 /r id	IMUL r32, imm32	        doubleword register = r/m32 * immediate doubleword
     }
     // [IDIV]----------------------------------------------------------------------------------------------------------------
     namespace idiv {
@@ -245,15 +232,15 @@ namespace opcode {
     }
     // [JMP]----------------------------------------------------------------------------------------------------------------
     namespace jmp {
-        __cmd jmp_rel8 (0xeb, 1);     // EB cb	JMP rel8	Jump short, relative, displacement relative to next instruction.
-        __cmd jmp_rel16 (0xe9, 1);     // E9 cw	JMP rel16	Jump near, relative, displacement relative to next instruction.
-        __cmd jmp_rel32 (0xe9, 1);     // E9 cd	JMP rel32	Jump near, relative, displacement relative to next instruction.
+        __cmd jmp_rel8 (0xeb, 1);       // EB cb	JMP rel8	Jump short, relative, displacement relative to next instruction.
+        __cmd jmp_rel16 (0xe9, 1);      // E9 cw	JMP rel16	Jump near, relative, displacement relative to next instruction.
+        __cmd jmp_rel32 (0xe9, 1);      // E9 cd	JMP rel32	Jump near, relative, displacement relative to next instruction.
         __cmd jmp_rm16 (0xff20, 1);     // FF /4	JMP r/m16	Jump near, absolute indirect, address given in r/m16.
         __cmd jmp_rm32 (0xff20, 1);     // FF /4	JMP r/m32	Jump near, absolute indirect, address given in r/m32.
-        __cmd jmp_ptr16_16 (0xea, 1);     // EA cd	JMP ptr16:16	Jump far, absolute, address given in operand.
-        __cmd jmp_ptr16_32 (0xea, 1);     // EA cp	JMP ptr16:32	Jump far, absolute, address given in operand.
-        __cmd jmp_m16_16 (0xff28, 1);     // FF /5	JMP m16:16	Jump far, absolute indirect, address given in m16:16.
-        __cmd jmp_m16_32 (0xff28, 1);     // FF /5	JMP m16:32	Jump far, absolute indirect, address given in m16:32.
+        __cmd jmp_ptr16_16 (0xea, 1);   // EA cd	JMP ptr16:16	Jump far, absolute, address given in operand.
+        __cmd jmp_ptr16_32 (0xea, 1);   // EA cp	JMP ptr16:32	Jump far, absolute, address given in operand.
+        __cmd jmp_m16_16 (0xff28, 1);   // FF /5	JMP m16:16	Jump far, absolute indirect, address given in m16:16.
+        __cmd jmp_m16_32 (0xff28, 1);   // FF /5	JMP m16:32	Jump far, absolute indirect, address given in m16:32.
     }
     // [RET]----------------------------------------------------------------------------------------------------------------
     namespace ret {

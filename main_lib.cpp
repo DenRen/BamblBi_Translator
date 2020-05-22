@@ -105,14 +105,15 @@ __line *SplitLines (char *lines, __uint32_t *num_lines, __int64_t size_buf) {
 
     // ????????? ??????. ????? ??????, ?????????? ????? ?? ?????? realloc - ??
     __uint32_t countLineBreak = countSymb (lines, '\n', size_buf);
-    __line *prim_buf = (__line *) calloc (countLineBreak, sizeof (__line));
+    __line *prim_buf = (__line *) calloc (countLineBreak + 1, sizeof (__line));
 
     __uint32_t _num_lines = 0;
 
     do {
         while (isspace (*lines))                // ?????????? ???????
             lines++;
-        if (*lines == '\0') break;              // ?????? ????????? ??????
+        if (*lines == '\0')
+            break;              // ?????? ????????? ??????
 
         prim_buf[_num_lines].string = lines;    // ????????? ?????? ???????
 
@@ -121,9 +122,10 @@ __line *SplitLines (char *lines, __uint32_t *num_lines, __int64_t size_buf) {
                                                 // ???????? ????? ???????
         prim_buf[_num_lines].size = lines - prim_buf[_num_lines].string;
 
-        _num_lines++;
+        if (*lines == '\0')
+            break;              // ?????? ????????? ??????
 
-        if (*lines == '\0') break;              // ?????? ????????? ??????
+        _num_lines++;
 
         *lines++ = '\0';                        // ????? ?? ???????
 
@@ -134,6 +136,7 @@ __line *SplitLines (char *lines, __uint32_t *num_lines, __int64_t size_buf) {
 
     // ?????? ????? ?????? realloc (prim_buf, sizeof (__line) * _num_lines);
     // ??-?? ????, ??? realloc ?? ????? ??????????, ? ?????? ?????? ??????
+
     prim_buf = (__line *) realloc (prim_buf, sizeof (__line) * _num_lines);
 
     *num_lines = _num_lines;
@@ -210,9 +213,29 @@ __word *getWordsFromLine (char *line, __uint8_t *quantity_words) {
 
             if (word_on == false && string_on == false) {
 
-                words[num_words].word = cur_word;
-                word_on = true;
+                if (*cur_word == '[' || *cur_word == ']') {
 
+                    words[num_words].word = cur_word;
+                    words[num_words++].len = 1;
+
+                } else {
+
+                    words[num_words].word = cur_word;
+                    word_on = true;
+
+                }
+
+
+            } else if (word_on) {
+                if (*cur_word == '[' || *cur_word == ']') {
+
+                    words[num_words].len = cur_word - words[num_words].word;
+                    num_words++;
+
+                    words[num_words].word = cur_word;
+                    words[num_words++].len = 1;
+                    word_on = false;
+                }
             }
 
             cur_word++;
@@ -235,5 +258,18 @@ __word *getWordsFromLine (char *line, __uint8_t *quantity_words) {
     return (__word *) realloc (words, num_words * sizeof (__word));
 }
 
+__int32_t str2num (char *str, int len) {
+    assert (str != nullptr);
 
+    int sign = 1;
+    if (*str == '-') {
+        sign = -1;
+        str++;
+    }
+    __int32_t number = 0;
+    for (; *str != '\0' && len ; str++, len--)
+        number = number * 10 + *str - '0';
+
+    return sign * number;
+}
 #undef MAX_WORDS_IN_LINE

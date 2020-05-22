@@ -1,8 +1,11 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cctype>
+#include <cassert>
 #include "main_lib.h"
 #include "ASM_Lib/Translate.h"
+
+
 
 int main () {
 

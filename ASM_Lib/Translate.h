@@ -11,7 +11,6 @@
 enum type_arg {
     arg_empty,
     arg_reg,
-    arg_exreg, // r8, r9, ...
     arg_sreg,
     arg_mem,
     arg_imm,
@@ -19,18 +18,38 @@ enum type_arg {
 };
 
 struct arg_t {
-    int type;
-    __int64_t arg;
-    int sparseness;
+    bool mem = false;
+    __int32_t val[3]  = {0, 0 ,0};
+    int sparseness[3] = {0, 0, 0};
+
+    //                REG1    REG2   Num
+    bool val_on[3] = {false, false, false};
 };
 
-int Translate (SourceCodeNasm code);
+enum proces {
+    cp, cpp
+};
+
+struct instuction_t {
+    int proces      = 0;
+    int command     = 0;
+    int extra_cmd   = 0;
+    int sparseness  = 0;
+
+    int num_args    = 0;
+    arg_t *args     = nullptr;
+};
+
+const int num_extra_cmd = 4;
+extern char extra_cmd[num_extra_cmd][10];
+
+int Translate (SourceCodeNasm &code);
 
 char *tolower (char *str);
 
 inline bool isnumber (char symb);
 
-__word createComand (__uint8_t command, arg_t *args, int quant_args);
+__word createComand (instuction_t instr);
 
 struct  _cmd_t {
     __uint8_t   LegPref = 0;
@@ -52,6 +71,6 @@ struct  _cmd_t {
     __word buildMC (int sizeDisp = 0, int sizeImm = 0);
 };
 
-__word genCmd (opcode::__cmd command, arg_t *args, int quant_args);
+__word genCmd (opcode::__cmd command, instuction_t instr);
 
 #endif //BAMBLBI_TRANSLATOR_TRANSLATE_H

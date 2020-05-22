@@ -17,13 +17,20 @@ SourceCodeNasm::SourceCodeNasm (const char *path_nasm_file) :
     __line *lines = SplitLines (buf_asm_code, &number_lines, size_buf);
 
     lines_code = getWordsFromLines (lines, number_lines);   // Words from lines
+
+
     free (lines);
 
 }
 
 SourceCodeNasm::~SourceCodeNasm () {
-    for (int i = 0; i < number_lines; i++)
+    for (int i = 0; i < number_lines - 1; i++) {
+        __word *t = lines_code[i].words;
         free (lines_code[i].words);
+    }
+
+    if (lines_code[number_lines - 1].words != nullptr)
+        free (lines_code[number_lines - 1].words);
 
     free (lines_code);
     free (buf_asm_code);
