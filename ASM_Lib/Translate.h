@@ -38,6 +38,8 @@ struct instuction_t {
 
     int num_args    = 0;
     arg_t *args     = nullptr;
+
+    void dump ();
 };
 
 const int num_extra_cmd = 4;
@@ -52,19 +54,22 @@ inline bool isnumber (char symb);
 __word createComand (instuction_t instr);
 
 struct  _cmd_t {
-    __uint8_t   LegPref = 0;
-    __uint8_t   REXPref = 0;
-    __uint8_t   ModR_M  = 0;
-    __uint8_t   SIB     = 0;
-    __int32_t   Disp    = 0;
-    __int32_t   Imm     = 0;
+    __uint8_t LegPref  = 0;
+    __uint8_t REXPref  = 0;
+    __uint8_t ModR_M   = 0;
+    __uint8_t SIB      = 0;
+    __int32_t Disp     = 0;
+    __int32_t Imm      = 0;
 
-    bool LegPref_On = false;
-    bool REXPref_On = false;
-    bool ModR_M_On  = false;
-    bool SIB_On     = false;
-    bool Disp_On    = false;
-    bool Imm_On     = false;
+    __uint8_t sizeImm  = 0;    // In bytes
+    __uint8_t sizeDisp = 0;    // In bytes
+
+    bool LegPref_On    = false;
+    bool REXPref_On    = false;
+    bool ModR_M_On     = false;
+    bool SIB_On        = false;
+    bool Disp_On       = false;
+    bool Imm_On        = false;
 
     opcode::__cmd Opcode;
     __uint8_t getSize (int sizeDisp = 0, int sizeImm = 0);

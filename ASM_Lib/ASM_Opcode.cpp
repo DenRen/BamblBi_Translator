@@ -165,82 +165,82 @@ namespace opcode {
     }
     // [Jcc]----------------------------------------------------------------------------------------------------------------
     namespace jcc {
-        __cmd ja_s (0x77, 1);           // 77 cb	JA rel8	J   ump short if above (CF=0 and ZF=0)
-        __cmd jae_s (0x73, 1);          // 73 cb	JAE rel8	Jump short if above or equal (CF=0)
-        __cmd jb_s (0x72, 1);           // 72 cb	JB rel8	    Jump short if below (CF=1)
-        __cmd jbe_s (0x76, 1);          // 76 cb	JBE rel8	Jump short if below or equal (CF=1 or ZF=1)
-        __cmd jc_s (0x72, 1);           // 72 cb	JC rel8	    Jump short if carry (CF=1)
-        __cmd jcxz_s (0xe3, 1);         // E3 cb	JCXZ rel8	Jump short if CX register is 0
-        __cmd jecxz_s (0xe3, 1);        // E3 cb	JECXZ rel8	Jump short if ECX register is 0
-        __cmd je_s (0x74, 1);           // 74 cb	JE rel8	    Jump short if equal (ZF=1)
-        __cmd jg_s (0x7f, 1);           // 7F cb	JG rel8	    Jump short if greater (ZF=0 and SF=OF)
-        __cmd jge_s (0x7d, 1);          // 7D cb	JGE rel8	Jump short if greater or equal (SF=OF)
-        __cmd jl_s (0x7c, 1);           // 7C cb	JL rel8	    Jump short if less (SF<>OF)
-        __cmd jle_s (0x7e, 1);          // 7E cb	JLE rel8	Jump short if less or equal (ZF=1 or SF<>OF)
-        __cmd jna_s (0x76, 1);          // 76 cb	JNA rel8	Jump short if not above (CF=1 or ZF=1)
-        __cmd jnae_s (0x72, 1);         // 72 cb	JNAE rel8	Jump short if not above or equal (CF=1)
-        __cmd jnb_s (0x73, 1);          // 73 cb	JNB rel8	Jump short if not below (CF=0)
-        __cmd jnbe_s (0x77, 1);         // 77 cb	JNBE rel8	Jump short if not below or equal (CF=0 and ZF=0)
-        __cmd jnc_s (0x73, 1);          // 73 cb	JNC rel8	Jump short if not carry (CF=0).
-        __cmd jne_s (0x75, 1);          // 75 cb	JNE rel8	Jump short if not equal (ZF=0)
-        __cmd jng_s (0x7e, 1);          // 7E cb	JNG rel8	Jump short if not greater (ZF=1 or SF<>OF)
-        __cmd jnge_s (0x7c, 1);         // 7C cb	JNGE rel8	Jump short if not greater or equal (SF<>OF)
-        __cmd jnl_s (0x7d, 1);          // 7D cb	JNL rel8	Jump short if not less (SF=OF)
-        __cmd jnle_s (0x7f, 1);         // 7F cb	JNLE rel8	Jump short if not less or equal (ZF=0 and SF=OF)
-        __cmd jno_s (0x71, 1);          // 71 cb	JNO rel8	Jump short if not overflow (OF=0)
-        __cmd jnp_s (0x7b, 1);          // 7B cb	JNP rel8	Jump short if not parity (PF=0)
-        __cmd jns_s (0x79, 1);          // 79 cb	JNS rel8	Jump short if not sign (SF=0)
-        __cmd jnz_s (0x75, 1);          // 75 cb	JNZ rel8	Jump short if not zero (ZF=0)
-        __cmd jo_s (0x70, 1);           // 70 cb	JO rel8	    Jump short if overflow (OF=1)
-        __cmd jp_s (0x7a, 1);           // 7A cb	JP rel8	    Jump short if parity (PF=1)
-        __cmd jpe_s (0x7a, 1);          // 7A cb	JPE rel8	Jump short if parity even (PF=1)
-        __cmd jpo_s (0x7b, 1);          // 7B cb	JPO rel8	Jump short if parity odd (PF=0)
-        __cmd js_s (0x78, 1);           // 78 cb	JS rel8	    Jump short if sign (SF=1).0
-        __cmd jz_s (0x74, 1);           // 74 cb	JZ rel8	    Jump short if zero (ZF = 1)
+        __cmd ja_s    (0x77, 1);    // 77 cb	JA rel8	            Jump short if above (CF=0 and ZF=0)
+        __cmd jae_s   (0x73, 1);    // 73 cb	JAE rel8	        Jump short if above or equal (CF=0)
+        __cmd jb_s    (0x72, 1);    // 72 cb	JB rel8	            Jump short if below (CF=1)
+        __cmd jbe_s   (0x76, 1);    // 76 cb	JBE rel8	        Jump short if below or equal (CF=1 or ZF=1)
+        __cmd jc_s    (0x72, 1);    // 72 cb	JC rel8	            Jump short if carry (CF=1)
+        __cmd jcxz_s  (0xe3, 1);    // E3 cb	JCXZ rel8	        Jump short if CX register is 0
+        __cmd jecxz_s (0xe3, 1);    // E3 cb	JECXZ rel8	        Jump short if ECX register is 0
+        __cmd je_s    (0x74, 1);    // 74 cb	JE rel8	            Jump short if equal (ZF=1)
+        __cmd jg_s    (0x7f, 1);    // 7F cb	JG rel8	            Jump short if greater (ZF=0 and SF=OF)
+        __cmd jge_s   (0x7d, 1);    // 7D cb	JGE rel8	        Jump short if greater or equal (SF=OF)
+        __cmd jl_s    (0x7c, 1);    // 7C cb	JL rel8	            Jump short if less (SF<>OF)
+        __cmd jle_s   (0x7e, 1);    // 7E cb	JLE rel8	        Jump short if less or equal (ZF=1 or SF<>OF)
+        __cmd jna_s   (0x76, 1);    // 76 cb	JNA rel8	        Jump short if not above (CF=1 or ZF=1)
+        __cmd jnae_s  (0x72, 1);    // 72 cb	JNAE rel8	        Jump short if not above or equal (CF=1)
+        __cmd jnb_s   (0x73, 1);    // 73 cb	JNB rel8	        Jump short if not below (CF=0)
+        __cmd jnbe_s  (0x77, 1);    // 77 cb	JNBE rel8	        Jump short if not below or equal (CF=0 and ZF=0)
+        __cmd jnc_s   (0x73, 1);    // 73 cb	JNC rel8	        Jump short if not carry (CF=0).
+        __cmd jne_s   (0x75, 1);    // 75 cb	JNE rel8	        Jump short if not equal (ZF=0)
+        __cmd jng_s   (0x7e, 1);    // 7E cb	JNG rel8	        Jump short if not greater (ZF=1 or SF<>OF)
+        __cmd jnge_s  (0x7c, 1);    // 7C cb	JNGE rel8	        Jump short if not greater or equal (SF<>OF)
+        __cmd jnl_s   (0x7d, 1);    // 7D cb	JNL rel8	        Jump short if not less (SF=OF)
+        __cmd jnle_s  (0x7f, 1);    // 7F cb	JNLE rel8	        Jump short if not less or equal (ZF=0 and SF=OF)
+        __cmd jno_s   (0x71, 1);    // 71 cb	JNO rel8	        Jump short if not overflow (OF=0)
+        __cmd jnp_s   (0x7b, 1);    // 7B cb	JNP rel8	        Jump short if not parity (PF=0)
+        __cmd jns_s   (0x79, 1);    // 79 cb	JNS rel8	        Jump short if not sign (SF=0)
+        __cmd jnz_s   (0x75, 1);    // 75 cb	JNZ rel8	        Jump short if not zero (ZF=0)
+        __cmd jo_s    (0x70, 1);    // 70 cb	JO rel8	            Jump short if overflow (OF=1)
+        __cmd jp_s    (0x7a, 1);    // 7A cb	JP rel8	            Jump short if parity (PF=1)
+        __cmd jpe_s   (0x7a, 1);    // 7A cb	JPE rel8	        Jump short if parity even (PF=1)
+        __cmd jpo_s   (0x7b, 1);    // 7B cb	JPO rel8	        Jump short if parity odd (PF=0)
+        __cmd js_s    (0x78, 1);    // 78 cb	JS rel8	            Jump short if sign (SF=1).0
+        __cmd jz_s    (0x74, 1);    // 74 cb	JZ rel8	            Jump short if zero (ZF = 1)
 
-        __cmd ja_n (0x0f87, 2);      // 0F 87 cw/cd	JA rel16/32	    Jump near if above (CF=0 and ZF=0)
-        __cmd jae (0x0f83, 2);      // 0F 83 cw/cd	JAE rel16/32	Jump near if above or equal (CF=0)
-        __cmd jb_n (0x0f82, 2);      // 0F 82 cw/cd	JB rel16/32	    Jump near if below (CF=1)
-        __cmd jbe_n (0x0f86, 2);      // 0F 86 cw/cd	JBE rel16/32	Jump near if below or equal (CF=1 or ZF=1)
-        __cmd jc_n (0x0f82, 2);      // 0F 82 cw/cd	JC rel16/32	    Jump near if carry (CF=1)
-        __cmd jcxz_n (0x0f84, 2);      // 0F 84 cw/cd	JE rel16/32	    Jump near if equal (ZF=1)
-        __cmd jecxz_n (0x0f84, 2);      // 0F 84 cw/cd	JZ rel16/32	    Jump near if 0 (ZF=1)
-        __cmd je_n (0x0f8f, 2);      // 0F 8F cw/cd	JG rel16/32	    Jump near if greater (ZF=0 and SF=OF)
-        __cmd jg_n (0x0f8d, 2);      // 0F 8D cw/cd	JGE rel16/32	Jump near if greater or equal (SF=OF)
-        __cmd jge_n (0x0f8c, 2);      // 0F 8C cw/cd	JL rel16/32	    Jump near if less (SF<>OF)
-        __cmd jl_n (0x0f8e, 2);      // 0F 8E cw/cd	JLE rel16/32	Jump near if less or equal (ZF=1 or SF<>OF)
-        __cmd jle_n (0x0f86, 2);      // 0F 86 cw/cd	JNA rel16/32	Jump near if not above (CF=1 or ZF=1)
-        __cmd jna_n (0x0f82, 2);      // 0F 82 cw/cd	JNAE rel16/32	Jump near if not above or equal (CF=1)
-        __cmd jnae_n (0x0f83, 2);      // 0F 83 cw/cd	JNB rel16/32	Jump near if not below (CF=0)
-        __cmd jnb_n (0x0f87, 2);      // 0F 87 cw/cd	JNBE rel16/32	Jump near if not below or equal (CF=0 and ZF=0)
-        __cmd jnbe_n (0x0f83, 2);      // 0F 83 cw/cd	JNC rel16/32	Jump near if not carry (CF=0)
-        __cmd jnc_n (0x0f85, 2);      // 0F 85 cw/cd	JNE rel16/32	Jump near if not equal (ZF=0)
-        __cmd jne_n (0x0f8e, 2);      // 0F 8E cw/cd	JNG rel16/32	Jump near if not greater (ZF=1 or SF<>OF)
-        __cmd jng_n (0x0f8c, 2);      // 0F 8C cw/cd	JNGE rel16/32	Jump near if not greater or equal (SF<>OF)
-        __cmd jnge_n (0x0f8d, 2);      // 0F 8D cw/cd	JNL rel16/32	Jump near if not less (SF=OF)
-        __cmd jnl_n (0x0f8f, 2);      // 0F 8F cw/cd	JNLE rel16/32	Jump near if not less or equal (ZF=0 and SF=OF)
-        __cmd jnle_n (0x0f81, 2);      // 0F 81 cw/cd	JNO rel16/32	Jump near if not overflow (OF=0)
-        __cmd jno_n (0x0f8b, 2);      // 0F 8B cw/cd	JNP rel16/32	Jump near if not parity (PF=0)
-        __cmd jnp_n (0x0f89, 2);      // 0F 89 cw/cd	JNS rel16/32	Jump near if not sign (SF=0)
-        __cmd jns_n (0x0f85, 2);      // 0F 85 cw/cd	JNZ rel16/32	Jump near if not zero (ZF=0)
-        __cmd jnz_n (0x0f80, 2);      // 0F 80 cw/cd	JO rel16/32	    Jump near if overflow (OF=1)
-        __cmd jo_n (0x0f8a, 2);      // 0F 8A cw/cd	JP rel16/32	    Jump near if parity (PF=1)
-        __cmd jp_n (0x0f8a, 2);      // 0F 8A cw/cd	JPE rel16/32	Jump near if parity even (PF=1)
-        __cmd jpe_n (0x0f8b, 2);      // 0F 8B cw/cd	JPO rel16/32	Jump near if parity odd (PF=0)
-        __cmd jpo_n (0x0f88, 2);      // 0F 88 cw/cd	JS rel16/32	    Jump near if sign (SF=1)
-        __cmd js_n (0x0f84, 2);      // 0F 84 cw/cd	JZ rel16/32	    Jump near if 0 (ZF=1)
+        __cmd ja_n    (0x0f87, 2);  // 0F 87 cw/cd	JA rel16/32	    Jump near if above (CF=0 and ZF=0)
+        __cmd jae     (0x0f83, 2);  // 0F 83 cw/cd	JAE rel16/32	Jump near if above or equal (CF=0)
+        __cmd jb_n    (0x0f82, 2);  // 0F 82 cw/cd	JB rel16/32	    Jump near if below (CF=1)
+        __cmd jbe_n   (0x0f86, 2);  // 0F 86 cw/cd	JBE rel16/32	Jump near if below or equal (CF=1 or ZF=1)
+        __cmd jc_n    (0x0f82, 2);  // 0F 82 cw/cd	JC rel16/32	    Jump near if carry (CF=1)
+        __cmd jcxz_n  (0x0f84, 2);  // 0F 84 cw/cd	JE rel16/32	    Jump near if equal (ZF=1)
+        __cmd jecxz_n (0x0f84, 2);  // 0F 84 cw/cd	JZ rel16/32	    Jump near if 0 (ZF=1)
+        __cmd je_n    (0x0f8f, 2);  // 0F 8F cw/cd	JG rel16/32	    Jump near if greater (ZF=0 and SF=OF)
+        __cmd jg_n    (0x0f8d, 2);  // 0F 8D cw/cd	JGE rel16/32	Jump near if greater or equal (SF=OF)
+        __cmd jge_n   (0x0f8c, 2);  // 0F 8C cw/cd	JL rel16/32	    Jump near if less (SF<>OF)
+        __cmd jl_n    (0x0f8e, 2);  // 0F 8E cw/cd	JLE rel16/32	Jump near if less or equal (ZF=1 or SF<>OF)
+        __cmd jle_n   (0x0f86, 2);  // 0F 86 cw/cd	JNA rel16/32	Jump near if not above (CF=1 or ZF=1)
+        __cmd jna_n   (0x0f82, 2);  // 0F 82 cw/cd	JNAE rel16/32	Jump near if not above or equal (CF=1)
+        __cmd jnae_n  (0x0f83, 2);  // 0F 83 cw/cd	JNB rel16/32	Jump near if not below (CF=0)
+        __cmd jnb_n   (0x0f87, 2);  // 0F 87 cw/cd	JNBE rel16/32	Jump near if not below or equal (CF=0 and ZF=0)
+        __cmd jnbe_n  (0x0f83, 2);  // 0F 83 cw/cd	JNC rel16/32	Jump near if not carry (CF=0)
+        __cmd jnc_n   (0x0f85, 2);  // 0F 85 cw/cd	JNE rel16/32	Jump near if not equal (ZF=0)
+        __cmd jne_n   (0x0f8e, 2);  // 0F 8E cw/cd	JNG rel16/32	Jump near if not greater (ZF=1 or SF<>OF)
+        __cmd jng_n   (0x0f8c, 2);  // 0F 8C cw/cd	JNGE rel16/32	Jump near if not greater or equal (SF<>OF)
+        __cmd jnge_n  (0x0f8d, 2);  // 0F 8D cw/cd	JNL rel16/32	Jump near if not less (SF=OF)
+        __cmd jnl_n   (0x0f8f, 2);  // 0F 8F cw/cd	JNLE rel16/32	Jump near if not less or equal (ZF=0 and SF=OF)
+        __cmd jnle_n  (0x0f81, 2);  // 0F 81 cw/cd	JNO rel16/32	Jump near if not overflow (OF=0)
+        __cmd jno_n   (0x0f8b, 2);  // 0F 8B cw/cd	JNP rel16/32	Jump near if not parity (PF=0)
+        __cmd jnp_n   (0x0f89, 2);  // 0F 89 cw/cd	JNS rel16/32	Jump near if not sign (SF=0)
+        __cmd jns_n   (0x0f85, 2);  // 0F 85 cw/cd	JNZ rel16/32	Jump near if not zero (ZF=0)
+        __cmd jnz_n   (0x0f80, 2);  // 0F 80 cw/cd	JO rel16/32	    Jump near if overflow (OF=1)
+        __cmd jo_n    (0x0f8a, 2);  // 0F 8A cw/cd	JP rel16/32	    Jump near if parity (PF=1)
+        __cmd jp_n    (0x0f8a, 2);  // 0F 8A cw/cd	JPE rel16/32	Jump near if parity even (PF=1)
+        __cmd jpe_n   (0x0f8b, 2);  // 0F 8B cw/cd	JPO rel16/32	Jump near if parity odd (PF=0)
+        __cmd jpo_n   (0x0f88, 2);  // 0F 88 cw/cd	JS rel16/32	    Jump near if sign (SF=1)
+        __cmd js_n    (0x0f84, 2);  // 0F 84 cw/cd	JZ rel16/32	    Jump near if 0 (ZF=1)
     }
     // [JMP]----------------------------------------------------------------------------------------------------------------
     namespace jmp {
-        __cmd jmp_rel8 (0xeb, 1);       // EB cb	JMP rel8	Jump short, relative, displacement relative to next instruction.
-        __cmd jmp_rel16 (0xe9, 1);      // E9 cw	JMP rel16	Jump near, relative, displacement relative to next instruction.
-        __cmd jmp_rel32 (0xe9, 1);      // E9 cd	JMP rel32	Jump near, relative, displacement relative to next instruction.
-        __cmd jmp_rm16 (0xff20, 1);     // FF /4	JMP r/m16	Jump near, absolute indirect, address given in r/m16.
-        __cmd jmp_rm32 (0xff20, 1);     // FF /4	JMP r/m32	Jump near, absolute indirect, address given in r/m32.
+        __cmd jmp_rel8     (0xeb, 1);   // EB cb	JMP rel8	Jump short, relative, displacement relative to next instruction.
+        __cmd jmp_rel16    (0xe9, 1);   // E9 cw	JMP rel16	Jump near, relative, displacement relative to next instruction.
+        __cmd jmp_rel32    (0xe9, 1);   // E9 cd	JMP rel32	Jump near, relative, displacement relative to next instruction.
+        __cmd jmp_rm16     (0xff20, 1); // FF /4	JMP r/m16	Jump near, absolute indirect, address given in r/m16.
+        __cmd jmp_rm32     (0xff20, 1); // FF /4	JMP r/m32	Jump near, absolute indirect, address given in r/m32.
         __cmd jmp_ptr16_16 (0xea, 1);   // EA cd	JMP ptr16:16	Jump far, absolute, address given in operand.
         __cmd jmp_ptr16_32 (0xea, 1);   // EA cp	JMP ptr16:32	Jump far, absolute, address given in operand.
-        __cmd jmp_m16_16 (0xff28, 1);   // FF /5	JMP m16:16	Jump far, absolute indirect, address given in m16:16.
-        __cmd jmp_m16_32 (0xff28, 1);   // FF /5	JMP m16:32	Jump far, absolute indirect, address given in m16:32.
+        __cmd jmp_m16_16   (0xff28, 1); // FF /5	JMP m16:16	Jump far, absolute indirect, address given in m16:16.
+        __cmd jmp_m16_32   (0xff28, 1); // FF /5	JMP m16:32	Jump far, absolute indirect, address given in m16:32.
     }
     // [RET]----------------------------------------------------------------------------------------------------------------
     namespace ret {

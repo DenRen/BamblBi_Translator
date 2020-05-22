@@ -12,6 +12,7 @@
 #include "ASM_Prefixes.h"
 #include "ASM_ModR_M.h"
 #include "../main_lib.h"
+#include "ASM_SIB.h"
 
 char extra_cmd[num_extra_cmd][10] = {
         "byte", "word", "dword", "qword"
@@ -43,7 +44,6 @@ int getSparseness (__int32_t number) {
     else
         return 64;
 }
-
 
 // Correct: mov [rax rcx -89], 164
 int Translate (SourceCodeNasm &code) {
@@ -120,8 +120,8 @@ int Translate (SourceCodeNasm &code) {
                     _ARG.val[2] = number;
 
                     int temp_spr = getSparseness (number);
-                    if (instr.sparseness < temp_spr)
-                        instr.sparseness = temp_spr;
+                    if (_ARG.sparseness[2] < temp_spr)
+                        _ARG.sparseness[2] = temp_spr;
 
                     if (_ARG.mem == false)  // For example: mov rax, 156
                         break;
@@ -159,6 +159,8 @@ int Translate (SourceCodeNasm &code) {
                 }
             }
 
+            instr.dump ();
+
             __word MC_cmd = createComand (instr);
 
             if (MC_cmd.word != nullptr) {
@@ -171,8 +173,12 @@ int Translate (SourceCodeNasm &code) {
     return 0;
 }
 
-#define _MR (instr.args[0].mem && instr.args[1].val_on[0])
-#define _RR (!instr.args[0].mem && instr.args[0].val_on[0] && instr.args[1].val_on[0])
+#define _first  instr.args[0]
+#define _second instr.args[1]
+#define _third  instr.args[2]
+
+#define _MR (_first.mem && _second.val_on[0])
+#define _RR (!_first.mem && _first.val_on[0] && _second.val_on[0])
 
 __word createComand (instuction_t instr) {
     switch (instr.command) {
@@ -184,10 +190,16 @@ __word createComand (instuction_t instr) {
                     return genCmd (opcode::mov::movrm8_r8, instr);
                 else
                     return genCmd (opcode::mov::movrm64_r64, instr);
+            } else if (_RR || _MR) {
+                if (instr.sparseness == 8)
+                    return genCmd (opcode::mov::movr8_rm8, instr);
+                else
+                    return genCmd (opcode::mov::movr64_rm64, instr);
             }
 
             break;
         case opcode::_cmds::ADD:
+
             break;
         case opcode::_cmds::SUB:
 
@@ -211,12 +223,13 @@ __word createComand (instuction_t instr) {
 }
 
 __uint8_t _cmd_t::getSize (int sizeDisp, int sizeImm) {
-    return (LegPref != 0) +
-           (REXPref != 0) +
-           (Opcode.size ) +
-           (ModR_M  != 0) +
-           (SIB     != 0) +
-           sizeDisp + sizeImm;
+    return (LegPref_On) * LegPref       +
+           (REXPref_On) * REXPref       +
+           (ModR_M_On ) * ModR_M        +
+           (SIB_On    ) * SIB           +
+           (Disp_On   ) * Disp          +
+           (Imm_On    ) * Imm           +
+           (true)       * Opcode.size;
 }
 
 __word _cmd_t::buildMC (int sizeDisp, int sizeImm) {
@@ -291,48 +304,123 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
     if (instr.args != nullptr) {
 
         // Legacy and REX prefixes
-        if (instr.args[0].sparseness[0] == 16) {
+        if (_first.sparseness[0] == 16) {
 
             cmd.LegPref = _p66h;
             cmd.LegPref_On = true;
 
-        } else if (instr.args[0].sparseness[0] > 16) {
+        } else if (_first.sparseness[0] > 16) {
 
             cmd.REXPref_On = true;
             cmd.REXPref = _REX (_w);
 
-            if (instr.args[0].sparseness[0] == 65) cmd.REXPref |= _REX (_b);
+            if (_first.sparseness[0] == 65) cmd.REXPref |= _REX (_b);
 
             if (instr.num_args > 1)
 
-                if (instr.args[1].sparseness[0] == 65) cmd.REXPref |= _REX (_r);
+                if (_second.sparseness[0] == 65) cmd.REXPref |= _REX (_r);
 
         }
 
         // ModR/M & SIB & Imm
-        if (instr.args[0].mem == false) {       // First: register
-            if (instr.num_args == 1)            // inc rax
+        if (_first.mem == false) {
 
-                cmd.ModR_M = ModR_M (mrm::reg, 0, reg::reg[instr.args[0].val[0]]);
+            if (_first.val_on[0]) {                     // First: register
+                if (instr.num_args == 1)                // inc rax
 
-            else if (instr.num_args == 2)       // mov rax, rbx; mov rax, 231
+                    cmd.ModR_M = ModR_M (mrm::reg, 0, reg::reg[_first.val[0]]);
 
-                if (instr.args[1].val_on[0])    // Second: register
-                    cmd.ModR_M = ModR_M (mrm::reg, reg::reg[instr.args[1].val[0]], reg::reg[instr.args[0].val[0]]);
-                else {                           // Imm
-                    cmd.ModR_M = ModR_M (mrm::reg, 0, reg::reg[instr.args[0].val[0]]);
-                    cmd.Imm = instr.args[1].val[2];
+                else if (instr.num_args == 2)           // mov rax, rbx; mov rax, 231
+
+                    if (_second.val_on[0])              // Second: register
+
+                        cmd.ModR_M = ModR_M (mrm::reg, reg::reg[_second.val[0]], reg::reg[_first.val[0]]);
+
+                    else {                              // Imm
+
+                        cmd.ModR_M = ModR_M (mrm::reg, 0, reg::reg[_first.val[0]]);
+                        cmd.Imm = _second.val[2];
+                        cmd.sizeImm = _second.sparseness[2];
+                        cmd.Imm_On = true;
+
+                    }
+                else if (instr.num_args == 3) {     // mul rdx, rax, 4
+
+                    cmd.ModR_M = ModR_M (mrm::reg, reg::reg[_second.val[0]], reg::reg[_first.val[0]]);
+                    cmd.Imm = _third.val[2];
+                    cmd.sizeImm = _second.sparseness[2];
                     cmd.Imm_On = true;
-                }
-            else if (instr.num_args == 3) {       // mul rdx, rax, 4
-                cmd.ModR_M = ModR_M (mrm::reg, reg::reg[instr.args[1].val[0]], reg::reg[instr.args[0].val[0]]);
-                cmd.Imm = instr.args[2].val[2];
-                cmd.Imm_On = true;
-            }
-            else
-                assert (0);
 
-            cmd.ModR_M_On = true;
+                }
+                else
+                    assert (0);
+
+                cmd.ModR_M_On = true;
+            } else {                                        // First Imm
+
+                cmd.Imm = _first.val[2];
+                cmd.sizeImm = _first.sparseness[2];
+                cmd.Imm_On = true;
+
+            }
+
+        } else {                                            // First memory
+            int mod = 0;
+
+            if (_first.val_on[0] && _first.val_on[1]) {     // [ reg reg ...
+
+                if (_first.val_on[2]) {                     // [ reg reg number]
+
+                    cmd.Disp = _first.val[2];
+                    cmd.Disp_On = true;
+                    cmd.sizeDisp = _first.sparseness[2];
+
+                    if (_first.sparseness[2] == 8)  mod = mrm::mod::disp8;
+                    else                            mod = mrm::mod::disp32;
+
+                } else                              mod = mrm::mod::disp0;  // [ reg reg ]
+
+                cmd.ModR_M = ModR_M (mod, _second.val[0], _first.val[0]);
+                cmd.ModR_M_On = true;
+
+                cmd.SIB = _SIB (0, _first.val[0], _first.val[1]);
+                cmd.SIB_On = true;
+
+            } else if (_first.val_on[0]) {              // [ reg ...
+
+                if (_first.val[0] != reg::sp) {         // sp == esp == rsp
+
+                    if (_first.val_on[2]) {             // [ reg num ]
+
+                        if (_first.sparseness[2] == 8) mod = mrm::mod::disp8;
+                        else                           mod = mrm::mod::disp32;
+
+                        cmd.Disp = _first.val[2];
+                        cmd.sizeDisp = _first.sparseness[2];
+                        cmd.Disp_On = true;
+
+                        cmd.ModR_M = ModR_M (mod, 0, _first.val[0]);
+                        cmd.ModR_M_On = true;
+
+                    } else {                            // [ reg ]
+
+                        if (_first.val[2] != reg::bp)
+
+                            mod = mrm::mod::disp0;
+
+                        else {
+
+                            mod = mrm::mod::disp8;
+                            cmd.Disp = 0;
+                            cmd.Disp_On = true;
+
+                        }
+
+                        cmd.ModR_M = ModR_M (mod, 0, _first.val[0]);
+                        cmd.ModR_M_On = true;
+                    }
+                }
+            }
         }
 /*
         //
@@ -352,4 +440,27 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
     }
 
     return {0, nullptr};
+}
+
+void instuction_t::dump () {
+    printf ("\n"
+            "proces:      %d\n"
+            "command:     %d\n"
+            "extra_cmd:   %d\n"
+            "sparseness:  %d\n"
+            "num_args:    %d\n",
+            proces, command,
+            extra_cmd, sparseness,
+            num_args);
+
+    for (int i = 0; i < num_args; i++) {
+
+        printf ("\n%d) mem = %d\n\n", i, args[i].mem);
+        printf ("val:    %d\t%d\t%d\n", args[i].val[0], args[i].val[1], args[i].val[2]);
+        printf ("sprs:   %d\t%d\t%d\n", args[i].sparseness[0], args[i].sparseness[1], args[i].sparseness[2]);
+        printf ("val_on: %d\t%d\t%d\n", args[i].val_on[0], args[i].val_on[1], args[i].val_on[2]);
+
+    }
+
+    printf ("\n");
 }

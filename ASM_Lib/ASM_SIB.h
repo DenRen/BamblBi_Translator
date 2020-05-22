@@ -21,7 +21,7 @@
 
  */
 
-__uint8_t _sib (__uint8_t Scale, reg Index, reg Base) {
+__uint8_t _SIB (__uint8_t Scale, __uint8_t Index, __uint8_t Base) {
     assert (Scale < 4);
     assert (Index < 8);
     assert (Base  < 8);

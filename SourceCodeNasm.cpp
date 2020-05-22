@@ -18,7 +18,6 @@ SourceCodeNasm::SourceCodeNasm (const char *path_nasm_file) :
 
     lines_code = getWordsFromLines (lines, number_lines);   // Words from lines
 
-
     free (lines);
 
 }
