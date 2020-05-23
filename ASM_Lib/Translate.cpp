@@ -322,8 +322,63 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
 
         }
 
+        // Early building strategy
+
+        cmd.ModR_M = ModR_M (0, _second.val[0], _first.val[0]);
+        cmd.SIB = _SIB (sib::scl1, _first.val[1], _first.val[0]);
+
+        // Only one of them can exist. Nonexistents equal by zero
+        cmd.Imm     = _second.val[2]        + _third.val[2];
+        cmd.sizeImm = _second.sparseness[2] + _third.sparseness[2];
+
+        cmd.Disp     = _first.val[2];
+        cmd.sizeDisp = _first.sparseness[2];
+
+        if (_first.val_on[0]) cmd.ModR_M_On = true;                     // Enable or Ignore ModR/M
+        if (_second.val_on[2] || _third.val_on[2]) cmd.Imm_On = true;   // Enable or Ignore Imm
+
+        if (_first.mem == false) {                                      // Reg or Imm
+
+            cmd.ModR_M |= ModR_M (mrm::reg);
+
+            cmd.Imm     += _first.val[2];
+            cmd.sizeImm += _first.sparseness[2];
+
+            if (_first.val_on[2]) cmd.Imm_On = true;
+
+        } else {                                                        // Memroy
+            // Enable or Ignore SIB
+            // We know that mod != 11
+            if ((_first.val_on[0] && _first.val[1]) ||                                  // [ reg reg ... ] ||           // TODO SP and BP !!!
+                (_first.val[0] == reg::_reg::rsp || _first.val[1] == reg::_reg::rsp))   // [ rsp ... ... ] ||           // todo The most important
+            {                                                                           // [ ... rsp ... ]
+                cmd.SIB_On = true;
+            }
+
+            // Enable or Ignore Disp
+            if (_first.val_on[2]) cmd.Disp_On = true;
+
+            // Enable or Ignore ModR/M
+            if (_first.val_on[2]) {
+                if (_first.sparseness[2] == 1) cmd.ModR_M |= ModR_M (mrm::disp8);
+                else                           cmd.ModR_M |= ModR_M (mrm::disp32);
+            }
+
+        }
+
+
+        if (_first.val_on[0]) {
+            cmd.ModR_M |= ModR_M (mrm::reg, 0, _first.val[0]);
+        }
+
+
         // ModR/M & SIB & Imm
         if (_first.mem == false) {
+
+
+
+
+
 
             if (_first.val_on[0]) {                     // First: register
                 if (instr.num_args == 1)                // inc rax

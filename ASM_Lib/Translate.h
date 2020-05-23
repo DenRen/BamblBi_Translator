@@ -72,8 +72,8 @@ struct  _cmd_t {
     bool Imm_On        = false;
 
     opcode::__cmd Opcode;
-    __uint8_t getSize (int sizeDisp = 0, int sizeImm = 0);
-    __word buildMC (int sizeDisp = 0, int sizeImm = 0);
+    __uint8_t getSize ();
+    __word buildMC ();
 };
 
 __word genCmd (opcode::__cmd command, instuction_t instr);

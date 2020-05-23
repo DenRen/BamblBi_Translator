@@ -21,6 +21,17 @@
 
  */
 
+namespace sib {
+
+    enum {
+        scl1,       // 00 -> Scale == 1
+        scl2,       // 01 -> Scale == 2
+        scl4,       // 10 -> Scale == 4
+        scl8        // 11 -> Scale == 8
+    };
+
+}
+
 __uint8_t _SIB (__uint8_t Scale, __uint8_t Index, __uint8_t Base) {
     assert (Scale < 4);
     assert (Index < 8);
