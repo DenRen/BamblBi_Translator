@@ -10,9 +10,9 @@
 int main () {
 
     const char path_asm[] = "../asm/test.s";
-    SourceCodeNasm code (path_asm);
+    SourceCodeNasm code (path_asm, false);
 
-    if (Translate (code))
+    if (Translate (code, false))
         fprintf (stderr, "Fail\n");
 
     return 0;

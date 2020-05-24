@@ -47,7 +47,7 @@ int getSparseness (__int32_t number) {
 }
 
 // Correct: mov [rax rcx -89], 164
-int Translate (SourceCodeNasm &code) {
+int Translate (SourceCodeNasm &code, bool dump) {
 
     for (__uint32_t num_line = 0; num_line < code.number_lines; num_line++) {
 
@@ -55,12 +55,12 @@ int Translate (SourceCodeNasm &code) {
         __word *words = code.lines_code[num_line].words;
         __uint8_t quant_words = code.lines_code[num_line].size;
 
+        if (dump) {
+            for (int i = 0; i < quant_words; i++)
+                printf ("%s ", words[i].word);
 
-        for (int i = 0; i < quant_words; i++)
-            printf ("%s ", words[i].word);
-
-        printf ("\t--> ");
-
+            printf ("\t--> ");
+        }
         instuction_t instr = {};
 
         // Get id commands
@@ -118,7 +118,7 @@ int Translate (SourceCodeNasm &code) {
                 else if (isnumber (arg[0]) || arg[0] == '-') {
 
                     __int64_t number = str2num (arg, len);
-
+                    //printf ("NUMBER: %ld\n", number);
                     _ARG.val_on[2] = true;
                     _ARG.val[2] = number;
 
@@ -126,8 +126,10 @@ int Translate (SourceCodeNasm &code) {
                     if (_ARG.sparseness[2] < temp_spr)
                         _ARG.sparseness[2] = temp_spr;
 
-                    if (_ARG.mem == false)  // For example: mov rax, 156
+                    if (_ARG.mem == false) {  // For example: mov rax, 156
+                        instr.num_args++;
                         break;
+                    }
 
                 } else if (arg[0] == '[') {
 
@@ -162,7 +164,9 @@ int Translate (SourceCodeNasm &code) {
                 }
             }
 
-            //instr.dump ();
+
+            if (dump)
+                instr.dump ();
 
             __word MC_cmd = createComand (instr);
 
@@ -195,12 +199,39 @@ int Translate (SourceCodeNasm &code) {
 #define _R_RM_I (!_first.mem && _first.val_on[0] && _third.val_on[2])
 #define _R_or_M (instr.num_args == 1)
 
+// Stupid contractions
+#define _R  (!_first.mem && _first.val_on[0])
+#define _M  ( _first.mem)
+#define _I  (!_first.mem && _first.val_on[2])
+
 #define GenerateCmd(spars8, spars64) {                                                      \
                                          if (_first.sparseness[0] == 8)                     \
                                             return genCmd (opcode:: spars8, instr);         \
                                          else                                               \
                                             return genCmd (opcode:: spars64, instr);        \
                                      }
+
+__word GenShortCmd (__uint32_t command, instuction_t instr) {
+    assert (instr.num_args == 1);
+
+    __word mc;
+    if (_first.sparseness[0] == 65) {
+
+        mc.len = 2;
+        mc.word = (char *) calloc (mc.len, sizeof (__uint8_t));
+        mc.word[0] = _REX (_b);
+        mc.word[1] = command | _first.val[0];
+
+    } else {
+
+        mc.len = 1;
+        mc.word = (char *) calloc (mc.len, sizeof (__uint8_t));
+        mc.word[0] = command | _first.val[0];
+
+    }
+    return mc;
+}
+
 __word createComand (instuction_t instr) {
     switch (instr.command) {
         case opcode::_cmds::MOV:
@@ -254,12 +285,7 @@ __word createComand (instuction_t instr) {
                  if (_R_RM_I)   GenerateCmd (imul::r16_rm_i8, imul::r_rm_i64)
             else if (_R_or_M)   GenerateCmd (imul::rm8, imul::rm64)
             else {
-                 if (_RI) {
-                     arg_t temp_arg = _second;
-                     _second = _first;
-                     _first = temp_arg;
-                                GenerateCmd (imul::r16_i8, imul::r_i64)
-                 }
+                 if (_RI)       GenerateCmd (imul::r16_i8, imul::r_i64)
                  else if (_RM || _RR) {
                      arg_t temp_arg = _second;
                      _second = _first;
@@ -269,16 +295,71 @@ __word createComand (instuction_t instr) {
                  }
             break;
         case opcode::_cmds::IDIV:
-                                GenerateCmd (idiv::rm8,       idiv::rm64)
+                                GenerateCmd (idiv::rm8, idiv::rm64)
             break;
         case opcode::_cmds::PUSH:
+                     if (_R)    GenerateCmd (push::r8,  push::r64)
+                else if (_M)    GenerateCmd (push::rm8, push::rm64)
             break;
         case opcode::_cmds::POP:
+            if (_R)    return   GenShortCmd (opcode::pop::r64.opcode, instr);
+            if (_M) {
+               if (instr.extra_cmd == 3)
+                                GenerateCmd (pop::m64, pop::m64)
+               else
+                   printf ("Error: operation size not specified!");
+            }
             break;
         case opcode::_cmds::JMP:
+            if (_R || _M)       GenerateCmd (jmp::rm16, jmp::rm64)
+            if (_I) {
+                                _first.val[2] -= 4;
+                                GenerateCmd (jmp::rel8, jmp::rel32)
+            }
             break;
-
         default:                    // Jcc
+            if (_I) {
+                _first.val[2] -= 4;
+                switch (instr.command) {
+
+#define GenCmd(_opcode)  return genCmd (opcode::jcc:: _opcode, instr);
+
+                    case opcode::_cmds::JA:   GenCmd (ja_n)
+                    case opcode::_cmds::JAE:  GenCmd (jae_n)
+                    case opcode::_cmds::JB:   GenCmd (jb_n)
+                    case opcode::_cmds::JBE:  GenCmd (jbe_n)
+                    case opcode::_cmds::JC:   GenCmd (jc_n)
+                    case opcode::_cmds::JCXZ: GenCmd (je_n)
+                    case opcode::_cmds::JE:   GenCmd (jz_n)
+                    case opcode::_cmds::JG:   GenCmd (jg_n)
+                    case opcode::_cmds::JGE:  GenCmd (jge_n)
+                    case opcode::_cmds::JL:   GenCmd (jl_n)
+                    case opcode::_cmds::JLE:  GenCmd (jle_n)
+                    case opcode::_cmds::JNA:  GenCmd (jna_n)
+                    case opcode::_cmds::JNAE: GenCmd (jnae_n)
+                    case opcode::_cmds::JNB:  GenCmd (jnb_n)
+                    case opcode::_cmds::JNBE: GenCmd (jnbe_n)
+                    case opcode::_cmds::JNC:  GenCmd (jnc_n)
+                    case opcode::_cmds::JNE:  GenCmd (jne_n)
+                    case opcode::_cmds::JNG:  GenCmd (jng_n)
+                    case opcode::_cmds::JNGE: GenCmd (jnge_n)
+                    case opcode::_cmds::JNL:  GenCmd (jnl_n)
+                    case opcode::_cmds::JNLE: GenCmd (jnle_n)
+                    case opcode::_cmds::JNO:  GenCmd (jno_n)
+                    case opcode::_cmds::JNP:  GenCmd (jnp_n)
+                    case opcode::_cmds::JNS:  GenCmd (jns_n)
+                    case opcode::_cmds::JNZ:  GenCmd (jnz_n)
+                    case opcode::_cmds::JO:   GenCmd (jo_n)
+                    case opcode::_cmds::JP:   GenCmd (jp_n)
+                    case opcode::_cmds::JPE:  GenCmd (jpe_n)
+                    case opcode::_cmds::JPO:  GenCmd (jpo_n)
+                    case opcode::_cmds::JS:   GenCmd (js_n)
+                    case opcode::_cmds::JZ:   GenCmd (jz_n)
+
+                    default:
+                        break;
+                }
+            }
             break;
     }
 
@@ -316,38 +397,42 @@ __word _cmd_t::buildMC () {
     if (REXPref_On)
         mc.word[id++] = REXPref;
 
-    if (Opcode.size == 3)
-        mc.word[id++] = (Opcode.opcode & 0xff0000) >> 4 * 4;
+    if (Opcode.size + Opcode.ext == 4)
+        mc.word[id++] = (Opcode.opcode & 0xff000000) >> 6 * 4;
 
-    if (Opcode.size == 2)
-        mc.word[id++] = (Opcode.opcode & 0x00ff00) >> 2 * 4;
+    if (Opcode.size + Opcode.ext == 3)
+        mc.word[id++] = (Opcode.opcode & 0x00ff0000) >> 4 * 4;
 
-    mc.word[id++] = (Opcode.opcode & 0x0000ff);
+    if (Opcode.size + Opcode.ext == 2)
+        mc.word[id++] = (Opcode.opcode & 0x0000ff00) >> 2 * 4;
+
+    mc.word[id++] = (Opcode.opcode & 0x000000ff);
+    if (Opcode.ext) id--;
 
     if (ModR_M_On)
-        mc.word[id++] = ModR_M;
+        mc.word[id++] |= ModR_M;
 
     if (SIB_On)
-        mc.word[id++] = SIB;
+        mc.word[id++] |= SIB;
 
     if (Disp_On) {
         if (sizeDisp == 1)
-            *(__int8_t *) &mc.word[id] = (__int8_t) Disp;
+            *(__int8_t *)  &mc.word[id] |= (__int8_t) Disp;
         else if (sizeDisp == 2)
-            *(__int16_t *) &mc.word[id] = (__int16_t) Disp;
+            *(__int16_t *) &mc.word[id] |= (__int16_t) Disp;
         else
-            *(__int32_t *) &mc.word[id] = (__int32_t) Disp;
+            *(__int32_t *) &mc.word[id] |= (__int32_t) Disp;
 
         id += sizeDisp;
     }
 
     if (Imm_On) {
         if (sizeImm == 1)
-            *(__int8_t *)  &mc.word[id] = (__int8_t)  Imm;
+            *(__int8_t *)  &mc.word[id] |= (__int8_t)  Imm;
         else if (sizeImm == 2)
-            *(__int16_t *) &mc.word[id] = (__int16_t) Imm;
+            *(__int16_t *) &mc.word[id] |= (__int16_t) Imm;
         else
-            *(__int32_t *) &mc.word[id] = (__int32_t) Imm;
+            *(__int32_t *) &mc.word[id] |= (__int32_t) Imm;
 
         id += sizeImm;
     }
@@ -388,15 +473,15 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
             cmd.REXPref = _REX (_w);
 
             if (_first.sparseness[0]  == 65) cmd.REXPref |= _REX (_b);
-
+            if (_first.sparseness[1]  == 65) cmd.REXPref |= _REX (_x);
             if (_second.sparseness[0] == 65) cmd.REXPref |= _REX (_r);
 
         }
 
         for (int i = 0; i < 3; i++) {
-            _first.sparseness[i] /= 8;
+            _first.sparseness[i]  /= 8;
             _second.sparseness[i] /= 8;
-            _third.sparseness[i] /= 8;
+            _third.sparseness[i]  /= 8;
         }
         // Early building strategy
 
@@ -583,7 +668,7 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
             }
         }
 */
-        /*
+/*
         if else {
             // Memory
         }*/

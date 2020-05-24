@@ -30,7 +30,7 @@ namespace opcode {
 
 };
 
-    // [MOV]----------------------------------------------------------------------------------------------------------------
+    // [MOV]------------------------------------------------------------------------------------------------------------
     namespace mov {
     __cmd rm8_r8   (0x88, 1);        // 88 /r	MOV r/m8,  r8	    Move r8 to r/m8.
     __cmd rm16_r16 (0x89, 1);        // 89 /r	MOV r/m16, r16	    Move r16 to r/m16.
@@ -63,7 +63,7 @@ namespace opcode {
     __cmd rm32_i32 (0xc7, 1);      // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
     __cmd rm64_i64 (0xc7, 1);      // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
 }
-    // [ADD]----------------------------------------------------------------------------------------------------------------
+    // [ADD]------------------------------------------------------------------------------------------------------------
     namespace add {
         __cmd r8_i8 (0x04, 1);          // 04 ib	    ADD AL,    imm8	    Add imm8 to AL
         __cmd r16_i16 (0x05, 1);        // 05 iw	    ADD AX,    imm16	Add imm16 to AX
@@ -89,21 +89,21 @@ namespace opcode {
         __cmd r32_rm32 (0x03, 1);        // 03 /r	    ADD r32, r/m32	    Add r/m32 to r32
         __cmd r64_rm64 (0x03, 1);        // 03 /r	    ADD r32, r/m32	    Add r/m32 to r32
     }
-    // [SUB]----------------------------------------------------------------------------------------------------------------
+    // [SUB]------------------------------------------------------------------------------------------------------------
     namespace sub {
         __cmd r8_i8 (0x2c, 1);          // 2C ib	    SUB AL,    imm8	    Subtract imm8  from AL
         __cmd r16_i16 (0x2d, 1);        // 2D iw	    SUB AX,    imm16	Subtract imm16 from AX
         __cmd r32_i32 (0x2d, 1);        // 2D id	    SUB EAX,   imm32	Subtract imm32 from EAX
         __cmd r64_i64 (0x2d, 1);        // 2D id	    SUB EAX,   imm32	Subtract imm32 from EAX
 
-        __cmd rm8_i8   (0x8028, 1);     // 80 /5 ib	    SUB r/m8,  imm8	    Subtract imm8  from r/m8
-        __cmd rm16_i16 (0x8128, 1);     // 81 /5 iw	    SUB r/m16, imm16    Subtract imm16 from r/m16
-        __cmd rm32_i32 (0x8128, 1);     // 81 /5 id	    SUB r/m32, imm32    Subtract imm32 from r/m32
-        __cmd rm64_i64 (0x8128, 1);     // 81 /5 id	    SUB r/m32, imm32    Subtract imm32 from r/m32
+        __cmd rm8_i8   (0x8028, 1, 1);     // 80 /5 ib	    SUB r/m8,  imm8	    Subtract imm8  from r/m8
+        __cmd rm16_i16 (0x8128, 1, 1);     // 81 /5 iw	    SUB r/m16, imm16    Subtract imm16 from r/m16
+        __cmd rm32_i32 (0x8128, 1, 1);     // 81 /5 id	    SUB r/m32, imm32    Subtract imm32 from r/m32
+        __cmd rm64_i64 (0x8128, 1, 1);     // 81 /5 id	    SUB r/m32, imm32    Subtract imm32 from r/m32
 
-        __cmd rm16_i16_se (0x8328, 1);  // 83 /5 ib	    SUB r/m16, imm8	    Subtract sign-extended imm8 from r/m16
-        __cmd rm32_i32_se (0x8328, 1);  // 83 /5 ib	    SUB r/m32, imm8	    Subtract sign-extended imm8 from r/m32
-        __cmd rm64_i64_se (0x8328, 1);  // 83 /5 ib	    SUB r/m32, imm8	    Subtract sign-extended imm8 from r/m32
+        __cmd rm16_i16_se (0x8328, 1, 1);  // 83 /5 ib	    SUB r/m16, imm8	    Subtract sign-extended imm8 from r/m16
+        __cmd rm32_i32_se (0x8328, 1, 1);  // 83 /5 ib	    SUB r/m32, imm8	    Subtract sign-extended imm8 from r/m32
+        __cmd rm64_i64_se (0x8328, 1, 1);  // 83 /5 ib	    SUB r/m32, imm8	    Subtract sign-extended imm8 from r/m32
 
         __cmd rm8_r8   (0x28, 1);       // 28 /r	    SUB r/m8,  r8	    Subtract r8  from r/m8
         __cmd rm16_r16 (0x29, 1);       // 29 /r	    SUB r/m16, r16	    Subtract r16 from r/m16
@@ -115,26 +115,26 @@ namespace opcode {
         __cmd r32_rm32 (0x2b, 1);       // 2B /r	    SUB r32,   r/m32	Subtract r/m32 from r32
         __cmd r64_rm64 (0x2b, 1);       // 2B /r	    SUB r32,   r/m32	Subtract r/m32 from r32
     }
-    // [MUL]----------------------------------------------------------------------------------------------------------------
+    // [MUL]------------------------------------------------------------------------------------------------------------
     namespace mul {
-        __cmd rm8  (0xf620, 1);     // F6 /4	MUL r/m8	Unsigned multiply (AX = AL * r/m8).
-        __cmd rm16 (0xf720, 1);     // F7 /4	MUL r/m16	Unsigned multiply (DX:AX = AX * r/m16).
-        __cmd rm32 (0xf720, 1);     // F7 /4	MUL r/m32	Unsigned multiply (EDX:EAX = EAX * r/m32)
-        __cmd rm64 (0xf720, 1);     // F7 /4	MUL r/m32	Unsigned multiply (EDX:EAX = EAX * r/m32)
+        __cmd rm8  (0xf620, 1, 1);  // F6 /4	MUL r/m8	Unsigned multiply (AX = AL * r/m8).
+        __cmd rm16 (0xf720, 1, 1);  // F7 /4	MUL r/m16	Unsigned multiply (DX:AX = AX * r/m16).
+        __cmd rm32 (0xf720, 1, 1);  // F7 /4	MUL r/m32	Unsigned multiply (EDX:EAX = EAX * r/m32)
+        __cmd rm64 (0xf720, 1, 1);  // F7 /4	MUL r/m32	Unsigned multiply (EDX:EAX = EAX * r/m32)
     }
-    // [DIV]----------------------------------------------------------------------------------------------------------------
+    // [DIV]------------------------------------------------------------------------------------------------------------
     namespace div {
-        __cmd rm8  (0xf630, 1);     // F6 /6	DIV r/m8	Unsigned divide AX by r/m8, with result stored in AL = Quotient, AH = Remainder
-        __cmd rm16 (0xf730, 1);     // F7 /6	DIV r/m16	Unsigned divide DX:AX by r/m16, with result stored in AX = Quotient, DX = Remainder
-        __cmd rm32 (0xf730, 1);     // F7 /6	DIV r/m32	Unsigned divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
-        __cmd rm64 (0xf730, 1);     // F7 /6	DIV r/m32	Unsigned divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
+        __cmd rm8  (0xf630, 1, 1);  // F6 /6	DIV r/m8	Unsigned divide AX by r/m8, with result stored in AL = Quotient, AH = Remainder
+        __cmd rm16 (0xf730, 1, 1);  // F7 /6	DIV r/m16	Unsigned divide DX:AX by r/m16, with result stored in AX = Quotient, DX = Remainder
+        __cmd rm32 (0xf730, 1, 1);  // F7 /6	DIV r/m32	Unsigned divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
+        __cmd rm64 (0xf730, 1, 1);  // F7 /6	DIV r/m32	Unsigned divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
     }
-    // [IMUL]----------------------------------------------------------------------------------------------------------------
+    // [IMUL]-----------------------------------------------------------------------------------------------------------
     namespace imul {
-        __cmd rm8  (0xf628, 1);     // F6 /5	IMUL r/m8	            AX = AL * r/m byte
-        __cmd rm16 (0xf728, 1);     // F7 /5	IMUL r/m16	            DX:AX = AX * r/m word
-        __cmd rm32 (0xf728, 1);     // F7 /5	IMUL r/m32	            EDX:EAX = EAX * r/m doubleword
-        __cmd rm64 (0xf728, 1);     // F7 /5	IMUL r/m32	            EDX:EAX = EAX * r/m doubleword
+        __cmd rm8  (0xf628, 1, 1);  // F6 /5	IMUL r/m8	            AX = AL * r/m byte
+        __cmd rm16 (0xf728, 1, 1);  // F7 /5	IMUL r/m16	            DX:AX = AX * r/m word
+        __cmd rm32 (0xf728, 1, 1);  // F7 /5	IMUL r/m32	            EDX:EAX = EAX * r/m doubleword
+        __cmd rm64 (0xf728, 1, 1);  // F7 /5	IMUL r/m32	            EDX:EAX = EAX * r/m doubleword
 
         __cmd r_rm16 (0x0faf, 2);   // 0F AF /r	IMUL r16, r/m16	        word register = word register * r/m word
         __cmd r_rm32 (0x0faf, 2);   // 0F AF /r	IMUL r32, r/m32	        doubleword register = doubleword register * r/m doubleword
@@ -171,10 +171,10 @@ namespace opcode {
     }
     // [IDIV]----------------------------------------------------------------------------------------------------------------
     namespace idiv {
-        __cmd rm8 (0xf638,  1);      // F6 /7	IDIV r/m8       Signed divide AX by r/m8, with result stored in AL = Quotient, AH = Remainder
-        __cmd rm16 (0xf738, 1);      // F7 /7	IDIV r/m16      Signed divide DX:AX by r/m16, with result stored in AX = Quotient, DX = Remainder
-        __cmd rm32 (0xf738, 1);      // F7 /7	IDIV r/m32      Signed divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
-        __cmd rm64 (0xf738, 1);      // F7 /7	IDIV r/m32      Signed divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
+        __cmd rm8  (0xf638, 1, 1);  // F6 /7	IDIV r/m8       Signed divide AX by r/m8, with result stored in AL = Quotient, AH = Remainder
+        __cmd rm16 (0xf738, 1, 1);  // F7 /7	IDIV r/m16      Signed divide DX:AX by r/m16, with result stored in AX = Quotient, DX = Remainder
+        __cmd rm32 (0xf738, 1, 1);  // F7 /7	IDIV r/m32      Signed divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
+        __cmd rm64 (0xf738, 1, 1);  // F7 /7	IDIV r/m32      Signed divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
     }
     // [Jcc]----------------------------------------------------------------------------------------------------------------
     namespace jcc {
@@ -211,49 +211,52 @@ namespace opcode {
         __cmd js_s    (0x78, 1);    // 78 cb	JS rel8	            Jump short if sign (SF=1).0
         __cmd jz_s    (0x74, 1);    // 74 cb	JZ rel8	            Jump short if zero (ZF = 1)
 
-        __cmd ja_n    (0x0f87, 2);  // 0F 87 cw/cd	JA rel16/32	    Jump near if above (CF=0 and ZF=0)
-        __cmd jae     (0x0f83, 2);  // 0F 83 cw/cd	JAE rel16/32	Jump near if above or equal (CF=0)
-        __cmd jb_n    (0x0f82, 2);  // 0F 82 cw/cd	JB rel16/32	    Jump near if below (CF=1)
-        __cmd jbe_n   (0x0f86, 2);  // 0F 86 cw/cd	JBE rel16/32	Jump near if below or equal (CF=1 or ZF=1)
-        __cmd jc_n    (0x0f82, 2);  // 0F 82 cw/cd	JC rel16/32	    Jump near if carry (CF=1)
-        __cmd jcxz_n  (0x0f84, 2);  // 0F 84 cw/cd	JE rel16/32	    Jump near if equal (ZF=1)
-        __cmd jecxz_n (0x0f84, 2);  // 0F 84 cw/cd	JZ rel16/32	    Jump near if 0 (ZF=1)
-        __cmd je_n    (0x0f8f, 2);  // 0F 8F cw/cd	JG rel16/32	    Jump near if greater (ZF=0 and SF=OF)
-        __cmd jg_n    (0x0f8d, 2);  // 0F 8D cw/cd	JGE rel16/32	Jump near if greater or equal (SF=OF)
-        __cmd jge_n   (0x0f8c, 2);  // 0F 8C cw/cd	JL rel16/32	    Jump near if less (SF<>OF)
-        __cmd jl_n    (0x0f8e, 2);  // 0F 8E cw/cd	JLE rel16/32	Jump near if less or equal (ZF=1 or SF<>OF)
-        __cmd jle_n   (0x0f86, 2);  // 0F 86 cw/cd	JNA rel16/32	Jump near if not above (CF=1 or ZF=1)
-        __cmd jna_n   (0x0f82, 2);  // 0F 82 cw/cd	JNAE rel16/32	Jump near if not above or equal (CF=1)
-        __cmd jnae_n  (0x0f83, 2);  // 0F 83 cw/cd	JNB rel16/32	Jump near if not below (CF=0)
-        __cmd jnb_n   (0x0f87, 2);  // 0F 87 cw/cd	JNBE rel16/32	Jump near if not below or equal (CF=0 and ZF=0)
-        __cmd jnbe_n  (0x0f83, 2);  // 0F 83 cw/cd	JNC rel16/32	Jump near if not carry (CF=0)
-        __cmd jnc_n   (0x0f85, 2);  // 0F 85 cw/cd	JNE rel16/32	Jump near if not equal (ZF=0)
-        __cmd jne_n   (0x0f8e, 2);  // 0F 8E cw/cd	JNG rel16/32	Jump near if not greater (ZF=1 or SF<>OF)
-        __cmd jng_n   (0x0f8c, 2);  // 0F 8C cw/cd	JNGE rel16/32	Jump near if not greater or equal (SF<>OF)
-        __cmd jnge_n  (0x0f8d, 2);  // 0F 8D cw/cd	JNL rel16/32	Jump near if not less (SF=OF)
-        __cmd jnl_n   (0x0f8f, 2);  // 0F 8F cw/cd	JNLE rel16/32	Jump near if not less or equal (ZF=0 and SF=OF)
-        __cmd jnle_n  (0x0f81, 2);  // 0F 81 cw/cd	JNO rel16/32	Jump near if not overflow (OF=0)
-        __cmd jno_n   (0x0f8b, 2);  // 0F 8B cw/cd	JNP rel16/32	Jump near if not parity (PF=0)
-        __cmd jnp_n   (0x0f89, 2);  // 0F 89 cw/cd	JNS rel16/32	Jump near if not sign (SF=0)
-        __cmd jns_n   (0x0f85, 2);  // 0F 85 cw/cd	JNZ rel16/32	Jump near if not zero (ZF=0)
-        __cmd jnz_n   (0x0f80, 2);  // 0F 80 cw/cd	JO rel16/32	    Jump near if overflow (OF=1)
-        __cmd jo_n    (0x0f8a, 2);  // 0F 8A cw/cd	JP rel16/32	    Jump near if parity (PF=1)
-        __cmd jp_n    (0x0f8a, 2);  // 0F 8A cw/cd	JPE rel16/32	Jump near if parity even (PF=1)
-        __cmd jpe_n   (0x0f8b, 2);  // 0F 8B cw/cd	JPO rel16/32	Jump near if parity odd (PF=0)
-        __cmd jpo_n   (0x0f88, 2);  // 0F 88 cw/cd	JS rel16/32	    Jump near if sign (SF=1)
-        __cmd js_n    (0x0f84, 2);  // 0F 84 cw/cd	JZ rel16/32	    Jump near if 0 (ZF=1)
+        __cmd ja_n  (0x0f87, 2);    // 0F 87 cw/cd	JA rel16/32	    Jump near if above (CF=0 and ZF=0)
+        __cmd jae_n (0x0f83, 2);    // 0F 83 cw/cd	JAE rel16/32	Jump near if above or equal (CF=0)
+        __cmd jb_n  (0x0f82, 2);    // 0F 82 cw/cd	JB rel16/32	    Jump near if below (CF=1)
+        __cmd jbe_n (0x0f86, 2);    // 0F 86 cw/cd	JBE rel16/32	Jump near if below or equal (CF=1 or ZF=1)
+        __cmd jc_n  (0x0f82, 2);    // 0F 82 cw/cd	JC rel16/32	    Jump near if carry (CF=1)
+        __cmd je_n  (0x0f84, 2);    // 0F 84 cw/cd	JE rel16/32	    Jump near if equal (ZF=1)
+        __cmd jg_n  (0x0f8f, 2);    // 0F 8F cw/cd	JG rel16/32	    Jump near if greater (ZF=0 and SF=OF)
+        __cmd jge_n (0x0f8d, 2);    // 0F 8D cw/cd	JGE rel16/32	Jump near if greater or equal (SF=OF)
+        __cmd jl_n  (0x0f8c, 2);    // 0F 8C cw/cd	JL rel16/32	    Jump near if less (SF<>OF)
+        __cmd jle_n (0x0f8e, 2);    // 0F 8E cw/cd	JLE rel16/32	Jump near if less or equal (ZF=1 or SF<>OF)
+        __cmd jna_n (0x0f86, 2);    // 0F 86 cw/cd	JNA rel16/32	Jump near if not above (CF=1 or ZF=1)
+        __cmd jnae_n(0x0f82, 2);    // 0F 82 cw/cd	JNAE rel16/32	Jump near if not above or equal (CF=1)
+        __cmd jnb_n (0x0f83, 2);    // 0F 83 cw/cd	JNB rel16/32	Jump near if not below (CF=0)
+        __cmd jnbe_n(0x0f87, 2);    // 0F 87 cw/cd	JNBE rel16/32	Jump near if not below or equal (CF=0 and ZF=0)
+        __cmd jnc_n (0x0f83, 2);    // 0F 83 cw/cd	JNC rel16/32	Jump near if not carry (CF=0)
+        __cmd jne_n (0x0f85, 2);    // 0F 85 cw/cd	JNE rel16/32	Jump near if not equal (ZF=0)
+        __cmd jng_n (0x0f8e, 2);    // 0F 8E cw/cd	JNG rel16/32	Jump near if not greater (ZF=1 or SF<>OF)
+        __cmd jnge_n(0x0f8c, 2);    // 0F 8C cw/cd	JNGE rel16/32	Jump near if not greater or equal (SF<>OF)
+        __cmd jnl_n (0x0f8d, 2);    // 0F 8D cw/cd	JNL rel16/32	Jump near if not less (SF=OF)
+        __cmd jnle_n (0x0f8f, 2);   // 0F 8F cw/cd	JNLE rel16/32	Jump near if not less or equal (ZF=0 and SF=OF)
+        __cmd jno_n (0x0f81, 2);    // 0F 81 cw/cd	JNO rel16/32	Jump near if not overflow (OF=0)
+        __cmd jnp_n (0x0f8b, 2);    // 0F 8B cw/cd	JNP rel16/32	Jump near if not parity (PF=0)
+        __cmd jns_n (0x0f89, 2);    // 0F 89 cw/cd	JNS rel16/32	Jump near if not sign (SF=0)
+        __cmd jnz_n (0x0f85, 2);    // 0F 85 cw/cd	JNZ rel16/32	Jump near if not zero (ZF=0)
+        __cmd jo_n  (0x0f80, 2);    // 0F 80 cw/cd	JO rel16/32	    Jump near if overflow (OF=1)
+        __cmd jp_n  (0x0f8a, 2);    // 0F 8A cw/cd	JP rel16/32	    Jump near if parity (PF=1)
+        __cmd jpe_n (0x0f8a, 2);    // 0F 8A cw/cd	JPE rel16/32	Jump near if parity even (PF=1)
+        __cmd jpo_n (0x0f8b, 2);    // 0F 8B cw/cd	JPO rel16/32	Jump near if parity odd (PF=0)
+        __cmd js_n  (0x0f88, 2);    // 0F 88 cw/cd	JS rel16/32	    Jump near if sign (SF=1)
+        __cmd jz_n  (0x0f84, 2);    // 0F 84 cw/cd	JZ rel16/32	    Jump near if 0 (ZF=1)
     }
     // [JMP]----------------------------------------------------------------------------------------------------------------
     namespace jmp {
-        __cmd jmp_rel8     (0xeb, 1);   // EB cb	JMP rel8	Jump short, relative, displacement relative to next instruction.
-        __cmd jmp_rel16    (0xe9, 1);   // E9 cw	JMP rel16	Jump near, relative, displacement relative to next instruction.
-        __cmd jmp_rel32    (0xe9, 1);   // E9 cd	JMP rel32	Jump near, relative, displacement relative to next instruction.
-        __cmd jmp_rm16     (0xff20, 1); // FF /4	JMP r/m16	Jump near, absolute indirect, address given in r/m16.
-        __cmd jmp_rm32     (0xff20, 1); // FF /4	JMP r/m32	Jump near, absolute indirect, address given in r/m32.
-        __cmd jmp_ptr16_16 (0xea, 1);   // EA cd	JMP ptr16:16	Jump far, absolute, address given in operand.
-        __cmd jmp_ptr16_32 (0xea, 1);   // EA cp	JMP ptr16:32	Jump far, absolute, address given in operand.
-        __cmd jmp_m16_16   (0xff28, 1); // FF /5	JMP m16:16	Jump far, absolute indirect, address given in m16:16.
-        __cmd jmp_m16_32   (0xff28, 1); // FF /5	JMP m16:32	Jump far, absolute indirect, address given in m16:32.
+        __cmd rel8     (0xeb, 1);       // EB cb	JMP rel8	 Jump short, relative, displacement relative to next instruction
+        __cmd rel16    (0xe9, 1);       // E9 cw	JMP rel16	 Jump near, relative, displacement relative to next instruction
+        __cmd rel32    (0xe9, 1);       // E9 cd	JMP rel32	 Jump near, relative, displacement relative to next instruction
+
+        __cmd rm16     (0xff20, 1, 1);  // FF /4	JMP r/m16	 Jump near, absolute indirect, address given in r/m16
+        __cmd rm32     (0xff20, 1, 1);  // FF /4	JMP r/m32	 Jump near, absolute indirect, address given in r/m32
+        __cmd rm64     (0xff20, 1, 1);  // FF /4	JMP r/m32	 Jump near, absolute indirect, address given in r/m32
+
+        __cmd ptr16_16 (0xea, 1);       // EA cd  UUJMP ptr16:16 Jump far, absolute, address given in operand
+        __cmd ptr16_32 (0xea, 1);       // EA cp  UUJMP ptr16:32 Jump far, absolute, address given in operand
+
+        __cmd m16_16   (0xff28, 1, 1);  // FF /5  UUJMP m16:16	 Jump far, absolute indirect, address given in m16:16
+        __cmd m16_32   (0xff28, 1, 1);  // FF /5  UUJMP m16:32	 Jump far, absolute indirect, address given in m16:32
     }
     // [RET]----------------------------------------------------------------------------------------------------------------
     namespace ret {
@@ -264,34 +267,39 @@ namespace opcode {
     }
     // [PUSH]---------------------------------------------------------------------------------------------------------------
     namespace push {
-        __cmd push_rm16 (0xff30, 1);    // FF /6	    Push r/m16
-        __cmd push_rm32 (0xff30, 1);    // FF /6	    Push r/m32
-        __cmd push_r16 (0x50, 1);    // 50+rw	    Push r16
-        __cmd push_r32 (0x50, 1);    // 50+rd	    Push r32
-        __cmd push_i8 (0x6a, 1);    // 6A	    Push imm8
-        __cmd push_i16 (0x68, 1);    // 68	    Push imm16
-        __cmd push_i32 (0x68, 1);    // 68	    Push imm32
-        __cmd push_cs (0x0e, 1);    // 0E	    Push CS
-        __cmd push_ss (0x16, 1);    // 16	    Push SS
-        __cmd push_ds (0x1e, 1);    // 1E	    Push DS
-        __cmd push_es (0x06, 1);    // 06	    Push ES
-        __cmd push_fs (0x0f, 1);    // 0F A0	    Push FS
-        __cmd push_gs (0x0f, 1);    // 0F A8	    Push GS
+        __cmd rm8  (0xff30, 1, 1); // FF /6    Push r/m16
+        __cmd rm16 (0xff30, 1, 1); // FF /6    Push r/m16
+        __cmd rm32 (0xff30, 1, 1); // FF /6    Push r/m32
+        __cmd rm64 (0xff30, 1, 1); // FF /6    Push r/m32
+
+        __cmd r8  (0x50, 1);       // 50+rw    Push r8
+        __cmd r16 (0x50, 1);       // 50+rw    Push r16
+        __cmd r32 (0x50, 1);       // 50+rd    Push r32
+        __cmd r64 (0x50, 1);       // 50+rd    Push r64
+
+        __cmd i8  (0x6a, 1);       // 6A	    Push imm8
+        __cmd i16 (0x68, 1);       // 68	    Push imm16
+        __cmd i32 (0x68, 1);       // 68	    Push imm32
+
+        __cmd cs  (0x0e, 1);       // 0E	    Push CS
+        __cmd ss  (0x16, 1);       // 16	    Push SS
+        __cmd ds  (0x1e, 1);       // 1E	    Push DS
+        __cmd es  (0x06, 1);       // 06	    Push ES
+        __cmd fs  (0x0fa0, 1);     // 0F A0    Push FS
+        __cmd gs  (0x0fa8, 1);     // 0F A8    Push GS
     }
     // [POP]---------------------------------------------------------------------------------------------------------------
     namespace pop {
-        __cmd pop_m16 (0x8f, 1);    // 8F /0		Pop top of stack into m16; increment stack pointer.
-        __cmd pop_m32 (0x8f, 1);    // 8F /0		Pop top of stack into m32; increment stack pointer.
-        __cmd pop_m64 (0x8f, 1);    // 8F /0		Pop top of stack into m64; increment stack pointer.
+        __cmd m16 (0x8f, 1);    // 8F /0	  UUPop top of stack into m16; increment stack pointer.
+        __cmd m32 (0x8f, 1);    // 8F /0	  UUPop top of stack into m32; increment stack pointer.
+        __cmd m64 (0x8f, 1);    // 8F /0	  UUPop top of stack into m64; increment stack pointer.
 
-        __cmd pop_r16 (0x58, 1);    // 58+ rw    Pop top of stack into r16; increment stack pointer.
-        __cmd pop_r32 (0x58, 1);    // 58+ rd    Pop top of stack into r32; increment stack pointer.
-        __cmd pop_r64 (0x58, 1);    // 58+ rd    Pop top of stack into r32; increment stack pointer.
+        __cmd r64 (0x58, 1);    // 58+ rd       Pop top of stack into r32; increment stack pointer.
 
-        __cmd pop_ds (0x1f, 1);    // 1F	    Pop top of stack into DS; increment stack pointer.
-        __cmd pop_es (0x07, 1);    // 07	    Pop top of stack into ES; increment stack pointer.
-        __cmd pop_ss (0x17, 1);    // 17	    Pop top of stack into SS; increment stack pointer.
-        __cmd pop_fs (0x0fa1, 2);    // 0F A1	    Pop top of stack into FS; increment stack pointer.
-        __cmd pop_gs (0x0fa9, 2);    // 0F A9	    Pop top of stack into GS; increment stack pointer.
+        __cmd ds (0x1f, 1);     // 1F	      UUPop top of stack into DS; increment stack pointer.
+        __cmd es (0x07, 1);     // 07	      UUPop top of stack into ES; increment stack pointer.
+        __cmd ss (0x17, 1);     // 17	      UUPop top of stack into SS; increment stack pointer.
+        __cmd fs (0x0fa1, 2);   // 0F A1	  UUPop top of stack into FS; increment stack pointer.
+        __cmd gs (0x0fa9, 2);   // 0F A9	  UUPop top of stack into GS; increment stack pointer.
     }
 }

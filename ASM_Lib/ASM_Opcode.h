@@ -27,14 +27,18 @@ namespace opcode {
 
         __uint32_t opcode;
         __uint8_t size;
+        bool ext;
 
         __cmd () :
             opcode (0),
-            size (0)
+            size   (0),
+            ext    (false)
         {};
-        __cmd (__uint32_t opcode, __uint8_t size) :
+
+        __cmd (__uint32_t opcode, __uint8_t size, bool ext = false) :
                 opcode (opcode),
-                size (size)
+                size (size),
+                ext (ext)
         {}
     };
 
@@ -46,7 +50,7 @@ namespace opcode {
         RET,
 
         JMP,
-        JA,     JAE,    JB,     JBE,    JC,     JCXZ,   JECX,   JE,
+        JA,     JAE,    JB,     JBE,    JC,     JCXZ,   JECXZ,   JE,
         JG,     JGE,    JL,     JLE,    JNA,    JNAE,   JNB,    JNBE,
         JNC,    JNE,    JNG,    JNGE,   JNL,    JNLE,   JNO,    JNP,
         JNS,    JNZ,    JO,     JP,     JPE,    JPO,    JS,     JZ,
@@ -191,82 +195,86 @@ namespace opcode {
     }
     // [Jcc]----------------------------------------------------------------------------------------------------------------
     namespace jcc {
-        extern __cmd ja_s;           // 77 cb	JA rel8	J   ump short if above (CF=0 and ZF=0)
-        extern __cmd jae_s;          // 73 cb	JAE rel8	Jump short if above or equal (CF=0)
-        extern __cmd jb_s;           // 72 cb	JB rel8	    Jump short if below (CF=1)
-        extern __cmd jbe_s;          // 76 cb	JBE rel8	Jump short if below or equal (CF=1 or ZF=1)
-        extern __cmd jc_s;           // 72 cb	JC rel8	    Jump short if carry (CF=1)
-        extern __cmd jcxz_s;         // E3 cb	JCXZ rel8	Jump short if CX register is 0
-        extern __cmd jecxz_s1;        // E3 cb	JECXZ rel8	Jump short if ECX register is 0
-        extern __cmd je_s;           // 74 cb	JE rel8	    Jump short if equal (ZF=1)
-        extern __cmd jg_s;           // 7F cb	JG rel8	    Jump short if greater (ZF=0 and SF=OF)
-        extern __cmd jge_s;          // 7D cb	JGE rel8	Jump short if greater or equal (SF=OF)
-        extern __cmd jl_s;           // 7C cb	JL rel8	    Jump short if less (SF<>OF)
-        extern __cmd jle_s;          // 7E cb	JLE rel8	Jump short if less or equal (ZF=1 or SF<>OF)
-        extern __cmd jna_s;          // 76 cb	JNA rel8	Jump short if not above (CF=1 or ZF=1)
-        extern __cmd jnae_s;         // 72 cb	JNAE rel8	Jump short if not above or equal (CF=1)
-        extern __cmd jnb_s;          // 73 cb	JNB rel8	Jump short if not below (CF=0)
-        extern __cmd jnbe_s;         // 77 cb	JNBE rel8	Jump short if not below or equal (CF=0 and ZF=0)
-        extern __cmd jnc_s;          // 73 cb	JNC rel8	Jump short if not carry (CF=0).
-        extern __cmd jne_s;          // 75 cb	JNE rel8	Jump short if not equal (ZF=0)
-        extern __cmd jng_s;          // 7E cb	JNG rel8	Jump short if not greater (ZF=1 or SF<>OF)
-        extern __cmd jnge_s;         // 7C cb	JNGE rel8	Jump short if not greater or equal (SF<>OF)
-        extern __cmd jnl_s;          // 7D cb	JNL rel8	Jump short if not less (SF=OF)
-        extern __cmd jnle_s;         // 7F cb	JNLE rel8	Jump short if not less or equal (ZF=0 and SF=OF)
-        extern __cmd jno_s;          // 71 cb	JNO rel8	Jump short if not overflow (OF=0)
-        extern __cmd jnp_s;          // 7B cb	JNP rel8	Jump short if not parity (PF=0)
-        extern __cmd jns_s;          // 79 cb	JNS rel8	Jump short if not sign (SF=0)
-        extern __cmd jnz_s;          // 75 cb	JNZ rel8	Jump short if not zero (ZF=0)
-        extern __cmd jo_s;            // 70 cb	JO rel8	    Jump short if overflow (OF=1)
-        extern __cmd jp_s;            // 7A cb	JP rel8	    Jump short if parity (PF=1)
-        extern __cmd jpe_s;          // 7A cb	JPE rel8	Jump short if parity even (PF=1)
-        extern __cmd jpo_s;          // 7B cb	JPO rel8	Jump short if parity odd (PF=0)
-        extern __cmd js_s;          // 78 cb	JS rel8	    Jump short if sign (SF=1).0
-        extern __cmd jz_s;          // 74 cb	JZ rel8	    Jump short if zero (ZF = 1)
+        extern __cmd ja_s;          // 77 cb	JA rel8	J           Jump short if above (CF=0 and ZF=0)
+        extern __cmd jae_s;         // 73 cb	JAE rel8	        Jump short if above or equal (CF=0)
+        extern __cmd jb_s;          // 72 cb	JB rel8	            Jump short if below (CF=1)
+        extern __cmd jbe_s;         // 76 cb	JBE rel8	        Jump short if below or equal (CF=1 or ZF=1)
+        extern __cmd jc_s;          // 72 cb	JC rel8	            Jump short if carry (CF=1)
+        extern __cmd jcxz_s;        // E3 cb	JCXZ rel8	        Jump short if CX register is 0
+        extern __cmd jecxz_s;       // E3 cb	JECXZ rel8	        Jump short if ECX register is 0
+        extern __cmd je_s;          // 74 cb	JE rel8	            Jump short if equal (ZF=1)
+        extern __cmd jg_s;          // 7F cb	JG rel8	            Jump short if greater (ZF=0 and SF=OF)
+        extern __cmd jge_s;         // 7D cb	JGE rel8	        Jump short if greater or equal (SF=OF)
+        extern __cmd jl_s;          // 7C cb	JL rel8	            Jump short if less (SF<>OF)
+        extern __cmd jle_s;         // 7E cb	JLE rel8	        Jump short if less or equal (ZF=1 or SF<>OF)
+        extern __cmd jna_s;         // 76 cb	JNA rel8	        Jump short if not above (CF=1 or ZF=1)
+        extern __cmd jnae_s;        // 72 cb	JNAE rel8	        Jump short if not above or equal (CF=1)
+        extern __cmd jnb_s;         // 73 cb	JNB rel8	        Jump short if not below (CF=0)
+        extern __cmd jnbe_s;        // 77 cb	JNBE rel8	        Jump short if not below or equal (CF=0 and ZF=0)
+        extern __cmd jnc_s;         // 73 cb	JNC rel8	        Jump short if not carry (CF=0).
+        extern __cmd jne_s;         // 75 cb	JNE rel8	        Jump short if not equal (ZF=0)
+        extern __cmd jng_s;         // 7E cb	JNG rel8	        Jump short if not greater (ZF=1 or SF<>OF)
+        extern __cmd jnge_s;        // 7C cb	JNGE rel8	        Jump short if not greater or equal (SF<>OF)
+        extern __cmd jnl_s;         // 7D cb	JNL rel8	        Jump short if not less (SF=OF)
+        extern __cmd jnle_s;        // 7F cb	JNLE rel8	        Jump short if not less or equal (ZF=0 and SF=OF)
+        extern __cmd jno_s;         // 71 cb	JNO rel8	        Jump short if not overflow (OF=0)
+        extern __cmd jnp_s;         // 7B cb	JNP rel8	        Jump short if not parity (PF=0)
+        extern __cmd jns_s;         // 79 cb	JNS rel8	        Jump short if not sign (SF=0)
+        extern __cmd jnz_s;         // 75 cb	JNZ rel8	        Jump short if not zero (ZF=0)
+        extern __cmd jo_s;          // 70 cb	JO rel8	            Jump short if overflow (OF=1)
+        extern __cmd jp_s;          // 7A cb	JP rel8	            Jump short if parity (PF=1)
+        extern __cmd jpe_s;         // 7A cb	JPE rel8	        Jump short if parity even (PF=1)
+        extern __cmd jpo_s;         // 7B cb	JPO rel8	        Jump short if parity odd (PF=0)
+        extern __cmd js_s;          // 78 cb	JS rel8	            Jump short if sign (SF=1).0
+        extern __cmd jz_s;          // 74 cb	JZ rel8	            Jump short if zero (ZF = 1)
 
-        extern __cmd ja_;      // 0F 87 cw/cd	JA rel16/32	    Jump near if above (CF=0 and ZF=0)
-        extern __cmd jae;      // 0F 83 cw/cd	JAE rel16/32	Jump near if above or equal (CF=0)
-        extern __cmd jb_n;      // 0F 82 cw/cd	JB rel16/32	    Jump near if below (CF=1)
-        extern __cmd jbe_n;      // 0F 86 cw/cd	JBE rel16/32	Jump near if below or equal (CF=1 or ZF=1)
-        extern __cmd jc_n;      // 0F 82 cw/cd	JC rel16/32	    Jump near if carry (CF=1)
-        extern __cmd jcxz_n;      // 0F 84 cw/cd	JE rel16/32	    Jump near if equal (ZF=1)
-        extern __cmd jecxz_n;      // 0F 84 cw/cd	JZ rel16/32	    Jump near if 0 (ZF=1)
-        extern __cmd je_n;      // 0F 8F cw/cd	JG rel16/32	    Jump near if greater (ZF=0 and SF=OF)
-        extern __cmd jg_n;      // 0F 8D cw/cd	JGE rel16/32	Jump near if greater or equal (SF=OF)
-        extern __cmd jge_n;      // 0F 8C cw/cd	JL rel16/32	    Jump near if less (SF<>OF)
-        extern __cmd jl_n;      // 0F 8E cw/cd	JLE rel16/32	Jump near if less or equal (ZF=1 or SF<>OF)
-        extern __cmd jle_n;      // 0F 86 cw/cd	JNA rel16/32	Jump near if not above (CF=1 or ZF=1)
-        extern __cmd jna_n;      // 0F 82 cw/cd	JNAE rel16/32	Jump near if not above or equal (CF=1)
-        extern __cmd jnae_n;      // 0F 83 cw/cd	JNB rel16/32	Jump near if not below (CF=0)
-        extern __cmd jnb_n;      // 0F 87 cw/cd	JNBE rel16/32	Jump near if not below or equal (CF=0 and ZF=0)
-        extern __cmd jnbe_n;      // 0F 83 cw/cd	JNC rel16/32	Jump near if not carry (CF=0)
-        extern __cmd jnc_n ;      // 0F 85 cw/cd	JNE rel16/32	Jump near if not equal (ZF=0)
-        extern __cmd jne_n;      // 0F 8E cw/cd	JNG rel16/32	Jump near if not greater (ZF=1 or SF<>OF)
-        extern __cmd jng_n;      // 0F 8C cw/cd	JNGE rel16/32	Jump near if not greater or equal (SF<>OF)
-        extern __cmd jnge_n;      // 0F 8D cw/cd	JNL rel16/32	Jump near if not less (SF=OF)
-        extern __cmd jnl_n;      // 0F 8F cw/cd	JNLE rel16/32	Jump near if not less or equal (ZF=0 and SF=OF)
-        extern __cmd jnle_n;      // 0F 81 cw/cd	JNO rel16/32	Jump near if not overflow (OF=0)
-        extern __cmd jno_n;      // 0F 8B cw/cd	JNP rel16/32	Jump near if not parity (PF=0)
-        extern __cmd jnp_n;      // 0F 89 cw/cd	JNS rel16/32	Jump near if not sign (SF=0)
-        extern __cmd jns_n;      // 0F 85 cw/cd	JNZ rel16/32	Jump near if not zero (ZF=0)
-        extern __cmd jnz_n;      // 0F 80 cw/cd	JO rel16/32	    Jump near if overflow (OF=1)
-        extern __cmd jo_n;      // 0F 8A cw/cd	JP rel16/32	    Jump near if parity (PF=1)
-        extern __cmd jp_n;      // 0F 8A cw/cd	JPE rel16/32	Jump near if parity even (PF=1)
-        extern __cmd jpe_n;      // 0F 8B cw/cd	JPO rel16/32	Jump near if parity odd (PF=0)
-        extern __cmd jpo_n;      // 0F 88 cw/cd	JS rel16/32	    Jump near if sign (SF=1)
-        extern __cmd js_n;      // 0F 84 cw/cd	JZ rel16/32	    Jump near if 0 (ZF=1)
+        extern __cmd ja_n;          // 0F 87 cw/cd	JA rel16/32	    Jump near if above (CF=0 and ZF=0).
+        extern __cmd jae_n;         // 0F 83 cw/cd	JAE rel16/32	Jump near if above or equal (CF=0).
+        extern __cmd jb_n;          // 0F 82 cw/cd	JB rel16/32	    Jump near if below (CF=1).
+        extern __cmd jbe_n;         // 0F 86 cw/cd	JBE rel16/32	Jump near if below or equal (CF=1 or ZF=1).
+        extern __cmd jc_n;          // 0F 82 cw/cd	JC rel16/32	    Jump near if carry (CF=1).
+        extern __cmd je_n;          // 0F 84 cw/cd	JE rel16/32	    Jump near if equal (ZF=1).
+        extern __cmd jz_n;          // 0F 84 cw/cd	JZ rel16/32	    Jump near if 0 (ZF=1).
+        extern __cmd jg_n;          // 0F 8F cw/cd	JG rel16/32	    Jump near if greater (ZF=0 and SF=OF).
+        extern __cmd jge_n;         // 0F 8D cw/cd	JGE rel16/32	Jump near if greater or equal (SF=OF).
+        extern __cmd jl_n;          // 0F 8C cw/cd	JL rel16/32	    Jump near if less (SF<>OF).
+        extern __cmd jle_n;         // 0F 8E cw/cd	JLE rel16/32	Jump near if less or equal (ZF=1 or SF<>OF).
+        extern __cmd jna_n;         // 0F 86 cw/cd	JNA rel16/32	Jump near if not above (CF=1 or ZF=1).
+        extern __cmd jnae_n;        // 0F 82 cw/cd	JNAE rel16/32	Jump near if not above or equal (CF=1).
+        extern __cmd jnb_n;         // 0F 83 cw/cd	JNB rel16/32	Jump near if not below (CF=0).
+        extern __cmd jnbe_n;        // 0F 87 cw/cd	JNBE rel16/32	Jump near if not below or equal (CF=0 and ZF=0).
+        extern __cmd jnc_n;         // 0F 83 cw/cd	JNC rel16/32	Jump near if not carry (CF=0).
+        extern __cmd jne_n;         // 0F 85 cw/cd	JNE rel16/32	Jump near if not equal (ZF=0).
+        extern __cmd jng_n;         // 0F 8E cw/cd	JNG rel16/32	Jump near if not greater (ZF=1 or SF<>OF).
+        extern __cmd jnge_n;        // 0F 8C cw/cd	JNGE rel16/32	Jump near if not greater or equal (SF<>OF).
+        extern __cmd jnl_n;         // 0F 8D cw/cd	JNL rel16/32	Jump near if not less (SF=OF).
+        extern __cmd jnle_n;        // 0F 8F cw/cd	JNLE rel16/32	Jump near if not less or equal (ZF=0 and SF=OF).
+        extern __cmd jno_n;         // 0F 81 cw/cd	JNO rel16/32	Jump near if not overflow (OF=0).
+        extern __cmd jnp_n;         // 0F 8B cw/cd	JNP rel16/32	Jump near if not parity (PF=0).
+        extern __cmd jns_n;         // 0F 89 cw/cd	JNS rel16/32	Jump near if not sign (SF=0).
+        extern __cmd jnz_n;         // 0F 85 cw/cd	JNZ rel16/32	Jump near if not zero (ZF=0).
+        extern __cmd jo_n;          // 0F 80 cw/cd	JO rel16/32	Jump near if overflow (OF=1).
+        extern __cmd jp_n;          // 0F 8A cw/cd	JP rel16/32	Jump near if parity (PF=1).
+        extern __cmd jpe_n;         // 0F 8A cw/cd	JPE rel16/32	Jump near if parity even (PF=1).
+        extern __cmd jpo_n;         // 0F 8B cw/cd	JPO rel16/32	Jump near if parity odd (PF=0).
+        extern __cmd js_n;          // 0F 88 cw/cd	JS rel16/32	Jump near if sign (SF=1).
+
     }
     // [JMP]----------------------------------------------------------------------------------------------------------------
     namespace jmp {
-        extern __cmd jmp_rel8;     // EB cb	JMP rel8	Jump short, relative, displacement relative to next instruction.
-        extern __cmd jmp_rel16;     // E9 cw	JMP rel16	Jump near, relative, displacement relative to next instruction.
-        extern __cmd jmp_rel32;     // E9 cd	JMP rel32	Jump near, relative, displacement relative to next instruction.
-        extern __cmd jmp_rm16;     // FF /4	JMP r/m16	Jump near, absolute indirect, address given in r/m16.
-        extern __cmd jmp_rm32;     // FF /4	JMP r/m32	Jump near, absolute indirect, address given in r/m32.
-        extern __cmd jmp_ptr16_16;     // EA cd	JMP ptr16:16	Jump far, absolute, address given in operand.
-        extern __cmd jmp_ptr16_32;     // EA cp	JMP ptr16:32	Jump far, absolute, address given in operand.
-        extern __cmd jmp_m16_16;     // FF /5	JMP m16:16	Jump far, absolute indirect, address given in m16:16.
-        extern __cmd jmp_m16_32;     // FF /5	JMP m16:32	Jump far, absolute indirect, address given in m16:32.
+        extern __cmd rel8;      // EB cb	JMP rel8	 Jump short, relative, displacement relative to next instruction.
+        extern __cmd rel16;     // E9 cw	JMP rel16	 Jump near, relative, displacement relative to next instruction.
+        extern __cmd rel32;     // E9 cd	JMP rel32	 Jump near, relative, displacement relative to next instruction.
+
+        extern __cmd rm16;      // FF /4	JMP r/m16	 Jump near, absolute indirect, address given in r/m16.
+        extern __cmd rm32;      // FF /4	JMP r/m32	 Jump near, absolute indirect, address given in r/m32.
+        extern __cmd rm64;      // FF /4	JMP r/m32	 Jump near, absolute indirect, address given in r/m32.
+
+        extern __cmd ptr16_16;  // EA cd	JMP ptr16:16 Jump far, absolute, address given in operand.
+        extern __cmd ptr16_32;  // EA cp	JMP ptr16:32 Jump far, absolute, address given in operand.
+
+        extern __cmd m16_16;    // FF /5	JMP m16:16	 Jump far, absolute indirect, address given in m16:16.
+        extern __cmd m16_32;    // FF /5	JMP m16:32	 Jump far, absolute indirect, address given in m16:32.
     }
     // [RET]----------------------------------------------------------------------------------------------------------------
     namespace ret {
@@ -277,35 +285,42 @@ namespace opcode {
     }
     // [PUSH]---------------------------------------------------------------------------------------------------------------
     namespace push {
-        extern __cmd push_rm16;    // FF /6	    Push r/m16
-        extern __cmd push_rm32;    // FF /6	    Push r/m32
-        extern __cmd push_r16;    // 50+rw	    Push r16
-        extern __cmd push_r32;    // 50+rd	    Push r32
-        extern __cmd push_i8;    // 6A	    Push imm8
-        extern __cmd push_i16;    // 68	    Push imm16
-        extern __cmd push_i32;    // 68	    Push imm32
-        extern __cmd push_cs;    // 0E	    Push CS
-        extern __cmd push_ss;    // 16	    Push SS
-        extern __cmd push_ds;    // 1E	    Push DS
-        extern __cmd push_es;    // 06	    Push ES
-        extern __cmd push_fs;    // 0F A0	    Push FS
-        extern __cmd push_gs;    // 0F A8	    Push GS
+        extern __cmd rm8 ;  // FF /6	    Push r/m8
+        extern __cmd rm16;  // FF /6	    Push r/m16
+        extern __cmd rm32;  // FF /6	    Push r/m32
+        extern __cmd rm64;  // FF /6	    Push r/m32
+
+        extern __cmd r8;    // 50+rd	    Push r8
+        extern __cmd r16;   // 50+rw	    Push r16
+        extern __cmd r32;   // 50+rd	    Push r32
+        extern __cmd r64;   // 50+rd	    Push r64
+
+        extern __cmd i8;    // 6A	        Push imm8
+        extern __cmd i16;   // 68	        Push imm16
+        extern __cmd i32;   // 68	        Push imm32
+
+        extern __cmd cs;    // 0E	        Push CS
+        extern __cmd ss;    // 16	        Push SS
+        extern __cmd ds;    // 1E	        Push DS
+        extern __cmd es;    // 06	        Push ES
+        extern __cmd fs;    // 0F A0	    Push FS
+        extern __cmd gs;    // 0F A8	    Push GS
     }
     // [POP]---------------------------------------------------------------------------------------------------------------
     namespace pop {
-        extern __cmd pop_m16;    // 8F /0		Pop top of stack into m16; increment stack pointer.
-        extern __cmd pop_m32;    // 8F /0		Pop top of stack into m32; increment stack pointer.
-        extern __cmd pop_m64;    // 8F /0		Pop top of stack into m64; increment stack pointer.
+        extern __cmd m16;    // 8F /0		Pop top of stack into m16; increment stack pointer.
+        extern __cmd m32;    // 8F /0		Pop top of stack into m32; increment stack pointer.
+        extern __cmd m64;    // 8F /0		Pop top of stack into m64; increment stack pointer.
 
-        extern __cmd pop_r16;    // 58+ rw    Pop top of stack into r16; increment stack pointer.
-        extern __cmd pop_r32;    // 58+ rd    Pop top of stack into r32; increment stack pointer.
-        extern __cmd pop_r64;    // 58+ rd    Pop top of stack into r32; increment stack pointer.
+        extern __cmd r16;    // 58+ rw    Pop top of stack into r16; increment stack pointer.
+        extern __cmd r32;    // 58+ rd    Pop top of stack into r32; increment stack pointer.
+        extern __cmd r64;    // 58+ rd    Pop top of stack into r32; increment stack pointer.
 
-        extern __cmd pop_ds;        // 1F	    Pop top of stack into DS; increment stack pointer.
-        extern __cmd pop_es;        // 07	    Pop top of stack into ES; increment stack pointer.
-        extern __cmd pop_ss;        // 17	    Pop top of stack into SS; increment stack pointer.
-        extern __cmd pop_fs;        // 0F A1	    Pop top of stack into FS; increment stack pointer.
-        extern __cmd pop_gs;        // 0F A9	    Pop top of stack into GS; increment stack pointer.
+        extern __cmd ds;        // 1F	    Pop top of stack into DS; increment stack pointer.
+        extern __cmd es;        // 07	    Pop top of stack into ES; increment stack pointer.
+        extern __cmd ss;        // 17	    Pop top of stack into SS; increment stack pointer.
+        extern __cmd fs;        // 0F A1	    Pop top of stack into FS; increment stack pointer.
+        extern __cmd gs;        // 0F A9	    Pop top of stack into GS; increment stack pointer.
     }
 // []---------------------------------------------------------------------------------------------------------------
 // []---------------------------------------------------------------------------------------------------------------

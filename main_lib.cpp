@@ -264,6 +264,7 @@ __int64_t str2num (char *str, int len) {
     int sign = 1;
     if (*str == '-') {
         sign = -1;
+        len--;
         str++;
     }
     __int64_t number = 0;

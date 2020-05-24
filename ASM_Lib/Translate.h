@@ -45,7 +45,7 @@ struct instuction_t {
 const int num_extra_cmd = 4;
 extern char extra_cmd[num_extra_cmd][10];
 
-int Translate (SourceCodeNasm &code);
+int Translate (SourceCodeNasm &code, bool dump = false);
 
 char *tolower (char *str);
 

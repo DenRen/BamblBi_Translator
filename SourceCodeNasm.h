@@ -29,7 +29,7 @@ public:
 
     __uint32_t number_lines;
 
-    explicit SourceCodeNasm (const char *path_nasm_file);
+    explicit SourceCodeNasm (const char *path_nasm_file, bool dump = false);
     ~SourceCodeNasm ();
 };
 

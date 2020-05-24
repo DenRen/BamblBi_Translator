@@ -6,7 +6,7 @@
 #include "SourceCodeNasm.h"
 #include "main_lib.h"
 
-SourceCodeNasm::SourceCodeNasm (const char *path_nasm_file) :
+SourceCodeNasm::SourceCodeNasm (const char *path_nasm_file, bool dump) :
     lines_code (nullptr),
     buf_asm_code (nullptr)
 {
@@ -17,6 +17,11 @@ SourceCodeNasm::SourceCodeNasm (const char *path_nasm_file) :
     __line *lines = SplitLines (buf_asm_code, &number_lines, size_buf);
 
     lines_code = getWordsFromLines (lines, number_lines);   // Words from lines
+
+    if (dump)
+        for (int i = 0; i < number_lines; i++)
+            for (int j = 0; j < lines_code[i].size; j++)
+                printf ("%s\n", lines_code[i].words[j].word);
 
     free (lines);
 
