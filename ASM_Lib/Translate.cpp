@@ -35,7 +35,7 @@ char *tolower (char *str) {
 int getSparseness (__int32_t number) {
     int pow = ceil (log2 (abs (number)));
 
-    if (pow < 7)
+    if (pow <= 7)
         return 8;
     else if (pow < 15)
         return 16;
@@ -54,12 +54,11 @@ int Translate (SourceCodeNasm &code) {
         __word *words = code.lines_code[num_line].words;
         __uint8_t quant_words = code.lines_code[num_line].size;
 
-
-        printf ("%2d: ", num_line);
+        /*
         for (int i = 0; i < quant_words; i++)
             printf ("%s ", words[i].word);
 
-        printf ("\t--> ");
+        printf ("\t--> ");*/
 
         instuction_t instr = {};
 
@@ -74,9 +73,12 @@ int Translate (SourceCodeNasm &code) {
             }
 
 
-        printf ("%s\n", opcode::_name_cmds[instr.command]);
+        //printf ("%s\n", opcode::_name_cmds[instr.command]);
 
-        instr.args = (arg_t *) calloc (quant_words - 1, sizeof (arg_t));
+        if (quant_words - 1 < 3)
+            instr.args = (arg_t *) calloc (3, sizeof (arg_t));
+        else
+            instr.args = (arg_t *) calloc (quant_words - 1, sizeof (arg_t));
 
         if (instr.command < opcode::__Quantity_Types_Commands) {  // If command
 
@@ -116,7 +118,7 @@ int Translate (SourceCodeNasm &code) {
 
                     __int32_t number = str2num (arg, len);
 
-                    _ARG.val[2] = true;
+                    _ARG.val_on[2] = true;
                     _ARG.val[2] = number;
 
                     int temp_spr = getSparseness (number);
@@ -148,7 +150,7 @@ int Translate (SourceCodeNasm &code) {
                             else if (arg[1] == 'h')     _ARG.sparseness[num_value] = 8;     // ah
                             else                        _ARG.sparseness[num_value] = 16;    // ax
 
-                            _ARG.val_on[0] = true;
+                            _ARG.val_on[num_value] = true;
                             if (_ARG.mem)
                                 num_value++;
                             else
@@ -159,13 +161,13 @@ int Translate (SourceCodeNasm &code) {
                 }
             }
 
-            instr.dump ();
+            //instr.dump ();
 
             __word MC_cmd = createComand (instr);
 
             if (MC_cmd.word != nullptr) {
                 for (int i = 0; i < MC_cmd.len; i++)
-                    printf ("%x", (__uint8_t) MC_cmd.word[i]);
+                    printf ("%02x", (__uint8_t) MC_cmd.word[i]);
                 printf ("\n");
                 //printf ("%x\n", *(__uint32_t *) MC_cmd.word);
                 free (MC_cmd.word);
@@ -189,7 +191,7 @@ __word createComand (instuction_t instr) {
             assert (instr.num_args <= 2);
 
             if (_MR || _RR) {
-                if (instr.sparseness == 8)
+                if (_first.sparseness[0] == 8)
                     return genCmd (opcode::mov::movrm8_r8, instr);
                 else
                     return genCmd (opcode::mov::movrm64_r64, instr);
@@ -226,12 +228,12 @@ __word createComand (instuction_t instr) {
 }
 
 __uint8_t _cmd_t::getSize () {
-    return (LegPref_On) * LegPref       +
-           (REXPref_On) * REXPref       +
-           (ModR_M_On ) * ModR_M        +
-           (SIB_On    ) * SIB           +
-           (Disp_On   ) * Disp          +
-           (Imm_On    ) * Imm           +
+    return (LegPref_On)                 +
+           (REXPref_On)                 +
+           (ModR_M_On )                 +
+           (SIB_On    )                 +
+           (Disp_On   ) * sizeDisp      +
+           (Imm_On    ) * sizeImm       +
            (true)       * Opcode.size;
 }
 
@@ -242,6 +244,7 @@ __word _cmd_t::buildMC () {
     __word mc;
     int temp_size = getSize ();
     mc.word = (char *) calloc (getSize (), sizeof (__uint8_t));
+    mc.len = temp_size;
 
     int id = 0;
     if (LegPref_On)
@@ -261,6 +264,9 @@ __word _cmd_t::buildMC () {
 
     if (ModR_M_On)
         mc.word[id++] = ModR_M;
+
+    if (SIB_On)
+        mc.word[id++] = SIB;
 
     if (Disp_On) {
         if (sizeDisp == 1)
@@ -294,7 +300,7 @@ __word _cmd_t::buildMC () {
 }
 
 __word genCmd (opcode::__cmd command, instuction_t instr) {
-
+    // TODO byte, word, dword, qword
     // Second arg not memory!!!
 
     _cmd_t cmd = {};
@@ -309,16 +315,19 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
             cmd.LegPref = _p66h;
             cmd.LegPref_On = true;
 
-        } else if (_first.sparseness[0] > 16) {
+        } else if (_first.sparseness[0] == 32 && _first.mem) {
+
+            cmd.LegPref = _p67h;
+            cmd.LegPref_On = true;
+
+        } else if (_first.sparseness[0] > 32) {
 
             cmd.REXPref_On = true;
             cmd.REXPref = _REX (_w);
 
             if (_first.sparseness[0] == 65) cmd.REXPref |= _REX (_b);
 
-            if (instr.num_args > 1)
-
-                if (_second.sparseness[0] == 65) cmd.REXPref |= _REX (_r);
+            if (_second.sparseness[0] == 65) cmd.REXPref |= _REX (_r);
 
         }
 
@@ -333,6 +342,7 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
 
         // Only one of them can exist. Nonexistents equal by zero
         cmd.Imm     = _second.val[2]        + _third.val[2];
+        int a = _second.sparseness[2], b = _third.sparseness[2];
         cmd.sizeImm = _second.sparseness[2] + _third.sparseness[2];
 
         cmd.Disp     = _first.val[2];
@@ -353,8 +363,8 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
         } else {                                                            // Memroy
             // Enable or Ignore SIB
             // We know that mod != 11
-            if ((_first.val_on[0] && _first.val[1]) ||                                  // [ reg reg ... ] ||           // TODO SP and BP !!!
-                (_first.val[0] == reg::_reg::rsp || _first.val[1] == reg::_reg::rsp))   // [ rsp ... ... ] ||           // todo The most important
+            if ((_first.val_on[0] && _first.val[1]) ||                                  // [ reg reg ... ] ||
+                (_first.val[0] == reg::_reg::rsp || _first.val[1] == reg::_reg::rsp))   // [ rsp ... ... ] ||
             {                                                                           // [ ... rsp ... ]
 
                 cmd.SIB_On = true;
@@ -365,7 +375,6 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
                 cmd.ModR_M &= ModR_M (0b11, 0b111, 0b000);      // R/M -> 0
                 cmd.ModR_M += 0b100;                            // Enable SIB
             }
-
 
             if (_second.val_on[2] || _third.val_on[2]) cmd.Imm_On = true;   // Enable or Ignore Imm
 
@@ -383,6 +392,11 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
                 cmd.Disp_On = true;
                 cmd.Disp = 0;
 
+            }
+
+            if (_first.val_on[1] == false)  {
+                cmd.SIB &= 0b11000111;
+                cmd.SIB += 0b00100000;
             }
         }
 
