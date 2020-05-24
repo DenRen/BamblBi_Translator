@@ -258,7 +258,7 @@ __word *getWordsFromLine (char *line, __uint8_t *quantity_words) {
     return (__word *) realloc (words, num_words * sizeof (__word));
 }
 
-__int32_t str2num (char *str, int len) {
+__int64_t str2num (char *str, int len) {
     assert (str != nullptr);
 
     int sign = 1;
@@ -266,7 +266,7 @@ __int32_t str2num (char *str, int len) {
         sign = -1;
         str++;
     }
-    __int32_t number = 0;
+    __int64_t number = 0;
     for (; *str != '\0' && len ; str++, len--)
         number = number * 10 + *str - '0';
 

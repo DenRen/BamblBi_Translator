@@ -19,7 +19,7 @@ enum type_arg {
 
 struct arg_t {
     bool mem = false;
-    __int32_t val[3]  = {0, 0 ,0};
+    __int64_t val[3]  = {0, 0 ,0};
     int sparseness[3] = {0, 0, 0};
 
     //                REG1    REG2   Num

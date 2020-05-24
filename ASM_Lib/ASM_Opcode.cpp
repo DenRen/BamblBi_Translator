@@ -32,36 +32,36 @@ namespace opcode {
 
     // [MOV]----------------------------------------------------------------------------------------------------------------
     namespace mov {
-    __cmd movrm8_r8   (0x88, 1);        // 88 /r	MOV r/m8,  r8	    Move r8 to r/m8.
-    __cmd movrm16_r16 (0x89, 1);        // 89 /r	MOV r/m16, r16	    Move r16 to r/m16.
-    __cmd movrm32_r32 (0x89, 1);        // 89 /r	MOV r/m32, r32	    Move r32 to r/m32.
-    __cmd movrm64_r64 (0x89, 1);        // 89 /r	MOV r/m64, r64	    Move r64 to r/m64.
+    __cmd rm8_r8   (0x88, 1);        // 88 /r	MOV r/m8,  r8	    Move r8 to r/m8.
+    __cmd rm16_r16 (0x89, 1);        // 89 /r	MOV r/m16, r16	    Move r16 to r/m16.
+    __cmd rm32_r32 (0x89, 1);        // 89 /r	MOV r/m32, r32	    Move r32 to r/m32.
+    __cmd rm64_r64 (0x89, 1);        // 89 /r	MOV r/m64, r64	    Move r64 to r/m64.
 
-    __cmd movr8_rm8 (0x8a, 1);          // 8A /r	MOV r8,  r/m8	    Move r/m8 to r8.
-    __cmd movr16_rm16 (0x8b, 1);        // 8B /r	MOV r16, r/m16	    Move r/m16 to r16.
-    __cmd movr32_rm32 (0x8b, 1);        // 8B /r	MOV r32, r/m32	    Move r/m32 to r32.
-    __cmd movr64_rm64 (0x8b, 1);        // 8B /r	MOV r64, r/m64	    Move r/m64 to r64.
+    __cmd r8_rm8 (0x8a, 1);          // 8A /r	MOV r8,  r/m8	    Move r/m8 to r8.
+    __cmd r16_rm16 (0x8b, 1);        // 8B /r	MOV r16, r/m16	    Move r/m16 to r16.
+    __cmd r32_rm32 (0x8b, 1);        // 8B /r	MOV r32, r/m32	    Move r/m32 to r32.
+    __cmd r64_rm64 (0x8b, 1);        // 8B /r	MOV r64, r/m64	    Move r/m64 to r64.
 
-    __cmd movrm8_sr (0x8c, 1);          // 8C /r	MOV r/m16, Sreg**	Move segment register to r/m16.
-    __cmd movsr_rm8 (0x8e, 1);          // 8E /r	MOV Sreg, r/m16**	Move r/m16 to segment register.
+    __cmd rm8_sr (0x8c, 1);          // 8C /r	MOV r/m16, Sreg**	Move segment register to r/m16.
+    __cmd sr_rm8 (0x8e, 1);          // 8E /r	MOV Sreg, r/m16**	Move r/m16 to segment register.
 
-    __cmd movr8_moffs8 (0xa0, 1);      // A0	    MOV AL, moffs8*	    Move byte at (seg:offset) to AL.
-    __cmd movr16_moffs16 (0xa1, 1);      // A1	    MOV AX, moffs16*	Move word at (seg:offset) to AX.
-    __cmd movr32_moffs32 (0xa1, 1);      // A1	    MOV EAX, moffs32*	Move dword at (seg:offset) to EAX.
+    __cmd r8_moffs8 (0xa0, 1);      // A0	    MOV AL, moffs8*	    Move byte at (seg:offset) to AL.
+    __cmd r16_moffs16 (0xa1, 1);      // A1	    MOV AX, moffs16*	Move word at (seg:offset) to AX.
+    __cmd r32_moffs32 (0xa1, 1);      // A1	    MOV EAX, moffs32*	Move dword at (seg:offset) to EAX.
 
-    __cmd movmoffs8_r8   (0xa2, 1);      // A2	    MOV moffs8*, AL	    Move AL to (seg:offset).
-    __cmd movmoffs16_r16 (0xa3, 1);      // A3	    MOV moffs16*, AX	Move AX to (seg:offset).
-    __cmd movmoffs32_r32 (0xa3, 1);      // A3	    MOV moffs32*, EAX	Move EAX to (seg:offset).
+    __cmd moffs8_r8   (0xa2, 1);      // A2	    MOV moffs8*, AL	    Move AL to (seg:offset).
+    __cmd moffs16_r16 (0xa3, 1);      // A3	    MOV moffs16*, AX	Move AX to (seg:offset).
+    __cmd moffs32_r32 (0xa3, 1);      // A3	    MOV moffs32*, EAX	Move EAX to (seg:offset).
 
-    __cmd movr8_i8   (0xb0, 1);      // B0+ rb	MOV r8, imm8	    Move imm8 to r8.
-    __cmd movr16_i16 (0xb8, 1);      // B8+ rw	MOV r16, imm16	    Move imm16 to r16.
-    __cmd movr32_i32 (0xb8, 1);      // B8+ rd	MOV r32, imm32	    Move imm32 to r32.
-    __cmd movr64_i64 (0xb8, 1);      // B8+ rd	MOV r32, imm32	    Move imm32 to r32.
+    __cmd r8_i8   (0xb0, 1);      // B0+ rb	MOV r8, imm8	    Move imm8 to r8.
+    __cmd r16_i16 (0xb8, 1);      // B8+ rw	MOV r16, imm16	    Move imm16 to r16.
+    __cmd r32_i32 (0xb8, 1);      // B8+ rd	MOV r32, imm32	    Move imm32 to r32.
+    __cmd r64_i64 (0xb8, 1);      // B8+ rd	MOV r32, imm32	    Move imm32 to r32.
 
-    __cmd movrm8_i8   (0xc6, 1);      // C6 /0	MOV r/m8, imm8	    Move imm8 to r/m8.
-    __cmd movrm16_i16 (0xc7, 1);      // C7 /0	MOV r/m16, imm16	Move imm16 to r/m16.
-    __cmd movrm32_i32 (0xc7, 1);      // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
-    __cmd movrm64_i64 (0xc7, 1);      // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
+    __cmd rm8_i8   (0xc6, 1);      // C6 /0	MOV r/m8, imm8	    Move imm8 to r/m8.
+    __cmd rm16_i16 (0xc7, 1);      // C7 /0	MOV r/m16, imm16	Move imm16 to r/m16.
+    __cmd rm32_i32 (0xc7, 1);      // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
+    __cmd rm64_i64 (0xc7, 1);      // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
 }
     // [ADD]----------------------------------------------------------------------------------------------------------------
     namespace add {

@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <cassert>
 #include <cmath>
+#include <stdexcept>
 #include "Translate.h"
 #include "ASM_Registers.h"
 #include "ASM_Prefixes.h"
@@ -114,9 +115,9 @@ int Translate (SourceCodeNasm &code) {
                 if (arg[0] == ';')
                     break;
                 // Number
-                else if (isnumber (arg[0])) {
+                else if (isnumber (arg[0]) || arg[0] == '-') {
 
-                    __int32_t number = str2num (arg, len);
+                    __int64_t number = str2num (arg, len);
 
                     _ARG.val_on[2] = true;
                     _ARG.val[2] = number;
@@ -182,8 +183,12 @@ int Translate (SourceCodeNasm &code) {
 #define _second instr.args[1]
 #define _third  instr.args[2]
 
-#define _MR (_first.mem && _second.val_on[0])
-#define _RR (!_first.mem && _first.val_on[0] && _second.val_on[0])
+#define _MR ( _first.mem && !_second.mem && _second.val_on[0])
+#define _MI ( _first.mem && !_second.mem && _second.val_on[2])
+
+#define _RM (!_first.mem &&  _second.mem && _first.val_on[0])
+#define _RR (!_first.mem && !_second.mem && _first.val_on[0] && _second.val_on[0])
+#define _RI (!_first.mem && !_second.mem && _first.val_on[0] && _second.val_on[2])
 
 __word createComand (instuction_t instr) {
     switch (instr.command) {
@@ -192,14 +197,29 @@ __word createComand (instuction_t instr) {
 
             if (_MR || _RR) {
                 if (_first.sparseness[0] == 8)
-                    return genCmd (opcode::mov::movrm8_r8, instr);
+                    return genCmd (opcode::mov::rm8_r8, instr);
                 else
-                    return genCmd (opcode::mov::movrm64_r64, instr);
-            } else if (_RR || _MR) {
+                    return genCmd (opcode::mov::rm64_r64, instr);
+            } else if (_RM) {
+                arg_t temp_arg = _second;
+                _second = _first;
+                _first = temp_arg;
+
                 if (instr.sparseness == 8)
-                    return genCmd (opcode::mov::movr8_rm8, instr);
+                    return genCmd (opcode::mov::r8_rm8, instr);
                 else
-                    return genCmd (opcode::mov::movr64_rm64, instr);
+                    return genCmd (opcode::mov::r64_rm64, instr);
+
+            } else if (_RI) {
+                if (_first.sparseness[0] == 8)
+                    return genCmd (opcode::mov::r8_i8, instr);
+                else
+                    return genCmd (opcode::mov::r64_i64, instr);
+            } else if (_MI) {
+                if (_first.sparseness[0] == 8)
+                    return genCmd (opcode::mov::rm8_i8, instr);
+                else
+                    return genCmd (opcode::mov::rm64_i64, instr);
             }
 
             break;
@@ -239,7 +259,7 @@ __uint8_t _cmd_t::getSize () {
 
 __word _cmd_t::buildMC () {
     assert (sizeDisp <= 4);
-    assert (sizeImm  <= 4);
+    assert (sizeImm  <= 8);
 
     __word mc;
     int temp_size = getSize ();
@@ -249,7 +269,6 @@ __word _cmd_t::buildMC () {
     int id = 0;
     if (LegPref_On)
         mc.word[id++] = LegPref;
-
 
     if (REXPref_On)
         mc.word[id++] = REXPref;
@@ -325,16 +344,17 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
             cmd.REXPref_On = true;
             cmd.REXPref = _REX (_w);
 
-            if (_first.sparseness[0] == 65) cmd.REXPref |= _REX (_b);
+            if (_first.sparseness[0]  == 65) cmd.REXPref |= _REX (_b);
 
             if (_second.sparseness[0] == 65) cmd.REXPref |= _REX (_r);
 
         }
 
-        _first.sparseness[2]  /= 8;
-        _second.sparseness[2] /= 8;
-        _third.sparseness[2]  /= 8;
-
+        for (int i = 0; i < 3; i++) {
+            _first.sparseness[i] /= 8;
+            _second.sparseness[i] /= 8;
+            _third.sparseness[i] /= 8;
+        }
         // Early building strategy
 
         cmd.ModR_M = ModR_M (0, _second.val[0], _first.val[0]);
@@ -342,11 +362,16 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
 
         // Only one of them can exist. Nonexistents equal by zero
         cmd.Imm     = _second.val[2]        + _third.val[2];
-        int a = _second.sparseness[2], b = _third.sparseness[2];
         cmd.sizeImm = _second.sparseness[2] + _third.sparseness[2];
 
+        cmd.sizeImm = fmax (cmd.sizeImm, _first.sparseness[0]);             // Because x86_64
+
         cmd.Disp     = _first.val[2];
-        cmd.sizeDisp = _first.sparseness[2];
+        if (_first.sparseness[2] > 4)
+            throw std::runtime_error (" warning: dword data exceeds bounds!");
+
+             if (_first.sparseness[2] == 1) cmd.sizeDisp = 1;               // Because
+        else if (_first.sparseness[2]  > 1) cmd.sizeDisp = 4;               // x86_64
 
         if (_first.val_on[0]) cmd.ModR_M_On = true;                         // Enable or Ignore ModR/M
         if (_second.val_on[2] || _third.val_on[2]) cmd.Imm_On = true;       // Enable or Ignore Imm
@@ -540,7 +565,7 @@ void instuction_t::dump () {
     for (int i = 0; i < num_args; i++) {
 
         printf ("\n%d) mem = %d\n\n", i, args[i].mem);
-        printf ("val:    %d\t%d\t%d\n", args[i].val[0], args[i].val[1], args[i].val[2]);
+        printf ("val:    %ld\t%ld\t%ld\n", args[i].val[0], args[i].val[1], args[i].val[2]);
         printf ("sprs:   %d\t%d\t%d\n", args[i].sparseness[0], args[i].sparseness[1], args[i].sparseness[2]);
         printf ("val_on: %d\t%d\t%d\n", args[i].val_on[0], args[i].val_on[1], args[i].val_on[2]);
 

@@ -25,5 +25,5 @@ __line *SplitLines (char *lines, __uint32_t *num_lines, __int64_t size_buf = -1)
 __line_words *getWordsFromLines (__line *lines, __uint32_t num_lines);
 __word       *getWordsFromLine (char *line, __uint8_t *quantity_words);
 
-__int32_t str2num (char *str, int len = 100);
+__int64_t str2num (char *str, int len = 100);
 #endif //BAMBLBI_TRANSLATOR_MAIN_LIB_H
