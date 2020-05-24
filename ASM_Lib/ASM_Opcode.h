@@ -89,102 +89,105 @@ namespace opcode {
         extern __cmd rm32_i32;      // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
         extern __cmd rm64_i64;      // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
     }
-
     // [ADD]----------------------------------------------------------------------------------------------------------------
     namespace add {
-        extern __cmd addr8_i8;   // 04 ib	    ADD AL,    imm8	    Add imm8 to AL
-        extern __cmd addr16_i16;     // 05 iw	    ADD AX,    imm16	Add imm16 to AX
-        extern __cmd addr32_i32;     // 05 id	    ADD EAX,   imm32	Add imm32 to EAX
-        extern __cmd addr64_i64;     // 05 id	    ADD RAX,   imm64	Add imm32 to EAX
+        extern __cmd r8_i8;         // 04 ib	    ADD AL,    imm8	    Add imm8 to AL
+        extern __cmd r16_i16;       // 05 iw	    ADD AX,    imm16	Add imm16 to AX
+        extern __cmd r32_i32;       // 05 id	    ADD EAX,   imm32	Add imm32 to EAX
+        extern __cmd r64_i64;       // 05 id	    ADD RAX,   imm64	Add imm32 to EAX
 
-        extern __cmd addrm8_i8;   // 80 /0 ib	ADD r/m8,  imm8	    Add imm8 to r/m8
-        extern __cmd addrm16_i16;     // 81 /0 iw	ADD r/m16, imm16	Add imm16 to r/m16
-        extern __cmd addrm32_i32;     // 81 /0 id	ADD r/m32, imm32	Add imm32 to r/m32
-        extern __cmd addrm64_i64;     // 81 /0 id	ADD r/m32, imm32	Add imm32 to r/m32
+        extern __cmd rm8_i8;        // 80 /0 ib	    ADD r/m8,  imm8	    Add imm8 to r/m8
+        extern __cmd rm16_i16;      // 81 /0 iw	    ADD r/m16, imm16	Add imm16 to r/m16
+        extern __cmd rm32_i32;      // 81 /0 id	    ADD r/m32, imm32	Add imm32 to r/m32
+        extern __cmd rm64_i64;      // 81 /0 id	    ADD r/m32, imm32	Add imm32 to r/m32
 
-        extern __cmd addrm16_i16_se;      // 83 /0 ib	ADD r/m16, imm8	    Add sign-extended imm8 to r/m16
-        extern __cmd addrm32_i32_se;      // 83 /0 ib	ADD r/m32, imm8	    Add sign-extended imm8 to r/m32
-        extern __cmd addrm64_i64_se;      // 83 /0 ib	ADD r/m32, imm8	    Add sign-extended imm8 to r/m32
+        extern __cmd rm16_i16_se;   // 83 /0 ib	    ADD r/m16, imm8	    Add sign-extended imm8 to r/m16
+        extern __cmd rm32_i32_se;   // 83 /0 ib	    ADD r/m32, imm8	    Add sign-extended imm8 to r/m32
+        extern __cmd rm64_i64_se;   // 83 /0 ib	    ADD r/m32, imm8	    Add sign-extended imm8 to r/m32
 
-        extern __cmd addrm8_r8;     // 00 /r	    ADD r/m8,  r8	    Add r8 to r/m8
-        extern __cmd addrm16_r16;      // 01 /r	    ADD r/m16, r16	    Add r16 to r/m16
-        extern __cmd addrm32_r32;      // 01 /r	    ADD r/m32, r32	    Add r32 to r/m32
-        extern __cmd addrm64_r64;      // 01 /r	    ADD r/m32, r32	    Add r32 to r/m32
+        extern __cmd rm8_r8;        // 00 /r	    ADD r/m8,  r8	    Add r8 to r/m8
+        extern __cmd rm16_r16;      // 01 /r	    ADD r/m16, r16	    Add r16 to r/m16
+        extern __cmd rm32_r32;      // 01 /r	    ADD r/m32, r32	    Add r32 to r/m32
+        extern __cmd rm64_r64;      // 01 /r	    ADD r/m32, r32	    Add r32 to r/m32
 
-        extern __cmd addr8_r8;     // 02 /r	    ADD r8,  r/m8	    Add r/m8 to r8
-        extern __cmd addr16_r16;      // 03 /r	    ADD r16, r/m16	    Add r/m16 to r16
-        extern __cmd addr32_r32;      // 03 /r	    ADD r32, r/m32	    Add r/m32 to r32
-        extern __cmd addr64_r64;      // 03 /r	    ADD r32, r/m32	    Add r/m32 to r32
+        extern __cmd r8_rm8;        // 02 /r	    ADD r8,  r/m8	    Add r/m8 to r8
+        extern __cmd r16_rm16;      // 03 /r	    ADD r16, r/m16	    Add r/m16 to r16
+        extern __cmd r32_rm32;      // 03 /r	    ADD r32, r/m32	    Add r/m32 to r32
+        extern __cmd r64_rm64;      // 03 /r	    ADD r32, r/m32	    Add r/m32 to r32
     }
     // [SUB]----------------------------------------------------------------------------------------------------------------
     namespace sub {
-        extern __cmd subr8_i8;        // 2C ib	    SUB AL,    imm8	    Subtract imm8  from AL
-        extern __cmd subr16_i16;         // 2D iw	    SUB AX,    imm16	Subtract imm16 from AX
-        extern __cmd subr32_i32;         // 2D id	    SUB EAX,   imm32	Subtract imm32 from EAX
-        extern __cmd subr64_i64;         // 2D id	    SUB EAX,   imm32	Subtract imm32 from EAX
+        extern __cmd r8_i8;         // 2C ib	    SUB AL,    imm8	    Subtract imm8  from AL
+        extern __cmd r16_i16;       // 2D iw	    SUB AX,    imm16	Subtract imm16 from AX
+        extern __cmd r32_i32;       // 2D id	    SUB EAX,   imm32	Subtract imm32 from EAX
+        extern __cmd r64_i64;       // 2D id	    SUB EAX,   imm32	Subtract imm32 from EAX
 
-        extern __cmd subrm8_i8;     // 80 /5 ib	SUB r/m8,  imm8	        Subtract imm8  from r/m8
-        extern __cmd subrm16_i16;      // 81 /5 iw	SUB r/m16, imm16	    Subtract imm16 from r/m16
-        extern __cmd subrm32_i32;      // 81 /5 id	SUB r/m32, imm32	    Subtract imm32 from r/m32
-        extern __cmd subrm64_i64;      // 81 /5 id	SUB r/m32, imm32	    Subtract imm32 from r/m32
+        extern __cmd rm8_i8;        // 80 /5 ib	    SUB r/m8,  imm8	    Subtract imm8  from r/m8
+        extern __cmd rm16_i16;      // 81 /5 iw	    SUB r/m16, imm16    Subtract imm16 from r/m16
+        extern __cmd rm32_i32;      // 81 /5 id	    SUB r/m32, imm32    Subtract imm32 from r/m32
+        extern __cmd rm64_i64;      // 81 /5 id	    SUB r/m32, imm32    Subtract imm32 from r/m32
 
-        extern __cmd subrm16_i16_se;   // 83 /5 ib	SUB r/m16, imm8	        Subtract sign-extended imm8 from r/m16
-        extern __cmd subrm32_i32_se;   // 83 /5 ib	SUB r/m32, imm8	        Subtract sign-extended imm8 from r/m32
-        extern __cmd subrm64_i64_se;   // 83 /5 ib	SUB r/m32, imm8	        Subtract sign-extended imm8 from r/m32
+        extern __cmd rm16_i16_se;   // 83 /5 ib	    SUB r/m16, imm8	    Subtract sign-extended imm8 from r/m16
+        extern __cmd rm32_i32_se;   // 83 /5 ib	    SUB r/m32, imm8	    Subtract sign-extended imm8 from r/m32
+        extern __cmd rm64_i64_se;   // 83 /5 ib	    SUB r/m32, imm8	    Subtract sign-extended imm8 from r/m32
 
-        extern __cmd subrm8_r8;      // 28 /r	    SUB r/m8,  r8	    Subtract r8  from r/m8
-        extern __cmd subrm16_r16;        // 29 /r	    SUB r/m16, r16	    Subtract r16 from r/m16
-        extern __cmd subrm32_r32;        // 29 /r	    SUB r/m32, r32	    Subtract r32 from r/m32
-        extern __cmd subrm64_r64;        // 29 /r	    SUB r/m32, r32	    Subtract r32 from r/m32
+        extern __cmd rm8_r8;        // 28 /r	    SUB r/m8,  r8	    Subtract r8  from r/m8
+        extern __cmd rm16_r16;      // 29 /r	    SUB r/m16, r16	    Subtract r16 from r/m16
+        extern __cmd rm32_r32;      // 29 /r	    SUB r/m32, r32	    Subtract r32 from r/m32
+        extern __cmd rm64_r64;      // 29 /r	    SUB r/m32, r32	    Subtract r32 from r/m32
 
-        extern __cmd subr8_r8;       // 2A /r	    SUB r8,    r/m8	    Subtract r/m8  from r8
-        extern __cmd subr16_r16;         // 2B /r	    SUB r16,   r/m16	Subtract r/m16 from r16
-        extern __cmd subr32_r32;         // 2B /r	    SUB r32,   r/m32	Subtract r/m32 from r32
-        extern __cmd subr64_r64;         // 2B /r	    SUB r32,   r/m32	Subtract r/m32 from r32
+        extern __cmd r8_rm8;        // 2A /r	    SUB r8,    r/m8	    Subtract r/m8  from r8
+        extern __cmd r16_rm16;      // 2B /r	    SUB r16,   r/m16	Subtract r/m16 from r16
+        extern __cmd r32_rm32;      // 2B /r	    SUB r32,   r/m32	Subtract r/m32 from r32
+        extern __cmd r64_rm64;      // 2B /r	    SUB r32,   r/m32	Subtract r/m32 from r32
     }
     // [MUL]----------------------------------------------------------------------------------------------------------------
     namespace mul {
-        extern __cmd mulrm8;     // F6 /4	MUL r/m8	Unsigned multiply (AX = AL * r/m8).
-        extern __cmd mulrm16;    // F7 /4	MUL r/m16	Unsigned multiply (DX:AX = AX * r/m16).
-        extern __cmd mulrm32;    // F7 /4	MUL r/m32	Unsigned multiply (EDX:EAX = EAX * r/m32)
-        extern __cmd mulrm64;    // F7 /4	MUL r/m32	Unsigned multiply (EDX:EAX = EAX * r/m32)
+        extern __cmd rm8;     // F6 /4	MUL r/m8	Unsigned multiply (AX = AL * r/m8).
+        extern __cmd rm16;    // F7 /4	MUL r/m16	Unsigned multiply (DX:AX = AX * r/m16).
+        extern __cmd rm32;    // F7 /4	MUL r/m32	Unsigned multiply (EDX:EAX = EAX * r/m32)
+        extern __cmd rm64;    // F7 /4	MUL r/m32	Unsigned multiply (EDX:EAX = EAX * r/m32)
     }
     // [DIV]----------------------------------------------------------------------------------------------------------------
     namespace div {
-        extern __cmd divrm8;    // F6 /6	DIV r/m8	Unsigned divide AX by r/m8, with result stored in AL = Quotient, AH = Remainder
-        extern __cmd divrm16;   // F7 /6	DIV r/m16	Unsigned divide DX:AX by r/m16, with result stored in AX = Quotient, DX = Remainder
-        extern __cmd divrm32;   // F7 /6	DIV r/m32	Unsigned divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
-        extern __cmd divrm64;   // F7 /6	DIV r/m32	Unsigned divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
+        extern __cmd rm8;    // F6 /6	DIV r/m8	Unsigned divide AX by r/m8, with result stored in AL = Quotient, AH = Remainder
+        extern __cmd rm16;   // F7 /6	DIV r/m16	Unsigned divide DX:AX by r/m16, with result stored in AX = Quotient, DX = Remainder
+        extern __cmd rm32;   // F7 /6	DIV r/m32	Unsigned divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
+        extern __cmd rm64;   // F7 /6	DIV r/m32	Unsigned divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
     }
     // [IMUL]----------------------------------------------------------------------------------------------------------------
     namespace imul {
-        extern __cmd imulrm8;      // F6 /5	IMUL r/m8	            AX = AL * r/m byte
-        extern __cmd imulrm16;     // F7 /5	IMUL r/m16	            DX:AX = AX * r/m word
-        extern __cmd imulrm32;     // F7 /5	IMUL r/m32	            EDX:EAX = EAX * r/m doubleword
-        extern __cmd imulrm64;     // F7 /5	IMUL r/m32	            EDX:EAX = EAX * r/m doubleword
+        extern __cmd rm8;       // F6 /5	IMUL r/m8	            AX = AL * r/m byte
+        extern __cmd rm16;      // F7 /5	IMUL r/m16	            DX:AX = AX * r/m word
+        extern __cmd rm32;      // F7 /5	IMUL r/m32	            EDX:EAX = EAX * r/m doubleword
+        extern __cmd rm64;      // F7 /5	IMUL r/m32	            EDX:EAX = EAX * r/m doubleword
 
-        extern __cmd imulr_rm16;      // 0F AF /r	IMUL r16, r/m16	        word register = word register * r/m word
-        extern __cmd imulr_rm32;      // 0F AF /r	IMUL r32, r/m32	        doubleword register = doubleword register * r/m doubleword
-        extern __cmd imulr_rm64;      // 0F AF /r	IMUL r32, r/m32	        doubleword register = doubleword register * r/m doubleword
+        extern __cmd r_rm16;    // 0F AF /r	IMUL r16, r/m16	        word register = word register * r/m word
+        extern __cmd r_rm32;    // 0F AF /r	IMUL r32, r/m32	        doubleword register = doubleword register * r/m doubleword
+        extern __cmd r_rm64;    // 0F AF /r	IMUL r32, r/m32	        doubleword register = doubleword register * r/m doubleword
 
-        extern __cmd imulr16_i8;        // 6B /r ib	IMUL r16, r/m16, imm8	word register = r/m16 * sign-extended immediate byte
-        extern __cmd imulr32_i8;        // 6B /r ib	IMUL r32, r/m32, imm8	doubleword register = r/m32 * sign-extended immediate byte
-        extern __cmd imulr64_i8;        // 6B /r ib	IMUL r32, r/m32, imm8	doubleword register = r/m32 * sign-extended immediate byte
+        extern __cmd r16_rm_i8; // 6B /r ib	IMUL r16, r/m16, imm8	word register = r/m16 * sign-extended immediate byte
+        extern __cmd r32_rm_i8; // 6B /r ib	IMUL r32, r/m32, imm8	doubleword register = r/m32 * sign-extended immediate byte
+        extern __cmd r64_rm_i8; // 6B /r ib	IMUL r32, r/m32, imm8	doubleword register = r/m32 * sign-extended immediate byte
 
-        extern __cmd imulr_rm_i16;        // 69 /r iw	IMUL r16, r/m16, imm16	word register = r/m16 * immediate word
-        extern __cmd imulr_rm_i32;        // 69 /r id	IMUL r32, r/m32, imm32	doubleword register = r/m32 * immediate doubleword
-        extern __cmd imulr_rm_i64;        // 69 /r id	IMUL r32, r/m32, imm32	doubleword register = r/m32 * immediate doubleword
+        extern __cmd r16_i8;    // 6B /r ib	IMUL r16, r/m16, imm8	word register = r/m16 * sign-extended immediate byte
+        extern __cmd r32_i8;    // 6B /r ib	IMUL r32, r/m32, imm8	doubleword register = r/m32 * sign-extended immediate byte
+        extern __cmd r64_i8;    // 6B /r ib	IMUL r32, r/m32, imm8	doubleword register = r/m32 * sign-extended immediate byte
 
-        extern __cmd imulr_i16;        // 69 /r iw	IMUL r16, imm16	        word register = r/m16 * immediate word
-        extern __cmd imulr_i32 ;        // 69 /r id	IMUL r32, imm32	        doubleword register = r/m32 * immediate doubleword
-        extern __cmd imulr_i64;        // 69 /r id	IMUL r32, imm32	        doubleword register = r/m32 * immediate doubleword
+        extern __cmd r_rm_i16;  // 69 /r iw	IMUL r16, r/m16, imm16	word register = r/m16 * immediate word
+        extern __cmd r_rm_i32;  // 69 /r id	IMUL r32, r/m32, imm32	doubleword register = r/m32 * immediate doubleword
+        extern __cmd r_rm_i64;  // 69 /r id	IMUL r32, r/m32, imm32	doubleword register = r/m32 * immediate doubleword
+
+        extern __cmd r_i16;     // 69 /r iw	IMUL r16, imm16	        word register = r/m16 * immediate word
+        extern __cmd r_i32 ;    // 69 /r id	IMUL r32, imm32	        doubleword register = r/m32 * immediate doubleword
+        extern __cmd r_i64;     // 69 /r id	IMUL r32, imm32	        doubleword register = r/m32 * immediate doubleword
     }
     // [IDIV]----------------------------------------------------------------------------------------------------------------
     namespace idiv {
-        extern __cmd idivrm8 ;      // F6 /7	IDIV r/m8       Signed divide AX by r/m8, with result stored in AL = Quotient, AH = Remainder
-        extern __cmd idivrm16;      // F7 /7	IDIV r/m16      Signed divide DX:AX by r/m16, with result stored in AX = Quotient, DX = Remainder
-        extern __cmd idivrm32;      // F7 /7	IDIV r/m32      Signed divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
-        extern __cmd idivrm64;      // F7 /7	IDIV r/m32      Signed divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
+        extern __cmd rm8 ;      // F6 /7	IDIV r/m8       Signed divide AX by r/m8, with result stored in AL = Quotient, AH = Remainder
+        extern __cmd rm16;      // F7 /7	IDIV r/m16      Signed divide DX:AX by r/m16, with result stored in AX = Quotient, DX = Remainder
+        extern __cmd rm32;      // F7 /7	IDIV r/m32      Signed divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
+        extern __cmd rm64;      // F7 /7	IDIV r/m32      Signed divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
     }
     // [Jcc]----------------------------------------------------------------------------------------------------------------
     namespace jcc {

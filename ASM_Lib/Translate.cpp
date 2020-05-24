@@ -55,11 +55,11 @@ int Translate (SourceCodeNasm &code) {
         __word *words = code.lines_code[num_line].words;
         __uint8_t quant_words = code.lines_code[num_line].size;
 
-        /*
+
         for (int i = 0; i < quant_words; i++)
             printf ("%s ", words[i].word);
 
-        printf ("\t--> ");*/
+        printf ("\t--> ");
 
         instuction_t instr = {};
 
@@ -172,7 +172,9 @@ int Translate (SourceCodeNasm &code) {
                 printf ("\n");
                 //printf ("%x\n", *(__uint32_t *) MC_cmd.word);
                 free (MC_cmd.word);
-            }
+            } else
+                assert (false);
+
         }
     }
 
@@ -190,50 +192,84 @@ int Translate (SourceCodeNasm &code) {
 #define _RR (!_first.mem && !_second.mem && _first.val_on[0] && _second.val_on[0])
 #define _RI (!_first.mem && !_second.mem && _first.val_on[0] && _second.val_on[2])
 
+#define _R_RM_I (!_first.mem && _first.val_on[0] && _third.val_on[2])
+#define _R_or_M (instr.num_args == 1)
+
+#define GenerateCmd(spars8, spars64) {                                                      \
+                                         if (_first.sparseness[0] == 8)                     \
+                                            return genCmd (opcode:: spars8, instr);         \
+                                         else                                               \
+                                            return genCmd (opcode:: spars64, instr);        \
+                                     }
 __word createComand (instuction_t instr) {
     switch (instr.command) {
         case opcode::_cmds::MOV:
             assert (instr.num_args <= 2);
 
-            if (_MR || _RR) {
-                if (_first.sparseness[0] == 8)
-                    return genCmd (opcode::mov::rm8_r8, instr);
-                else
-                    return genCmd (opcode::mov::rm64_r64, instr);
-            } else if (_RM) {
+            if (_MR || _RR)     GenerateCmd (mov::rm8_r8, mov::rm64_r64)
+            else if (_RM) {
                 arg_t temp_arg = _second;
                 _second = _first;
                 _first = temp_arg;
 
-                if (instr.sparseness == 8)
-                    return genCmd (opcode::mov::r8_rm8, instr);
-                else
-                    return genCmd (opcode::mov::r64_rm64, instr);
-
-            } else if (_RI) {
-                if (_first.sparseness[0] == 8)
-                    return genCmd (opcode::mov::r8_i8, instr);
-                else
-                    return genCmd (opcode::mov::r64_i64, instr);
-            } else if (_MI) {
-                if (_first.sparseness[0] == 8)
-                    return genCmd (opcode::mov::rm8_i8, instr);
-                else
-                    return genCmd (opcode::mov::rm64_i64, instr);
+                                GenerateCmd (mov::r8_rm8, mov::r64_rm64)
             }
+            else if (_RI)       GenerateCmd (mov::r8_i8,  mov::r64_i64)
+            else if (_MI)       GenerateCmd (mov::rm8_i8, mov::rm64_i64)
 
             break;
         case opcode::_cmds::ADD:
+            if (_MR || _RR)     GenerateCmd (add::rm8_r8, add::rm64_r64)
+            else if (_RM) {
+                arg_t temp_arg = _second;
+                _second = _first;
+                _first = temp_arg;
+
+                                GenerateCmd (add::r8_rm8, add::r64_rm64)
+            }
+            else if (_RI)       GenerateCmd (add::r8_i8,  add::r64_i64)
+            else if (_MI)       GenerateCmd (add::rm8_i8, add::rm64_i64)
 
             break;
         case opcode::_cmds::SUB:
+            if (_MR || _RR)     GenerateCmd (sub::rm8_r8, sub::rm64_r64)
+            else if (_RM) {
+                arg_t temp_arg = _second;
+                _second = _first;
+                _first = temp_arg;
+
+                                GenerateCmd (sub::r8_rm8, sub::r64_rm64)
+            }
+            else if (_RI)       GenerateCmd (sub::r8_i8,  sub::r64_i64)
+            else if (_MI)       GenerateCmd (sub::rm8_i8, sub::rm64_i64)
 
             break;
         case opcode::_cmds::MUL:
+                                GenerateCmd (mul::rm8,    mul::rm64)
+            break;
+        case opcode::_cmds::DIV:
+                                GenerateCmd (div::rm8,    div::rm64)
             break;
         case opcode::_cmds::IMUL:
+                 if (_R_RM_I)   GenerateCmd (imul::r16_rm_i8, imul::r_rm_i64)
+            else if (_R_or_M)   GenerateCmd (imul::rm8, imul::rm64)
+            else {
+                 if (_RI) {
+                     arg_t temp_arg = _second;
+                     _second = _first;
+                     _first = temp_arg;
+                                GenerateCmd (imul::r16_i8, imul::r_i64)
+                 }
+                 else if (_RM || _RR) {
+                     arg_t temp_arg = _second;
+                     _second = _first;
+                     _first = temp_arg;
+                                GenerateCmd (imul::r_rm16, imul::r_rm64)
+                    }
+                 }
             break;
         case opcode::_cmds::IDIV:
+                                GenerateCmd (idiv::rm8,       idiv::rm64)
             break;
         case opcode::_cmds::PUSH:
             break;
@@ -245,6 +281,13 @@ __word createComand (instuction_t instr) {
         default:                    // Jcc
             break;
     }
+
+    printf ("Syntax error!!! Error translate this code. Abort!");
+    __word empty_word;
+    empty_word.word = nullptr;
+    empty_word.len  = -1;
+
+    return empty_word;
 }
 
 __uint8_t _cmd_t::getSize () {
@@ -573,3 +616,13 @@ void instuction_t::dump () {
 
     printf ("\n");
 }
+
+#undef _RI
+#undef _RR
+#undef _RM
+#undef _MI
+#undef _MR
+
+#undef _third
+#undef _second
+#undef _first

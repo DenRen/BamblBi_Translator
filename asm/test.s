@@ -1,10 +1,18 @@
+sub rax, rdx
+sub [rax + rbx + 7], rbx
+sub ah, al
+sub esi, [eax]
+
+imul rax, rbx
+imul rax,  [rbx]
+
 mov bl, 150
 mov ah, 150
 mov ax, 150
 mov eax, 150
 mov rax, 150
 
-mov r13, [rsp + 10000000]
+mov r13, [rsp + 56415614]
 mov rax, [rsi]              ; 488b06
 
 mov ah, bl                  ; 88dc
