@@ -10,7 +10,7 @@ SourceCodeNasm::SourceCodeNasm (const char *path_nasm_file, bool dump) :
     lines_code (nullptr),
     buf_asm_code (nullptr)
 {
-    __uint32_t size_buf = 0;
+    size_buf = 0;
     buf_asm_code = readfile (path_nasm_file, &size_buf);    // Read file i buffer
 
     number_lines = 0;                                       // Splits into lines
@@ -38,4 +38,17 @@ SourceCodeNasm::~SourceCodeNasm () {
 
     free (lines_code);
     free (buf_asm_code);
+}
+
+bool __word::conv2num () {
+    if (len % 2)
+        return false;
+
+    for (int i = 0; i < len / 4; i++) {
+        __int16_t temp = word[2 * i];
+        *(__int16_t *) &word[2 * i] = *(__int16_t *) &word[len - 2 * (i + 1)];
+        *(__int16_t *) &word[len - 2 * (i + 1)] = temp;
+    }
+
+    return true;
 }

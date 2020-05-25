@@ -20,7 +20,7 @@ namespace opcode {
     "add",  "sub",
     "mul",  "div", "imul", "idiv",
     "push", "pop",
-    "ret",
+    "nop",  "ret",
 
     "jmp",
     "ja",     "jae",    "jb",     "jbe",    "jc",     "jcxz",   "jecx",   "je",
@@ -261,9 +261,9 @@ namespace opcode {
     // [RET]----------------------------------------------------------------------------------------------------------------
     namespace ret {
         __cmd ret_near (0xc3, 1);       // C3	    RET	Near return to calling procedure.
-        __cmd ret_far  (0xcb, 1);       // CB       RET	Far return to calling procedure.
+        __cmd ret_far  (0xcb, 1);       // CB       RET	Far  return to calling procedure.
         __cmd ret_ni16 (0xc2, 1);       // C2 iw    RET imm16	Near return to calling procedure and pop imm16 bytes from stack.
-        __cmd ret_nf16 (0xca, 1);       // CA iw    RET imm16	Far return to calling procedure and pop imm16 bytes from stack.
+        __cmd ret_nf16 (0xca, 1);       // CA iw    RET imm16	Far  return to calling procedure and pop imm16 bytes from stack.
     }
     // [PUSH]---------------------------------------------------------------------------------------------------------------
     namespace push {
@@ -290,16 +290,18 @@ namespace opcode {
     }
     // [POP]---------------------------------------------------------------------------------------------------------------
     namespace pop {
-        __cmd m16 (0x8f, 1);    // 8F /0	  UUPop top of stack into m16; increment stack pointer.
-        __cmd m32 (0x8f, 1);    // 8F /0	  UUPop top of stack into m32; increment stack pointer.
-        __cmd m64 (0x8f, 1);    // 8F /0	  UUPop top of stack into m64; increment stack pointer.
+        __cmd m16 (0x8f, 1);    // 8F /0	UUPop top of stack into m16; increment stack pointer.
+        __cmd m32 (0x8f, 1);    // 8F /0	UUPop top of stack into m32; increment stack pointer.
+        __cmd m64 (0x8f, 1);    // 8F /0	UUPop top of stack into m64; increment stack pointer.
 
-        __cmd r64 (0x58, 1);    // 58+ rd       Pop top of stack into r32; increment stack pointer.
+        __cmd r64 (0x58, 1);    // 58+ rd   Pop top of stack into r32; increment stack pointer.
 
-        __cmd ds (0x1f, 1);     // 1F	      UUPop top of stack into DS; increment stack pointer.
-        __cmd es (0x07, 1);     // 07	      UUPop top of stack into ES; increment stack pointer.
-        __cmd ss (0x17, 1);     // 17	      UUPop top of stack into SS; increment stack pointer.
-        __cmd fs (0x0fa1, 2);   // 0F A1	  UUPop top of stack into FS; increment stack pointer.
-        __cmd gs (0x0fa9, 2);   // 0F A9	  UUPop top of stack into GS; increment stack pointer.
+        __cmd ds (0x1f, 1);     // 1F	    UUPop top of stack into DS; increment stack pointer.
+        __cmd es (0x07, 1);     // 07	    UUPop top of stack into ES; increment stack pointer.
+        __cmd ss (0x17, 1);     // 17	    UUPop top of stack into SS; increment stack pointer.
+        __cmd fs (0x0fa1, 2);   // 0F A1	UUPop top of stack into FS; increment stack pointer.
+        __cmd gs (0x0fa9, 2);   // 0F A9	UUPop top of stack into GS; increment stack pointer.
     }
+
+        __cmd nop (0x90, 1);    // 90       NOP
 }

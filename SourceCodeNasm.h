@@ -8,8 +8,10 @@
 #include "zlib.h"
 
 struct __word {
-    __int8_t len;
+    __int32_t len;
     char *word;
+
+    bool conv2num ();
 };
 
 struct __line {
@@ -24,9 +26,11 @@ struct __line_words {   // Array from words
 
 class SourceCodeNasm {
 public:
-    __line_words *lines_code;
-    char *buf_asm_code;
 
+    char *buf_asm_code;
+    __uint32_t size_buf;
+
+    __line_words *lines_code;
     __uint32_t number_lines;
 
     explicit SourceCodeNasm (const char *path_nasm_file, bool dump = false);

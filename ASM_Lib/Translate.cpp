@@ -14,6 +14,7 @@
 #include "ASM_ModR_M.h"
 #include "../main_lib.h"
 #include "ASM_SIB.h"
+#include "directives.h"
 
 char extra_cmd[num_extra_cmd][10] = {
         "byte", "word", "dword", "qword"
@@ -49,6 +50,12 @@ int getSparseness (__int32_t number) {
 // Correct: mov [rax rcx -89], 164
 int Translate (SourceCodeNasm &code, bool dump) {
 
+    __word *MC = (__word *) calloc (code.size_buf, sizeof (__int8_t));
+    __uint32_t cur_pos = 0;
+    labels_t labels (4096);
+    labels_t cell_empty_labels (8192);
+    FILE *temp_file = fopen ("temp_file", "wb");
+
     for (__uint32_t num_line = 0; num_line < code.number_lines; num_line++) {
 
         __word  word  = code.lines_code[num_line].words[0]; // Current word
@@ -61,28 +68,30 @@ int Translate (SourceCodeNasm &code, bool dump) {
 
             printf ("\t--> ");
         }
+
         instuction_t instr = {};
 
         // Get id commands
         instr.command = opcode::_cmds::__Quantity_Types_Commands;   // Set max value
 
         for (int i = 0; i < opcode::__Quantity_Types_Commands; i++)
-            if (!strcmp (tolower (word.word), opcode::_name_cmds[i])) {
+            //if (!strcmp (tolower (word.word), opcode::_name_cmds[i])) {
+            if (!strcmp (word.word, opcode::_name_cmds[i])) {
                 instr.proces = proces::cp;
                 instr.command = i;
                 break;
             }
 
-
         //printf ("%s\n", opcode::_name_cmds[instr.command]);
 
-        if (quant_words - 1 < 3)
-            instr.args = (arg_t *) calloc (3, sizeof (arg_t));
-        else
-            instr.args = (arg_t *) calloc (quant_words - 1, sizeof (arg_t));
-
+        // If command
         if (instr.command < opcode::__Quantity_Types_Commands) {  // If command
 
+            if (quant_words - 1 < 3)
+                instr.args = (arg_t *) calloc (3, sizeof (arg_t));
+            else
+                instr.args = (arg_t *) calloc (quant_words - 1, sizeof (arg_t));
+            
             bool memory = false;
             bool extra  = false;
 
@@ -102,7 +111,7 @@ int Translate (SourceCodeNasm &code, bool dump) {
                             extra = true;
                             instr.extra_cmd = j;
 
-                            continue;
+                            break;
                         } else {
                             printf ("Syntax error!!!\n");
                             free (instr.args);
@@ -110,6 +119,11 @@ int Translate (SourceCodeNasm &code, bool dump) {
                             return -1;
                         }
                     }
+
+                if (extra) {
+                    extra = false;
+                    continue;
+                }
 
                 // Comment
                 if (arg[0] == ';')
@@ -141,33 +155,53 @@ int Translate (SourceCodeNasm &code, bool dump) {
                     num_value = 0;
 
                 } else {
-                    for (int j = reg::quant_reg - 1; j >= 0; j--)   // Arg register
+                    bool _registrer = false;
+                    int j = 0;
+                    for (j = reg::quant_reg - 1; j >= 0; j--)   // Arg register
                         if (!strncmp (arg, reg::_name_reg[j], len)) {
-
-                            _ARG.val[num_value] = reg::reg[j];
-
-                                 if (isnumber (arg[1])) _ARG.sparseness[num_value] = 65;    // r8
-                            else if (arg[0] == 'r')     _ARG.sparseness[num_value] = 64;    // rax
-                            else if (arg[0] == 'e')     _ARG.sparseness[num_value] = 32;    // eax
-                            else if (arg[1] == 'l')     _ARG.sparseness[num_value] = 8;     // al
-                            else if (arg[1] == 'h')     _ARG.sparseness[num_value] = 8;     // ah
-                            else                        _ARG.sparseness[num_value] = 16;    // ax
-
-                            _ARG.val_on[num_value] = true;
-                            if (_ARG.mem)
-                                num_value++;
-                            else
-                                instr.num_args++;
-
+                            _registrer = true;
                             break;
                         }
+
+                    if (_registrer) {
+
+                        _ARG.val[num_value] = reg::reg[j];
+
+                        if (isnumber (arg[1]))  _ARG.sparseness[num_value] = 65;    // r8
+                        else if (arg[0] == 'r') _ARG.sparseness[num_value] = 64;    // rax
+                        else if (arg[0] == 'e') _ARG.sparseness[num_value] = 32;    // eax
+                        else if (arg[1] == 'l') _ARG.sparseness[num_value] = 8;     // al
+                        else if (arg[1] == 'h') _ARG.sparseness[num_value] = 8;     // ah
+                        else                    _ARG.sparseness[num_value] = 16;    // ax
+
+                        _ARG.val_on[num_value] = true;
+                        if (_ARG.mem)
+                            num_value++;
+                        else
+                            instr.num_args++;
+
+                    } else {
+                        _ARG.val_on[2] = true;                          // Arg label
+                        _ARG.val[2] = 0;
+
+                        _ARG.sparseness[2] = 32;
+
+                        cell_empty_labels.add (code.lines_code[num_line].words[i], -1);
+                        _ARG.label = &cell_empty_labels.label[cell_empty_labels.active_size - 1];
+                        _ARG.label_on = true;
+
+                        if (_ARG.mem == false) {  // For example: mov rax, 156
+                            instr.num_args++;
+                            break;
+                        }
+                    }
                 }
             }
-
 
             if (dump)
                 instr.dump ();
 
+            instr.cur_pos = cur_pos;
             __word MC_cmd = createComand (instr);
 
             if (MC_cmd.word != nullptr) {
@@ -175,15 +209,104 @@ int Translate (SourceCodeNasm &code, bool dump) {
                     printf ("%02x", (__uint8_t) MC_cmd.word[i]);
                 printf ("\n");
                 //printf ("%x\n", *(__uint32_t *) MC_cmd.word);
+
+                fwrite (MC_cmd.word, MC_cmd.len, 1, temp_file);
+                cur_pos += MC_cmd.len;
+
                 free (MC_cmd.word);
             } else
                 assert (false);
 
+
+        }
+        else {
+
+            // Comment
+            if (word.word[0] == ';')
+                continue;
+
+            if (!strcmp (word.word, drctv::_name_directives[drctv::SECTION]))   // Ignor sections
+                continue;
+
+            if (labels.add (word, cur_pos) == false) {
+                fprintf (stderr, "Double label \"%s\"!!!\n", word.word);
+                fflush (stdout);
+                throw std::runtime_error ("Fatal pcc error!");
+            }
+
+            if (quant_words > 1) {
+                word = words[1];
+                
+                int num_dirtv = -1;
+                for (int i = 0; i < 4; i++)
+                    if (!strncmp (drctv::_name_directives[i], word.word, word.len)) {
+                        num_dirtv = i;
+                        break;
+                    }
+
+                if (num_dirtv != -1) {
+
+                    int multiplicity = -1;
+                    switch (num_dirtv) {
+                        case drctv::DB: multiplicity = 1;   break;
+                        case drctv::DW: multiplicity = 2;   break;
+                        case drctv::DD: multiplicity = 4;   break;
+                        case drctv::DQ: multiplicity = 8;   break;
+                    }
+                    if (multiplicity == -1)
+                        break;
+
+                    for (int i = 2; i < quant_words; i++) {
+
+                        if (words[i].word[0] == ';')
+                            break;
+
+                        if (words[i].word[0] == '\"') {             // STRING
+                            fwrite (words[i].word + 1, words[i].len - 1, sizeof (char), temp_file);
+                            fprintf (temp_file, "%c", '\0');
+
+                            // Align
+                            int align = words[i].len % multiplicity;
+                            __uint64_t templ_zero = 0;
+
+                            fwrite (&templ_zero, align, sizeof (char), temp_file);
+
+                            cur_pos += words[i].len + align;
+                        } else {                                    // NUMBER
+                            __int64_t _number = str2num (words[i].word);
+                            switch (multiplicity) {
+                                case 2: {
+                                    __int16_t num16 = _number;
+                                    fwrite (&num16, 1, sizeof (__int16_t), temp_file);
+                                    break;
+                                }
+                                case 4: {
+                                    __int32_t num32 = _number;
+                                    fwrite (&num32, 1, sizeof (__int32_t), temp_file);
+                                    break;
+                                }
+                                case 8: {
+                                    __int64_t num64 = _number;
+                                    fwrite (&num64, 1, sizeof (__int64_t), temp_file);
+                                    break;
+                                }
+                            }
+
+                            cur_pos += multiplicity;
+                        }
+                    }
+                }
+            }
         }
     }
 
+    for (int i = 0; i < labels.active_size; i++)
+        printf ("%d) %s\n", labels.label[i].position, labels.label[i].name.word);
+    fclose (temp_file);
+
     return 0;
-}
+    }
+
 
 #define _first  instr.args[0]
 #define _second instr.args[1]
@@ -212,7 +335,6 @@ int Translate (SourceCodeNasm &code, bool dump) {
                                      }
 
 __word GenShortCmd (__uint32_t command, instuction_t instr) {
-    assert (instr.num_args == 1);
 
     __word mc;
     if (_first.sparseness[0] == 65) {
@@ -229,6 +351,7 @@ __word GenShortCmd (__uint32_t command, instuction_t instr) {
         mc.word[0] = command | _first.val[0];
 
     }
+
     return mc;
 }
 
@@ -282,7 +405,12 @@ __word createComand (instuction_t instr) {
                                 GenerateCmd (div::rm8,    div::rm64)
             break;
         case opcode::_cmds::IMUL:
-                 if (_R_RM_I)   GenerateCmd (imul::r16_rm_i8, imul::r_rm_i64)
+                 if (_R_RM_I)   {
+                     arg_t temp_arg = _second;
+                     _second = _first;
+                     _first = temp_arg;
+                     GenerateCmd (imul::r16_rm_i8, imul::r_rm_i64)
+                 }
             else if (_R_or_M)   GenerateCmd (imul::rm8, imul::rm64)
             else {
                  if (_RI)       GenerateCmd (imul::r16_i8, imul::r_i64)
@@ -310,9 +438,17 @@ __word createComand (instuction_t instr) {
                    printf ("Error: operation size not specified!");
             }
             break;
+        case opcode::_cmds::NOP:
+                        return  GenShortCmd (opcode::nop.opcode, instr);
+            break;
+        case opcode::_cmds::RET:
+                        return  GenShortCmd (opcode::ret::ret_near.opcode, instr);
+            break;
         case opcode::_cmds::JMP:
             if (_R || _M)       GenerateCmd (jmp::rm16, jmp::rm64)
             if (_I) {
+                if (_first.sparseness[2] < 32)
+                    _first.sparseness[2] = 32;
                                 _first.val[2] -= 4;
                                 GenerateCmd (jmp::rel8, jmp::rel32)
             }
@@ -320,6 +456,8 @@ __word createComand (instuction_t instr) {
         default:                    // Jcc
             if (_I) {
                 _first.val[2] -= 4;
+                if (_first.sparseness[2] < 32)
+                    _first.sparseness[2] = 32;
                 switch (instr.command) {
 
 #define GenCmd(_opcode)  return genCmd (opcode::jcc:: _opcode, instr);
@@ -329,8 +467,7 @@ __word createComand (instuction_t instr) {
                     case opcode::_cmds::JB:   GenCmd (jb_n)
                     case opcode::_cmds::JBE:  GenCmd (jbe_n)
                     case opcode::_cmds::JC:   GenCmd (jc_n)
-                    case opcode::_cmds::JCXZ: GenCmd (je_n)
-                    case opcode::_cmds::JE:   GenCmd (jz_n)
+                    case opcode::_cmds::JE:   GenCmd (je_n)
                     case opcode::_cmds::JG:   GenCmd (jg_n)
                     case opcode::_cmds::JGE:  GenCmd (jge_n)
                     case opcode::_cmds::JL:   GenCmd (jl_n)
@@ -356,6 +493,7 @@ __word createComand (instuction_t instr) {
                     case opcode::_cmds::JS:   GenCmd (js_n)
                     case opcode::_cmds::JZ:   GenCmd (jz_n)
 
+#undef GenCmd
                     default:
                         break;
                 }
@@ -381,7 +519,7 @@ __uint8_t _cmd_t::getSize () {
            (true)       * Opcode.size;
 }
 
-__word _cmd_t::buildMC () {
+__word _cmd_t::buildMC (__uint32_t cur_pos) {
     assert (sizeDisp <= 4);
     assert (sizeImm  <= 8);
 
@@ -423,6 +561,8 @@ __word _cmd_t::buildMC () {
         else
             *(__int32_t *) &mc.word[id] |= (__int32_t) Disp;
 
+        if (DispLabel_On) DispLabel->position = id + cur_pos;
+
         id += sizeDisp;
     }
 
@@ -433,6 +573,8 @@ __word _cmd_t::buildMC () {
             *(__int16_t *) &mc.word[id] |= (__int16_t) Imm;
         else
             *(__int32_t *) &mc.word[id] |= (__int32_t) Imm;
+
+        if (ImmLabel_On) ImmLabel->position = id + cur_pos;
 
         id += sizeImm;
     }
@@ -551,129 +693,33 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
                 cmd.SIB &= 0b11000111;
                 cmd.SIB += 0b00100000;
             }
-        }
 
-/*
-        if (_first.val_on[0]) {
-            cmd.ModR_M |= ModR_M (mrm::reg, 0, _first.val[0]);
-        }
-
-
-        // ModR/M & SIB & Imm
-        if (_first.mem == false) {
-
-            if (_first.val_on[0]) {                     // First: register
-                if (instr.num_args == 1)                // inc rax
-
-                    cmd.ModR_M = ModR_M (mrm::reg, 0, reg::reg[_first.val[0]]);
-
-                else if (instr.num_args == 2)           // mov rax, rbx; mov rax, 231
-
-                    if (_second.val_on[0])              // Second: register
-
-                        cmd.ModR_M = ModR_M (mrm::reg, reg::reg[_second.val[0]], reg::reg[_first.val[0]]);
-
-                    else {                              // Imm
-
-                        cmd.ModR_M = ModR_M (mrm::reg, 0, reg::reg[_first.val[0]]);
-                        cmd.Imm = _second.val[2];
-                        cmd.sizeImm = _second.sparseness[2];
-                        cmd.Imm_On = true;
-
-                    }
-                else if (instr.num_args == 3) {     // mul rdx, rax, 4
-
-                    cmd.ModR_M = ModR_M (mrm::reg, reg::reg[_second.val[0]], reg::reg[_first.val[0]]);
-                    cmd.Imm = _third.val[2];
-                    cmd.sizeImm = _second.sparseness[2];
-                    cmd.Imm_On = true;
-
+            // Enable labels. For example mov [rax + r12 + my_label_0], my_label_1
+            if (instr.num_args < 3) {
+                if (_first.label_on) {
+                    cmd.DispLabel_On = true;
+                    cmd.DispLabel = _first.label;
                 }
-                else
-                    assert (0);
-
-                cmd.ModR_M_On = true;
-            } else {                                        // First Imm
-
-                cmd.Imm = _first.val[2];
-                cmd.sizeImm = _first.sparseness[2];
-                cmd.Imm_On = true;
-
-            }
-
-        } else {                                            // First memory
-            int mod = 0;
-
-            if (_first.val_on[0] && _first.val_on[1]) {     // [ reg reg ...
-
-                if (_first.val_on[2]) {                     // [ reg reg number]
-
-                    cmd.Disp = _first.val[2];
-                    cmd.Disp_On = true;
-                    cmd.sizeDisp = _first.sparseness[2];
-
-                    if (_first.sparseness[2] == 8)  mod = mrm::mod::disp8;
-                    else                            mod = mrm::mod::disp32;
-
-                } else                              mod = mrm::mod::disp0;  // [ reg reg ]
-
-                cmd.ModR_M = ModR_M (mod, _second.val[0], _first.val[0]);
-                cmd.ModR_M_On = true;
-
-                cmd.SIB = _SIB (0, _first.val[0], _first.val[1]);
-                cmd.SIB_On = true;
-
-            } else if (_first.val_on[0]) {              // [ reg ...
-
-                if (_first.val[0] != reg::sp) {         // sp == esp == rsp
-
-                    if (_first.val_on[2]) {             // [ reg num ]
-
-                        if (_first.sparseness[2] == 8) mod = mrm::mod::disp8;
-                        else                           mod = mrm::mod::disp32;
-
-                        cmd.Disp = _first.val[2];
-                        cmd.sizeDisp = _first.sparseness[2];
-                        cmd.Disp_On = true;
-
-                        cmd.ModR_M = ModR_M (mod, 0, _first.val[0]);
-                        cmd.ModR_M_On = true;
-
-                    } else {                            // [ reg ]
-
-                        if (_first.val[2] != reg::bp)
-
-                            mod = mrm::mod::disp0;
-
-                        else {
-
-                            mod = mrm::mod::disp8;
-                            cmd.Disp = 0;
-                            cmd.Disp_On = true;
-
-                        }
-
-                        cmd.ModR_M = ModR_M (mod, 0, _first.val[0]);
-                        cmd.ModR_M_On = true;
-                    }
+                if (_second.label_on) {
+                    cmd.ImmLabel_On = true;
+                    cmd.ImmLabel = _second.label;
+                    cmd.sizeImm = 4;
+                }
+            } else {
+                if (_second.label_on) {
+                    cmd.DispLabel_On = true;
+                    cmd.DispLabel = _second.label;
+                }
+                if (_third.label_on) {
+                    cmd.ImmLabel_On = true;
+                    cmd.ImmLabel = _third.label;
+                    cmd.sizeImm = 4;
                 }
             }
-        }*/
-/*
-        //
-        if (quant_args == 2) {
-            if (args[0].type == arg_reg || args[1].type == arg_reg) {
-                cmd.ModR_M = ModR_M (mrm::reg, reg::reg[args[1].arg], reg::reg[args[0].arg]);
-                cmd.ModR_M_On = true;
-            }
-        }
-*/
-/*
-        if else {
-            // Memory
-        }*/
 
-        return cmd.buildMC ();
+        }
+
+        return cmd.buildMC (instr.cur_pos);
     }
 
     return {0, nullptr};
@@ -696,12 +742,64 @@ void instuction_t::dump () {
         printf ("val:    %ld\t%ld\t%ld\n", args[i].val[0], args[i].val[1], args[i].val[2]);
         printf ("sprs:   %d\t%d\t%d\n", args[i].sparseness[0], args[i].sparseness[1], args[i].sparseness[2]);
         printf ("val_on: %d\t%d\t%d\n", args[i].val_on[0], args[i].val_on[1], args[i].val_on[2]);
+        printf ("lbl_on: %d\t", args[i].label_on);
+        if (args[i].label != nullptr) fwrite (args[i].label->name.word, args[i].label->name.len, 1, stdout);
+        printf ("\n");
 
     }
 
     printf ("\n");
 }
 
+labels_t::labels_t (__uint32_t size) :
+    label ((label_t *) calloc (size, sizeof (label_t))),
+    total_size (size),
+    active_size (0)
+{
+    assert (size > 0);
+}
+
+bool labels_t::add (__word name, __uint32_t pos) {
+    assert (active_size <= total_size);
+
+    if (find (name) >= 0)
+        return false;
+
+    label[active_size].position = pos;
+    label[active_size++].name = name;
+
+    return true;
+}
+
+__int64_t labels_t::find (__word name) {
+
+    char *_name = name.word;
+
+    for (__uint32_t i = 0; i < active_size; i++)
+        if (!strncmp (_name, label[i].name.word, name.len))
+            return i;
+
+    return -1;
+}
+
+_cmd_t::_cmd_t () :
+        LegPref     (0),
+        REXPref     (0),
+        ModR_M      (0),
+        SIB         (0),
+        Disp        (0),
+        Imm         (0),
+        sizeImm     (0),
+        sizeDisp    (0),
+        LegPref_On  (false),
+        REXPref_On  (false),
+        ModR_M_On   (false),
+        SIB_On      (false),
+        Disp_On     (false),
+        Imm_On      (false)
+{
+
+}
 #undef _RI
 #undef _RR
 #undef _RM

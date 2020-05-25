@@ -47,7 +47,7 @@ namespace opcode {
         ADD, SUB,
         MUL, DIV, IMUL, IDIV,
         PUSH, POP,
-        RET,
+        NOP, RET,
 
         JMP,
         JA,     JAE,    JB,     JBE,    JC,     JCXZ,   JECXZ,   JE,
@@ -278,10 +278,10 @@ namespace opcode {
     }
     // [RET]----------------------------------------------------------------------------------------------------------------
     namespace ret {
-        extern __cmd ret_near;       // C3	    RET	Near return to calling procedure.
-        extern __cmd ret_far;       // CB       RET	Far return to calling procedure.
-        extern __cmd ret_ni16;       // C2 iw    RET imm16	Near return to calling procedure and pop imm16 bytes from stack.
-        extern __cmd ret_nf16;       // CA iw    RET imm16	Far return to calling procedure and pop imm16 bytes from stack.
+        extern __cmd ret_near;      // C3	    RET	Near return to calling procedure
+        extern __cmd ret_far;       // CB       RET	Far  return to calling procedure
+        extern __cmd ret_ni16;      // C2 iw  UURET imm16 Near return to calling procedure and pop imm16 bytes from stack
+        extern __cmd ret_nf16;      // CA iw  UURET imm16 Far  return to calling procedure and pop imm16 bytes from stack
     }
     // [PUSH]---------------------------------------------------------------------------------------------------------------
     namespace push {
@@ -322,10 +322,11 @@ namespace opcode {
         extern __cmd fs;        // 0F A1	    Pop top of stack into FS; increment stack pointer.
         extern __cmd gs;        // 0F A9	    Pop top of stack into GS; increment stack pointer.
     }
-// []---------------------------------------------------------------------------------------------------------------
-// []---------------------------------------------------------------------------------------------------------------
-// []---------------------------------------------------------------------------------------------------------------
+    // [NOP]---------------------------------------------------------------------------------------------------------------
+    extern __cmd nop;
+    // []---------------------------------------------------------------------------------------------------------------
 
+    // []---------------------------------------------------------------------------------------------------------------
 }
 
 #endif //BAMBLBI_TRANSLATOR_ASM_OPCODE_H

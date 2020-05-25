@@ -120,6 +120,12 @@
 		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_Lib/Translate.h">
 			<Option target="BamblBi_Translator"/>
 		</Unit>
+		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_Lib/directives.cpp">
+			<Option target="BamblBi_Translator"/>
+		</Unit>
+		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_Lib/directives.h">
+			<Option target="BamblBi_Translator"/>
+		</Unit>
 		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_MC_new.h">
 			<Option target="BamblBi_Translator"/>
 		</Unit>
