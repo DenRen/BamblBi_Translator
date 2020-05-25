@@ -50,10 +50,15 @@ int getSparseness (__int32_t number) {
 // Correct: mov [rax rcx -89], 164
 int Translate (SourceCodeNasm &code, bool dump) {
 
-    __word *MC = (__word *) calloc (code.size_buf, sizeof (__int8_t));
+    __uint32_t size_MC = code.size_buf;
+    __word MC = {};
+    MC.word = (char *) calloc (size_MC, sizeof (__int8_t));
+
     __uint32_t cur_pos = 0;
+
     labels_t labels (4096);
     labels_t cell_empty_labels (8192);
+
     FILE *temp_file = fopen ("temp_file", "wb");
 
     for (__uint32_t num_line = 0; num_line < code.number_lines; num_line++) {
@@ -128,6 +133,8 @@ int Translate (SourceCodeNasm &code, bool dump) {
                 // Comment
                 if (arg[0] == ';')
                     break;
+                if (arg[0] == '+')
+                    continue;
                 // Number
                 else if (isnumber (arg[0]) || arg[0] == '-') {
 
@@ -210,8 +217,14 @@ int Translate (SourceCodeNasm &code, bool dump) {
                 printf ("\n");
                 //printf ("%x\n", *(__uint32_t *) MC_cmd.word);
 
-                fwrite (MC_cmd.word, MC_cmd.len, 1, temp_file);
+                if (size_MC < cur_pos + MC_cmd.len) {
+                    size_MC *= 2;
+                    MC.word = (char *) realloc (MC.word, size_MC);
+                }
+
+                memcpy (MC.word + cur_pos, MC_cmd.word, MC_cmd.len);
                 cur_pos += MC_cmd.len;
+                MC.len = cur_pos;
 
                 free (MC_cmd.word);
             } else
@@ -300,13 +313,24 @@ int Translate (SourceCodeNasm &code, bool dump) {
         }
     }
 
+    for (int i = 0; i < cell_empty_labels.active_size; i++) {
+
+        __uint32_t num_cell = cell_empty_labels.label[i].position;
+        __int64_t num_label = labels.find (cell_empty_labels.label->name);
+
+        __uint32_t position = labels.label[num_label].position;
+        MC.word[num_cell] = position;
+
+    }
+
+    fwrite (MC.word, cur_pos, 1, temp_file);
+
     for (int i = 0; i < labels.active_size; i++)
         printf ("%d) %s\n", labels.label[i].position, labels.label[i].name.word);
     fclose (temp_file);
 
     return 0;
     }
-
 
 #define _first  instr.args[0]
 #define _second instr.args[1]
@@ -561,7 +585,8 @@ __word _cmd_t::buildMC (__uint32_t cur_pos) {
         else
             *(__int32_t *) &mc.word[id] |= (__int32_t) Disp;
 
-        if (DispLabel_On) DispLabel->position = id + cur_pos;
+        if (DispLabel_On)
+            DispLabel->position = id + cur_pos;
 
         id += sizeDisp;
     }
@@ -574,7 +599,8 @@ __word _cmd_t::buildMC (__uint32_t cur_pos) {
         else
             *(__int32_t *) &mc.word[id] |= (__int32_t) Imm;
 
-        if (ImmLabel_On) ImmLabel->position = id + cur_pos;
+        if (ImmLabel_On)
+            ImmLabel->position = id + cur_pos;
 
         id += sizeImm;
     }
@@ -706,9 +732,9 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
                     cmd.sizeImm = 4;
                 }
             } else {
-                if (_second.label_on) {
+                if (_first.label_on) {
                     cmd.DispLabel_On = true;
-                    cmd.DispLabel = _second.label;
+                    cmd.DispLabel = _first.label;
                 }
                 if (_third.label_on) {
                     cmd.ImmLabel_On = true;
@@ -762,13 +788,15 @@ labels_t::labels_t (__uint32_t size) :
 bool labels_t::add (__word name, __uint32_t pos) {
     assert (active_size <= total_size);
 
-    if (find (name) >= 0)
-        return false;
+    bool status = false;
+
+    if (find (name) < 0)
+        status = true;
 
     label[active_size].position = pos;
     label[active_size++].name = name;
 
-    return true;
+    return status;
 }
 
 __int64_t labels_t::find (__word name) {

@@ -12,7 +12,7 @@ int main () {
     const char path_asm[] = "../asm/test.s";
     SourceCodeNasm code (path_asm, false);
 
-    if (Translate (code, false))
+    if (Translate (code, true))
         fprintf (stderr, "Fail\n");
 
     return 0;

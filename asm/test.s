@@ -4,6 +4,7 @@
 ;nop
 ;nop
 ;nop
+mov [rsp + 15], rcx         ; 48894c240f
 section .text
 
 mov qword [rax + my_label], my_label
