@@ -132,6 +132,12 @@
 		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ASM_commands_name.h">
 			<Option target="BamblBi_Translator"/>
 		</Unit>
+		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ELF/elf_prog_header.cpp">
+			<Option target="BamblBi_Translator"/>
+		</Unit>
+		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/ELF/elf_prog_header.h">
+			<Option target="BamblBi_Translator"/>
+		</Unit>
 		<Unit filename="/home/tester/Documents/GitHub/BamblBi_Translator/SourceCodeNasm.cpp">
 			<Option target="BamblBi_Translator"/>
 		</Unit>

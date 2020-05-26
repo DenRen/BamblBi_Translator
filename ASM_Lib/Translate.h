@@ -7,10 +7,12 @@
 
 #include "../SourceCodeNasm.h"
 #include "ASM_Opcode.h"
+#include "../ELF/elf_prog_header.h"
 
 struct label_t {
     __word name;
     __uint32_t position;
+    bool rel = false;
 };
 
 struct labels_t {
@@ -58,6 +60,7 @@ struct instuction_t {
     arg_t *args     = nullptr;
 
     __uint32_t cur_pos = 0;
+    bool rel = false;
 
     void dump ();
 };
@@ -65,7 +68,7 @@ struct instuction_t {
 const int num_extra_cmd = 4;
 extern char extra_cmd[num_extra_cmd][10];
 
-int Translate (SourceCodeNasm &code, bool dump = false);
+__word Translate (SourceCodeNasm &code, FILE *temp_file, __uint32_t cur_pos, __uint32_t  locate_prog, bool dump);
 
 char *tolower (char *str);
 
@@ -93,6 +96,7 @@ struct  _cmd_t {
 
     bool DispLabel_On  = false;
     bool ImmLabel_On   = false;
+    bool rel_label     = false;
 
     label_t *DispLabel = nullptr;
     label_t *ImmLabel  = nullptr;

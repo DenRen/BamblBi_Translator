@@ -21,4 +21,4 @@ add_executable(BamblBi_Translator   main.cpp
                                     ASM_Lib/NameCommands.h
                                     ASM_Lib/Translate.h
                                     ASM_Lib/Translate.cpp
-                                    ASM_Lib/Opcodes.cpp ASM_Lib/directives.cpp ASM_Lib/directives.h)
+                                    ASM_Lib/Opcodes.cpp ASM_Lib/directives.cpp ASM_Lib/directives.h ELF/elf_prog_header.cpp ELF/elf_prog_header.h)

@@ -20,7 +20,7 @@ namespace opcode {
     "add",  "sub",
     "mul",  "div", "imul", "idiv",
     "push", "pop",
-    "nop",  "ret",
+    "nop",  "ret", "syscall",
 
     "jmp",
     "ja",     "jae",    "jb",     "jbe",    "jc",     "jcxz",   "jecx",   "je",
@@ -303,5 +303,6 @@ namespace opcode {
         __cmd gs (0x0fa9, 2);   // 0F A9	UUPop top of stack into GS; increment stack pointer.
     }
 
-        __cmd nop (0x90, 1);    // 90       NOP
+        __cmd nop     (0x90, 1);        // 90       NOP
+        __cmd syscall (0x0f05, 2);      // 0F05     SYSCALL
 }

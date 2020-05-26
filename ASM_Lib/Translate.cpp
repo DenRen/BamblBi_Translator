@@ -48,18 +48,15 @@ int getSparseness (__int32_t number) {
 }
 
 // Correct: mov [rax rcx -89], 164
-int Translate (SourceCodeNasm &code, bool dump) {
+__word Translate (SourceCodeNasm &code, FILE *temp_file, __uint32_t cur_pos, __uint32_t  locate_prog, bool dump) {
 
-    __uint32_t size_MC = code.size_buf;
+    __uint32_t size_MC = code.size_buf + 1024;
     __word MC = {};
     MC.word = (char *) calloc (size_MC, sizeof (__int8_t));
 
-    __uint32_t cur_pos = 0;
 
     labels_t labels (4096);
     labels_t cell_empty_labels (8192);
-
-    FILE *temp_file = fopen ("temp_file", "wb");
 
     for (__uint32_t num_line = 0; num_line < code.number_lines; num_line++) {
 
@@ -121,7 +118,7 @@ int Translate (SourceCodeNasm &code, bool dump) {
                             printf ("Syntax error!!!\n");
                             free (instr.args);
 
-                            return -1;
+                            return {0, nullptr};
                         }
                     }
 
@@ -230,7 +227,6 @@ int Translate (SourceCodeNasm &code, bool dump) {
             } else
                 assert (false);
 
-
         }
         else {
 
@@ -275,8 +271,9 @@ int Translate (SourceCodeNasm &code, bool dump) {
                             break;
 
                         if (words[i].word[0] == '\"') {             // STRING
-                            fwrite (words[i].word + 1, words[i].len - 1, sizeof (char), temp_file);
-                            fprintf (temp_file, "%c", '\0');
+
+                            memcpy (MC.word + cur_pos, words[i].word + 1, words[i].len - 1);
+                            MC.word[cur_pos + words[i].len - 1] = '\0';
 
                             // Align
                             int align = words[i].len % multiplicity;
@@ -319,18 +316,23 @@ int Translate (SourceCodeNasm &code, bool dump) {
         __int64_t num_label = labels.find (cell_empty_labels.label->name);
 
         __uint32_t position = labels.label[num_label].position;
+
+        if (cell_empty_labels.label[i].rel == false)
+            position += locate_prog;
+
         MC.word[num_cell] = position;
 
     }
 
-    fwrite (MC.word, cur_pos, 1, temp_file);
+    //fwrite (MC.word, cur_pos, 1, temp_file);
 
     for (int i = 0; i < labels.active_size; i++)
         printf ("%d) %s\n", labels.label[i].position, labels.label[i].name.word);
-    fclose (temp_file);
 
-    return 0;
-    }
+    MC.len = cur_pos;
+
+    return MC;
+}
 
 #define _first  instr.args[0]
 #define _second instr.args[1]
@@ -392,9 +394,8 @@ __word createComand (instuction_t instr) {
 
                                 GenerateCmd (mov::r8_rm8, mov::r64_rm64)
             }
-            else if (_RI)       GenerateCmd (mov::r8_i8,  mov::r64_i64)
-            else if (_MI)       GenerateCmd (mov::rm8_i8, mov::rm64_i64)
-
+            else if (_RI || _MI)
+                                GenerateCmd (mov::rm8_i8, mov::rm64_i64)
             break;
         case opcode::_cmds::ADD:
             if (_MR || _RR)     GenerateCmd (add::rm8_r8, add::rm64_r64)
@@ -468,7 +469,11 @@ __word createComand (instuction_t instr) {
         case opcode::_cmds::RET:
                         return  GenShortCmd (opcode::ret::ret_near.opcode, instr);
             break;
+        case opcode::_cmds::SYSCALL:
+                                GenerateCmd (syscall, syscall);
+            break;
         case opcode::_cmds::JMP:
+            instr.rel = true;
             if (_R || _M)       GenerateCmd (jmp::rm16, jmp::rm64)
             if (_I) {
                 if (_first.sparseness[2] < 32)
@@ -478,6 +483,7 @@ __word createComand (instuction_t instr) {
             }
             break;
         default:                    // Jcc
+            instr.rel = true;
             if (_I) {
                 _first.val[2] -= 4;
                 if (_first.sparseness[2] < 32)
@@ -585,8 +591,10 @@ __word _cmd_t::buildMC (__uint32_t cur_pos) {
         else
             *(__int32_t *) &mc.word[id] |= (__int32_t) Disp;
 
-        if (DispLabel_On)
+        if (DispLabel_On) {
             DispLabel->position = id + cur_pos;
+            DispLabel->rel = rel_label;
+        }
 
         id += sizeDisp;
     }
@@ -599,8 +607,10 @@ __word _cmd_t::buildMC (__uint32_t cur_pos) {
         else
             *(__int32_t *) &mc.word[id] |= (__int32_t) Imm;
 
-        if (ImmLabel_On)
+        if (ImmLabel_On) {
             ImmLabel->position = id + cur_pos;
+            ImmLabel->rel = rel_label;
+        }
 
         id += sizeImm;
     }
@@ -620,6 +630,7 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
 
     _cmd_t cmd = {};
 
+    cmd.rel_label = instr.rel;
     cmd.Opcode = command;
 
     if (instr.args != nullptr) {
@@ -660,7 +671,7 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
         cmd.Imm     = _second.val[2]        + _third.val[2];
         cmd.sizeImm = _second.sparseness[2] + _third.sparseness[2];
 
-        cmd.sizeImm = fmax (cmd.sizeImm, _first.sparseness[0]);             // Because x86_64
+        cmd.sizeImm = fmax (cmd.sizeImm, 4);             // Because x86_64
 
         cmd.Disp     = _first.val[2];
         if (_first.sparseness[2] > 4)
@@ -680,6 +691,15 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
             cmd.sizeImm += _first.sparseness[2];
 
             if (_first.val_on[2] || _second.val_on[2] || _third.val_on[2]) cmd.Imm_On = true;
+
+            // Enable labels. For example mov rax, my_label
+
+            if (_second.label_on) {
+                cmd.ImmLabel_On = true;
+                cmd.ImmLabel = _second.label;
+                cmd.sizeImm = 4;
+            }
+
 
         } else {                                                            // Memroy
             // Enable or Ignore SIB
@@ -757,10 +777,11 @@ void instuction_t::dump () {
             "command:     %d\n"
             "extra_cmd:   %d\n"
             "sparseness:  %d\n"
-            "num_args:    %d\n",
+            "num_args:    %d\n"
+            "rel:         %d\n",
             proces, command,
             extra_cmd, sparseness,
-            num_args);
+            num_args, rel);
 
     for (int i = 0; i < num_args; i++) {
 
