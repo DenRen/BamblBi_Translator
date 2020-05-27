@@ -50,6 +50,7 @@ int getSparseness (__int32_t number) {
 // Correct: mov [rax rcx -89], 164
 __word Translate (SourceCodeNasm &code, FILE *temp_file, __uint32_t cur_pos, __uint32_t  locate_prog, bool dump) {
 
+    __uint32_t save_cur_pos = cur_pos;
     __uint32_t size_MC = code.size_buf + 1024;
     __word MC = {};
     MC.word = (char *) calloc (size_MC, sizeof (__int8_t));
@@ -87,7 +88,7 @@ __word Translate (SourceCodeNasm &code, FILE *temp_file, __uint32_t cur_pos, __u
         //printf ("%s\n", opcode::_name_cmds[instr.command]);
 
         // If command
-        if (instr.command < opcode::__Quantity_Types_Commands) {  // If command
+        if (instr.command < opcode::__Quantity_Types_Commands) { // If command
 
             if (quant_words - 1 < 3)
                 instr.args = (arg_t *) calloc (3, sizeof (arg_t));
@@ -206,7 +207,7 @@ __word Translate (SourceCodeNasm &code, FILE *temp_file, __uint32_t cur_pos, __u
                 instr.dump ();
 
             instr.cur_pos = cur_pos;
-            __word MC_cmd = createComand (instr);
+            __word MC_cmd = createComand (instr, locate_prog);
 
             if (MC_cmd.word != nullptr) {
                 for (int i = 0; i < MC_cmd.len; i++)
@@ -236,6 +237,8 @@ __word Translate (SourceCodeNasm &code, FILE *temp_file, __uint32_t cur_pos, __u
 
             if (!strcmp (word.word, drctv::_name_directives[drctv::SECTION]))   // Ignor sections
                 continue;
+
+            printf ("Add label: %s (%d)\n", word.word, cur_pos);
 
             if (labels.add (word, cur_pos) == false) {
                 fprintf (stderr, "Double label \"%s\"!!!\n", word.word);
@@ -315,17 +318,20 @@ __word Translate (SourceCodeNasm &code, FILE *temp_file, __uint32_t cur_pos, __u
         __uint32_t num_cell = cell_empty_labels.label[i].position;
         __int64_t num_label = labels.find (cell_empty_labels.label->name);
 
-        __uint32_t position = labels.label[num_label].position;
+        __uint64_t position = labels.label[num_label].position - save_cur_pos;
 
-        //if (cell_empty_labels.label[i].rel == false)
-//            position += locate_prog;
+        if (cell_empty_labels.label[i].rel == false)
+            position += locate_prog;
 
-        //*(__uint32_t *) &MC.word[num_cell] = position;
+        if (cell_empty_labels.label[i].far)
+            * (__uint64_t *) &MC.word[num_cell] += position;
+        else
+            * (__uint32_t *) &MC.word[num_cell] += position;
 
     }
 
     //fwrite (MC.word, cur_pos, 1, temp_file);
-
+    printf ("\n");
     for (int i = 0; i < labels.active_size; i++)
         printf ("%d) %s\n", labels.label[i].position, labels.label[i].name.word);
 
@@ -381,7 +387,29 @@ __word GenShortCmd (__uint32_t command, instuction_t instr) {
     return mc;
 }
 
-__word createComand (instuction_t instr) {
+__word movabs (instuction_t instr, __uint32_t locate_prog) {
+    __word mc = {};
+
+    mc.len = 2 + 8;
+    mc.word = (char *) calloc (mc.len, sizeof (char));
+
+    mc.word[0] = _REX (_w);
+    mc.word[1] = opcode::mov::r64_i64.opcode;
+    mc.word[1] |= _first.val[0];
+
+    * (__uint64_t *) &mc.word[2] = _second.val[2];
+
+    if (_second.label_on && instr.rel == false) {
+        //*(__uint64_t *) &mc.word[2] -= 2;
+
+        _second.label->far = true;
+        _second.label->position = instr.cur_pos + 2;
+    }
+
+    return mc;
+}
+
+__word createComand (instuction_t instr, __uint32_t locate_prog) {
     switch (instr.command) {
         case opcode::_cmds::MOV:
             assert (instr.num_args <= 2);
@@ -394,7 +422,11 @@ __word createComand (instuction_t instr) {
 
                                 GenerateCmd (mov::r8_rm8, mov::r64_rm64)
             }
-            else if (_RI)       GenerateCmd (mov::r8_i8, mov::r64_i64)
+            else if (_RI) {
+                if (_first.label_on || _second.label_on)
+                                return movabs (instr, locate_prog);
+                else            GenerateCmd (mov::rm8_i8, mov::rm64_i64)
+            }
             else if (_MI)       GenerateCmd (mov::rm8_i8, mov::rm64_i64)
             break;
         case opcode::_cmds::ADD:
@@ -478,14 +510,14 @@ __word createComand (instuction_t instr) {
             if (_I) {
                 if (_first.sparseness[2] < 32)
                     _first.sparseness[2] = 32;
-                                _first.val[2] -= 4;
+                                _first.val[2] -= 5;
                                 GenerateCmd (jmp::rel8, jmp::rel32)
             }
             break;
         default:                    // Jcc
             instr.rel = true;
             if (_I) {
-                _first.val[2] -= 4;
+                _first.val[2] -= 6;
                 if (_first.sparseness[2] < 32)
                     _first.sparseness[2] = 32;
                 switch (instr.command) {
@@ -671,7 +703,7 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
         cmd.Imm     = _second.val[2]        + _third.val[2];
         cmd.sizeImm = _second.sparseness[2] + _third.sparseness[2];
 
-        cmd.sizeImm = fmax (cmd.sizeImm, _first.sparseness[0]);             // Because x86_64
+        cmd.sizeImm = fmax (cmd.sizeImm, 4);             // Because x86_64
 
         cmd.Disp     = _first.val[2];
         if (_first.sparseness[2] > 4)
@@ -690,18 +722,21 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
             cmd.Imm     += _first.val[2];
             cmd.sizeImm += _first.sparseness[2];
 
-            if (_first.val_on[2] || _second.val_on[2] || _third.val_on[2]) cmd.Imm_On = true;
+            if (_first.val_on[2] || _second.val_on[2] || _third.val_on[2])
+                cmd.Imm_On = true;
 
             // Enable labels. For example mov rax, my_label
+
+            if (_first.label_on) {
+                cmd.ImmLabel_On = true;
+                cmd.ImmLabel = _first.label;
+                cmd.sizeImm = 4;
+            }
 
             if (_second.label_on) {
                 cmd.ImmLabel_On = true;
                 cmd.ImmLabel = _second.label;
-
-                if (instr.rel)
-                    cmd.sizeImm = 4;
-                else
-                    cmd.sizeImm = 8;
+                cmd.sizeImm = 4;
             }
 
 

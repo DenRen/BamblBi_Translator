@@ -12,7 +12,9 @@
 struct label_t {
     __word name;
     __uint32_t position;
+
     bool rel = false;
+    bool far = false;
 };
 
 struct labels_t {
@@ -74,7 +76,7 @@ char *tolower (char *str);
 
 inline bool isnumber (char symb);
 
-__word createComand (instuction_t instr);
+__word createComand (instuction_t instr, __uint32_t locate_prog);
 
 struct  _cmd_t {
     __uint8_t LegPref  = 0;
