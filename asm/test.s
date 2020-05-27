@@ -1,40 +1,24 @@
-;nop
-ja L1
-nop
-nop
-mov rsi, my_label
-mov r15, 78
-;nop
-;nop
-call my_label
-L1
-add rax, r13
-xor rax, rax
-mov rax, 60
-xor rdi, rdi
+global _start
 
-syscall
-;global _start
-;
-;section .text
-;
-;    nop
-;    nop
-;    nop
-;
-;    mov rax, rbx
-;	 mov rsi, my_label
-;
-;    mov qword [rsi], rax
-;
-;    nop
-;    nop
-;    nop
-;
-;    mov rax, 60
-;	 mov rdi, 0
-;    nop
-;	 syscall
-;	 nop
+section .text
+
+_start:
+
+    mov rsi, my_label
+    call func
+
+    mov rax, 60
+    xor rdi, rdi
+
+    syscall
+
+func
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, my_label
+    mov rdx, 20
+    syscall
+
+    ret
 
 my_label db "Eee. Heeellooo, ASM!"

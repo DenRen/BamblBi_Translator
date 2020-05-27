@@ -313,15 +313,25 @@ __word Translate (SourceCodeNasm &code, FILE *temp_file, __uint32_t cur_pos, __u
         }
     }
 
-    for (int i = 0; i < cell_empty_labels.active_size; i++) {
+    printf ("\n");
+    for (int i = 0; i < labels.active_size; i++)
+        printf ("%d) %s\n", labels.label[i].position, labels.label[i].name.word);
+
+    for (__uint32_t i = 0; i < cell_empty_labels.active_size; i++) {
 
         __uint32_t num_cell = cell_empty_labels.label[i].position;
-        __int64_t num_label = labels.find (cell_empty_labels.label->name);
+        __int64_t num_label = labels.find (cell_empty_labels.label[i].name);
 
-        __uint64_t position = labels.label[num_label].position - save_cur_pos;
+        __int64_t position = 0;
 
-        if (cell_empty_labels.label[i].rel == false)
+        if (cell_empty_labels.label[i].rel == false) {
+            position = labels.label[num_label].position - save_cur_pos;
             position += locate_prog;
+        } else {
+            position = labels.label[num_label].position;
+        }
+
+        printf ("%ld\n", position);
 
         if (cell_empty_labels.label[i].far)
             * (__uint64_t *) &MC.word[num_cell] += position;
@@ -331,9 +341,7 @@ __word Translate (SourceCodeNasm &code, FILE *temp_file, __uint32_t cur_pos, __u
     }
 
     //fwrite (MC.word, cur_pos, 1, temp_file);
-    printf ("\n");
-    for (int i = 0; i < labels.active_size; i++)
-        printf ("%d) %s\n", labels.label[i].position, labels.label[i].name.word);
+
 
     MC.len = cur_pos;
 
@@ -521,6 +529,7 @@ __word createComand (instuction_t instr, __uint32_t locate_prog) {
                 if (_first.sparseness[2] < 32)
                     _first.sparseness[2] = 32;
                 _first.val[2] -= 5;
+                _first.val[2] -= instr.cur_pos;
                                 GenerateCmd (call, call)
             }
             break;
@@ -613,7 +622,7 @@ __word _cmd_t::buildMC (__uint32_t cur_pos) {
     assert (sizeDisp <= 4);
     assert (sizeImm  <= 8);
 
-    __word mc;
+    __word mc = {};
     int temp_size = getSize ();
     mc.word = (char *) calloc (getSize (), sizeof (__uint8_t));
     mc.len = temp_size;

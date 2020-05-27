@@ -5,7 +5,7 @@
 
 // To beuat
 // TODO rewrite in 64
-// TODO XOR, OR, AND, NOT, NEG, INC, DEC, NOP
+// TODO OR, AND, NOT, NEG, INC, DEC
 
 // [MOV]----------------------------------------------------------------------------------------------------------------
 //
@@ -33,88 +33,88 @@ namespace opcode {
 
     // [MOV]------------------------------------------------------------------------------------------------------------
     namespace mov {
-    __cmd rm8_r8   (0x88, 1);        // 88 /r	MOV r/m8,  r8	    Move r8 to r/m8.
-    __cmd rm16_r16 (0x89, 1);        // 89 /r	MOV r/m16, r16	    Move r16 to r/m16.
-    __cmd rm32_r32 (0x89, 1);        // 89 /r	MOV r/m32, r32	    Move r32 to r/m32.
-    __cmd rm64_r64 (0x89, 1);        // 89 /r	MOV r/m64, r64	    Move r64 to r/m64.
+        __cmd rm8_r8   (0x88, 1);           // 88 /r	MOV r/m8,  r8	    Move r8 to r/m8.
+        __cmd rm16_r16 (0x89, 1);           // 89 /r	MOV r/m16, r16	    Move r16 to r/m16.
+        __cmd rm32_r32 (0x89, 1);           // 89 /r	MOV r/m32, r32	    Move r32 to r/m32.
+        __cmd rm64_r64 (0x89, 1);           // 89 /r	MOV r/m64, r64	    Move r64 to r/m64.
 
-    __cmd r8_rm8 (0x8a, 1);          // 8A /r	MOV r8,  r/m8	    Move r/m8 to r8.
-    __cmd r16_rm16 (0x8b, 1);        // 8B /r	MOV r16, r/m16	    Move r/m16 to r16.
-    __cmd r32_rm32 (0x8b, 1);        // 8B /r	MOV r32, r/m32	    Move r/m32 to r32.
-    __cmd r64_rm64 (0x8b, 1);        // 8B /r	MOV r64, r/m64	    Move r/m64 to r64.
+        __cmd r8_rm8 (0x8a, 1);             // 8A /r	MOV r8,  r/m8	    Move r/m8 to r8.
+        __cmd r16_rm16 (0x8b, 1);           // 8B /r	MOV r16, r/m16	    Move r/m16 to r16.
+        __cmd r32_rm32 (0x8b, 1);           // 8B /r	MOV r32, r/m32	    Move r/m32 to r32.
+        __cmd r64_rm64 (0x8b, 1);           // 8B /r	MOV r64, r/m64	    Move r/m64 to r64.
 
-    __cmd rm8_sr (0x8c, 1);          // 8C /r	MOV r/m16, Sreg**	Move segment register to r/m16.
-    __cmd sr_rm8 (0x8e, 1);          // 8E /r	MOV Sreg, r/m16**	Move r/m16 to segment register.
+        __cmd rm8_sr (0x8c, 1);             // 8C /r	MOV r/m16, Sreg**	Move segment register to r/m16.
+        __cmd sr_rm8 (0x8e, 1);             // 8E /r	MOV Sreg, r/m16**	Move r/m16 to segment register.
 
-    __cmd r8_moffs8 (0xa0, 1);      // A0	    MOV AL, moffs8*	    Move byte at (seg:offset) to AL.
-    __cmd r16_moffs16 (0xa1, 1);      // A1	    MOV AX, moffs16*	Move word at (seg:offset) to AX.
-    __cmd r32_moffs32 (0xa1, 1);      // A1	    MOV EAX, moffs32*	Move dword at (seg:offset) to EAX.
+        __cmd r8_moffs8 (0xa0, 1);          // A0	    MOV AL, moffs8*	    Move byte at (seg:offset) to AL.
+        __cmd r16_moffs16 (0xa1, 1);        // A1	    MOV AX, moffs16*	Move word at (seg:offset) to AX.
+        __cmd r32_moffs32 (0xa1, 1);        // A1	    MOV EAX, moffs32*	Move dword at (seg:offset) to EAX.
 
-    __cmd moffs8_r8   (0xa2, 1);      // A2	    MOV moffs8*, AL	    Move AL to (seg:offset).
-    __cmd moffs16_r16 (0xa3, 1);      // A3	    MOV moffs16*, AX	Move AX to (seg:offset).
-    __cmd moffs32_r32 (0xa3, 1);      // A3	    MOV moffs32*, EAX	Move EAX to (seg:offset).
+        __cmd moffs8_r8   (0xa2, 1);        // A2	    MOV moffs8*, AL	    Move AL to (seg:offset).
+        __cmd moffs16_r16 (0xa3, 1);        // A3	    MOV moffs16*, AX	Move AX to (seg:offset).
+        __cmd moffs32_r32 (0xa3, 1);        // A3	    MOV moffs32*, EAX	Move EAX to (seg:offset).
 
-    __cmd r8_i8   (0xbe, 1);      // B0+ rb	MOV r8, imm8	    Move imm8 to r8.
-    __cmd r16_i16 (0xbe, 1);      // B8+ rw	MOV r16, imm16	    Move imm16 to r16.
-    __cmd r32_i32 (0xbe, 1);      // B8+ rd	MOV r32, imm32	    Move imm32 to r32.
-    __cmd r64_i64 (0xbe, 1);      // B8+ rd	MOV r32, imm32	    Move imm32 to r32.
+        __cmd r8_i8   (0xbe, 1);            // B0+ rb	MOV r8, imm8	    Move imm8 to r8.
+        __cmd r16_i16 (0xbe, 1);            // B8+ rw	MOV r16, imm16	    Move imm16 to r16.
+        __cmd r32_i32 (0xbe, 1);            // B8+ rd	MOV r32, imm32	    Move imm32 to r32.
+        __cmd r64_i64 (0xbe, 1);            // B8+ rd	MOV r32, imm32	    Move imm32 to r32.
 
-    __cmd rm8_i8   (0xc6, 1);      // C6 /0	MOV r/m8, imm8	    Move imm8 to r/m8.
-    __cmd rm16_i16 (0xc7, 1);      // C7 /0	MOV r/m16, imm16	Move imm16 to r/m16.
-    __cmd rm32_i32 (0xc7, 1);      // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
-    __cmd rm64_i64 (0xc7, 1);      // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
-}
+        __cmd rm8_i8   (0xc6, 1);           // C6 /0	MOV r/m8, imm8	    Move imm8 to r/m8.
+        __cmd rm16_i16 (0xc7, 1);           // C7 /0	MOV r/m16, imm16	Move imm16 to r/m16.
+        __cmd rm32_i32 (0xc7, 1);           // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
+        __cmd rm64_i64 (0xc7, 1);           // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
+    }
     // [ADD]------------------------------------------------------------------------------------------------------------
     namespace add {
-        __cmd r8_i8 (0x04, 1);          // 04 ib	    ADD AL,    imm8	    Add imm8 to AL
-        __cmd r16_i16 (0x05, 1);        // 05 iw	    ADD AX,    imm16	Add imm16 to AX
-        __cmd r32_i32 (0x05, 1);        // 05 id	    ADD EAX,   imm32	Add imm32 to EAX
-        __cmd r64_i64 (0x05, 1);        // 05 id	    ADD RAX,   imm64	Add imm32 to EAX
+        __cmd r8_i8 (0x04, 1);              // 04 ib	    ADD AL,    imm8	    Add imm8 to AL
+        __cmd r16_i16 (0x05, 1);            // 05 iw	    ADD AX,    imm16	Add imm16 to AX
+        __cmd r32_i32 (0x05, 1);            // 05 id	    ADD EAX,   imm32	Add imm32 to EAX
+        __cmd r64_i64 (0x05, 1);            // 05 id	    ADD RAX,   imm64	Add imm32 to EAX
 
-        __cmd rm8_i8 (0x80, 1);         // 80 /0 ib	    ADD r/m8,  imm8	    Add imm8 to r/m8
-        __cmd rm16_i16 (0x81, 1);       // 81 /0 iw	    ADD r/m16, imm16	Add imm16 to r/m16
-        __cmd rm32_i32 (0x81, 1);       // 81 /0 id	    ADD r/m32, imm32	Add imm32 to r/m32
-        __cmd rm64_i64 (0x81, 1);       // 81 /0 id	    ADD r/m32, imm32	Add imm32 to r/m32
+        __cmd rm8_i8 (0x80, 1);             // 80 /0 ib	    ADD r/m8,  imm8	    Add imm8 to r/m8
+        __cmd rm16_i16 (0x81, 1);           // 81 /0 iw	    ADD r/m16, imm16	Add imm16 to r/m16
+        __cmd rm32_i32 (0x81, 1);           // 81 /0 id	    ADD r/m32, imm32	Add imm32 to r/m32
+        __cmd rm64_i64 (0x81, 1);           // 81 /0 id	    ADD r/m32, imm32	Add imm32 to r/m32
 
-        __cmd rm16_i16_se (0x83, 1);    // 83 /0 ib	    ADD r/m16, imm8	    Add sign-extended imm8 to r/m16
-        __cmd rm32_i32_se (0x83, 1);    // 83 /0 ib	    ADD r/m32, imm8	    Add sign-extended imm8 to r/m32
-        __cmd rm64_i64_se (0x83, 1);    // 83 /0 ib	    ADD r/m32, imm8	    Add sign-extended imm8 to r/m32
+        __cmd rm16_i16_se (0x83, 1);        // 83 /0 ib	    ADD r/m16, imm8	    Add sign-extended imm8 to r/m16
+        __cmd rm32_i32_se (0x83, 1);        // 83 /0 ib	    ADD r/m32, imm8	    Add sign-extended imm8 to r/m32
+        __cmd rm64_i64_se (0x83, 1);        // 83 /0 ib	    ADD r/m32, imm8	    Add sign-extended imm8 to r/m32
 
-        __cmd rm8_r8 (0x00, 1);         // 00 /r	    ADD r/m8,  r8	    Add r8 to r/m8
-        __cmd rm16_r16 (0x01, 1);       // 01 /r	    ADD r/m16, r16	    Add r16 to r/m16
-        __cmd rm32_r32 (0x01, 1);       // 01 /r	    ADD r/m32, r32	    Add r32 to r/m32
-        __cmd rm64_r64 (0x01, 1);       // 01 /r	    ADD r/m32, r32	    Add r32 to r/m32
+        __cmd rm8_r8 (0x00, 1);             // 00 /r	    ADD r/m8,  r8	    Add r8 to r/m8
+        __cmd rm16_r16 (0x01, 1);           // 01 /r	    ADD r/m16, r16	    Add r16 to r/m16
+        __cmd rm32_r32 (0x01, 1);           // 01 /r	    ADD r/m32, r32	    Add r32 to r/m32
+        __cmd rm64_r64 (0x01, 1);           // 01 /r	    ADD r/m32, r32	    Add r32 to r/m32
 
-        __cmd r8_rm8 (0x02, 1);          // 02 /r	    ADD r8,  r/m8	    Add r/m8 to r8
-        __cmd r16_rm16 (0x03, 1);        // 03 /r	    ADD r16, r/m16	    Add r/m16 to r16
-        __cmd r32_rm32 (0x03, 1);        // 03 /r	    ADD r32, r/m32	    Add r/m32 to r32
-        __cmd r64_rm64 (0x03, 1);        // 03 /r	    ADD r32, r/m32	    Add r/m32 to r32
+        __cmd r8_rm8 (0x02, 1);             // 02 /r	    ADD r8,  r/m8	    Add r/m8 to r8
+        __cmd r16_rm16 (0x03, 1);           // 03 /r	    ADD r16, r/m16	    Add r/m16 to r16
+        __cmd r32_rm32 (0x03, 1);           // 03 /r	    ADD r32, r/m32	    Add r/m32 to r32
+        __cmd r64_rm64 (0x03, 1);           // 03 /r	    ADD r32, r/m32	    Add r/m32 to r32
     }
     // [SUB]------------------------------------------------------------------------------------------------------------
     namespace sub {
-        __cmd r8_i8 (0x2c, 1);          // 2C ib	    SUB AL,    imm8	    Subtract imm8  from AL
-        __cmd r16_i16 (0x2d, 1);        // 2D iw	    SUB AX,    imm16	Subtract imm16 from AX
-        __cmd r32_i32 (0x2d, 1);        // 2D id	    SUB EAX,   imm32	Subtract imm32 from EAX
-        __cmd r64_i64 (0x2d, 1);        // 2D id	    SUB EAX,   imm32	Subtract imm32 from EAX
+        __cmd r8_i8 (0x2c, 1);              // 2C ib	    SUB AL,    imm8	    Subtract imm8  from AL
+        __cmd r16_i16 (0x2d, 1);            // 2D iw	    SUB AX,    imm16	Subtract imm16 from AX
+        __cmd r32_i32 (0x2d, 1);            // 2D id	    SUB EAX,   imm32	Subtract imm32 from EAX
+        __cmd r64_i64 (0x2d, 1);            // 2D id	    SUB EAX,   imm32	Subtract imm32 from EAX
 
-        __cmd rm8_i8   (0x8028, 1, 1);     // 80 /5 ib	    SUB r/m8,  imm8	    Subtract imm8  from r/m8
-        __cmd rm16_i16 (0x8128, 1, 1);     // 81 /5 iw	    SUB r/m16, imm16    Subtract imm16 from r/m16
-        __cmd rm32_i32 (0x8128, 1, 1);     // 81 /5 id	    SUB r/m32, imm32    Subtract imm32 from r/m32
-        __cmd rm64_i64 (0x8128, 1, 1);     // 81 /5 id	    SUB r/m32, imm32    Subtract imm32 from r/m32
+        __cmd rm8_i8   (0x8028, 1, 1);      // 80 /5 ib	    SUB r/m8,  imm8	    Subtract imm8  from r/m8
+        __cmd rm16_i16 (0x8128, 1, 1);      // 81 /5 iw	    SUB r/m16, imm16    Subtract imm16 from r/m16
+        __cmd rm32_i32 (0x8128, 1, 1);      // 81 /5 id	    SUB r/m32, imm32    Subtract imm32 from r/m32
+        __cmd rm64_i64 (0x8128, 1, 1);      // 81 /5 id	    SUB r/m32, imm32    Subtract imm32 from r/m32
 
-        __cmd rm16_i16_se (0x8328, 1, 1);  // 83 /5 ib	    SUB r/m16, imm8	    Subtract sign-extended imm8 from r/m16
-        __cmd rm32_i32_se (0x8328, 1, 1);  // 83 /5 ib	    SUB r/m32, imm8	    Subtract sign-extended imm8 from r/m32
-        __cmd rm64_i64_se (0x8328, 1, 1);  // 83 /5 ib	    SUB r/m32, imm8	    Subtract sign-extended imm8 from r/m32
+        __cmd rm16_i16_se (0x8328, 1, 1);   // 83 /5 ib	    SUB r/m16, imm8	    Subtract sign-extended imm8 from r/m16
+        __cmd rm32_i32_se (0x8328, 1, 1);   // 83 /5 ib	    SUB r/m32, imm8	    Subtract sign-extended imm8 from r/m32
+        __cmd rm64_i64_se (0x8328, 1, 1);   // 83 /5 ib	    SUB r/m32, imm8	    Subtract sign-extended imm8 from r/m32
 
-        __cmd rm8_r8   (0x28, 1);       // 28 /r	    SUB r/m8,  r8	    Subtract r8  from r/m8
-        __cmd rm16_r16 (0x29, 1);       // 29 /r	    SUB r/m16, r16	    Subtract r16 from r/m16
-        __cmd rm32_r32 (0x29, 1);       // 29 /r	    SUB r/m32, r32	    Subtract r32 from r/m32
-        __cmd rm64_r64 (0x29, 1);       // 29 /r	    SUB r/m32, r32	    Subtract r32 from r/m32
+        __cmd rm8_r8   (0x28, 1);           // 28 /r	    SUB r/m8,  r8	    Subtract r8  from r/m8
+        __cmd rm16_r16 (0x29, 1);           // 29 /r	    SUB r/m16, r16	    Subtract r16 from r/m16
+        __cmd rm32_r32 (0x29, 1);           // 29 /r	    SUB r/m32, r32	    Subtract r32 from r/m32
+        __cmd rm64_r64 (0x29, 1);           // 29 /r	    SUB r/m32, r32	    Subtract r32 from r/m32
 
-        __cmd r8_rm8   (0x2a, 1);       // 2A /r	    SUB r8,    r/m8	    Subtract r/m8  from r8
-        __cmd r16_rm16 (0x2b, 1);       // 2B /r	    SUB r16,   r/m16	Subtract r/m16 from r16
-        __cmd r32_rm32 (0x2b, 1);       // 2B /r	    SUB r32,   r/m32	Subtract r/m32 from r32
-        __cmd r64_rm64 (0x2b, 1);       // 2B /r	    SUB r32,   r/m32	Subtract r/m32 from r32
+        __cmd r8_rm8   (0x2a, 1);           // 2A /r	    SUB r8,    r/m8	    Subtract r/m8  from r8
+        __cmd r16_rm16 (0x2b, 1);           // 2B /r	    SUB r16,   r/m16	Subtract r/m16 from r16
+        __cmd r32_rm32 (0x2b, 1);           // 2B /r	    SUB r32,   r/m32	Subtract r/m32 from r32
+        __cmd r64_rm64 (0x2b, 1);           // 2B /r	    SUB r32,   r/m32	Subtract r/m32 from r32
     }
     // [MUL]------------------------------------------------------------------------------------------------------------
     namespace mul {
@@ -134,41 +134,29 @@ namespace opcode {
     namespace imul {
         __cmd rm8  (0xf628, 1, 1);  // F6 /5	IMUL r/m8	            AX = AL * r/m byte
         __cmd rm16 (0xf728, 1, 1);  // F7 /5	IMUL r/m16	            DX:AX = AX * r/m word
-        __cmd rm32 (0xf728, 1, 1);  // F7 /5	IMUL r/m32	            EDX:EAX = EAX * r/m doubleword
-        __cmd rm64 (0xf728, 1, 1);  // F7 /5	IMUL r/m32	            EDX:EAX = EAX * r/m doubleword
+        __cmd rm32 (0xf728, 1, 1);  // F7 /5	IMUL r/m32	            EDX:EAX = EAX * r/m dword
+        __cmd rm64 (0xf728, 1, 1);  // F7 /5	IMUL r/m32	            EDX:EAX = EAX * r/m dword
 
         __cmd r_rm16 (0x0faf, 2);   // 0F AF /r	IMUL r16, r/m16	        word register = word register * r/m word
-        __cmd r_rm32 (0x0faf, 2);   // 0F AF /r	IMUL r32, r/m32	        doubleword register = doubleword register * r/m doubleword
-        __cmd r_rm64 (0x0faf, 2);   // 0F AF /r	IMUL r32, r/m32	        doubleword register = doubleword register * r/m doubleword
+        __cmd r_rm32 (0x0faf, 2);   // 0F AF /r	IMUL r32, r/m32	        dword register = dword register * r/m dword
+        __cmd r_rm64 (0x0faf, 2);   // 0F AF /r	IMUL r32, r/m32	        dword register = dword register * r/m dword
 
         __cmd r16_rm_i8 (0x6b, 1);  // 6B /r ib	IMUL r16, r/m16, imm8	word register = r/m16 * sign-extended immediate byte
-        __cmd r32_rm_i8 (0x6b, 1);  // 6B /r ib	IMUL r32, r/m32, imm8	doubleword register = r/m32 * sign-extended immediate byte
-        __cmd r64_rm_i8 (0x6b, 1);  // 6B /r ib	IMUL r32, r/m32, imm8	doubleword register = r/m32 * sign-extended immediate byte
+        __cmd r32_rm_i8 (0x6b, 1);  // 6B /r ib	IMUL r32, r/m32, imm8	dword register = r/m32 * sign-extended immediate byte
+        __cmd r64_rm_i8 (0x6b, 1);  // 6B /r ib	IMUL r32, r/m32, imm8	dword register = r/m32 * sign-extended immediate byte
 
         __cmd r16_i8    (0x6b, 1);  // 6B /r ib	IMUL r16, r/m16, imm8	word register = r/m16 * sign-extended immediate byte
-        __cmd r32_i8    (0x6b, 1);  // 6B /r ib	IMUL r32, r/m32, imm8	doubleword register = r/m32 * sign-extended immediate byte
-        __cmd r64_i8    (0x6b, 1);  // 6B /r ib	IMUL r32, r/m32, imm8	doubleword register = r/m32 * sign-extended immediate byte
+        __cmd r32_i8    (0x6b, 1);  // 6B /r ib	IMUL r32, r/m32, imm8	dword register = r/m32 * sign-extended immediate byte
+        __cmd r64_i8    (0x6b, 1);  // 6B /r ib	IMUL r32, r/m32, imm8	dword register = r/m32 * sign-extended immediate byte
 
         __cmd r_rm_i16 (0x69, 1);   // 69 /r iw	IMUL r16, r/m16, imm16	word register = r/m16 * immediate word
-        __cmd r_rm_i32 (0x69, 1);   // 69 /r id	IMUL r32, r/m32, imm32	doubleword register = r/m32 * immediate doubleword
-        __cmd r_rm_i64 (0x69, 1);   // 69 /r id	IMUL r32, r/m32, imm32	doubleword register = r/m32 * immediate doubleword
+        __cmd r_rm_i32 (0x69, 1);   // 69 /r id	IMUL r32, r/m32, imm32	dword register = r/m32 * immediate dword
+        __cmd r_rm_i64 (0x69, 1);   // 69 /r id	IMUL r32, r/m32, imm32	dword register = r/m32 * immediate dword
 
         __cmd r_i16 (0x69, 1);      // 69 /r iw	IMUL r16, imm16	        word register = r/m16 * immediate word
-        __cmd r_i32 (0x69, 1);      // 69 /r id	IMUL r32, imm32	        doubleword register = r/m32 * immediate doubleword
-        __cmd r_i64 (0x69, 1);      // 69 /r id	IMUL r32, imm32	        doubleword register = r/m32 * immediate doubleword
+        __cmd r_i32 (0x69, 1);      // 69 /r id	IMUL r32, imm32	        dword register = r/m32 * immediate dword
+        __cmd r_i64 (0x69, 1);      // 69 /r id	IMUL r32, imm32	        dword register = r/m32 * immediate dword
 
-        /*
-             6B /r ib	IMUL r32,r/m32,imm8	    doubleword register = r/m32 * sign-extended immediate byte
-             6B /r ib	IMUL r16,r/m16,imm8	    word register = r/m16 * sign-extended immediate byte..
-
-             6B /r ib	IMUL r16,imm8	word register = word register * sign-extended immediate byte.
-            6B /r ib	IMUL r32,imm8	doubleword register = doubleword register * signextended immediate byte.
-
-            69 /r iw	IMUL r16,r/m16,imm16	word register = r/m16 * immediate word.
-            69 /r id	IMUL r32,r/m32,imm32	doubleword register = r/m32 * immediate doubleword.
-            69 /r iw	IMUL r16,imm16	        word register = r/m16 * immediate word.
-            69 /r id	IMUL r32,imm32	        doubleword register = r/m32 * immediate doubleword.
-        */
     }
     // [IDIV]-----------------------------------------------------------------------------------------------------------
     namespace idiv {
@@ -268,45 +256,45 @@ namespace opcode {
     }
     // [PUSH]-----------------------------------------------------------------------------------------------------------
     namespace push {
-        __cmd rm8  (0xff30, 1, 1); // FF /6    Push r/m16
-        __cmd rm16 (0xff30, 1, 1); // FF /6    Push r/m16
-        __cmd rm32 (0xff30, 1, 1); // FF /6    Push r/m32
-        __cmd rm64 (0xff30, 1, 1); // FF /6    Push r/m32
+        __cmd rm8  (0xff30, 1, 1);      // FF /6    Push r/m16
+        __cmd rm16 (0xff30, 1, 1);      // FF /6    Push r/m16
+        __cmd rm32 (0xff30, 1, 1);      // FF /6    Push r/m32
+        __cmd rm64 (0xff30, 1, 1);      // FF /6    Push r/m32
 
-        __cmd r8  (0x50, 1);       // 50+rw    Push r8
-        __cmd r16 (0x50, 1);       // 50+rw    Push r16
-        __cmd r32 (0x50, 1);       // 50+rd    Push r32
-        __cmd r64 (0x50, 1);       // 50+rd    Push r64
+        __cmd r8  (0x50, 1);            // 50+rw    Push r8
+        __cmd r16 (0x50, 1);            // 50+rw    Push r16
+        __cmd r32 (0x50, 1);            // 50+rd    Push r32
+        __cmd r64 (0x50, 1);            // 50+rd    Push r64
 
-        __cmd i8  (0x6a, 1);       // 6A	    Push imm8
-        __cmd i16 (0x68, 1);       // 68	    Push imm16
-        __cmd i32 (0x68, 1);       // 68	    Push imm32
+        __cmd i8  (0x6a, 1);            // 6A	    Push imm8
+        __cmd i16 (0x68, 1);            // 68	    Push imm16
+        __cmd i32 (0x68, 1);            // 68	    Push imm32
 
-        __cmd cs  (0x0e, 1);       // 0E	    Push CS
-        __cmd ss  (0x16, 1);       // 16	    Push SS
-        __cmd ds  (0x1e, 1);       // 1E	    Push DS
-        __cmd es  (0x06, 1);       // 06	    Push ES
-        __cmd fs  (0x0fa0, 1);     // 0F A0    Push FS
-        __cmd gs  (0x0fa8, 1);     // 0F A8    Push GS
+        __cmd cs  (0x0e, 1);            // 0E	    Push CS
+        __cmd ss  (0x16, 1);            // 16	    Push SS
+        __cmd ds  (0x1e, 1);            // 1E	    Push DS
+        __cmd es  (0x06, 1);            // 06	    Push ES
+        __cmd fs  (0x0fa0, 1);          // 0F A0    Push FS
+        __cmd gs  (0x0fa8, 1);          // 0F A8    Push GS
     }
     // [POP]------------------------------------------------------------------------------------------------------------
     namespace pop {
-        __cmd m16 (0x8f, 1);    // 8F /0	UUPop top of stack into m16; increment stack pointer.
-        __cmd m32 (0x8f, 1);    // 8F /0	UUPop top of stack into m32; increment stack pointer.
-        __cmd m64 (0x8f, 1);    // 8F /0	UUPop top of stack into m64; increment stack pointer.
+            __cmd m16 (0x8f, 1);        // 8F /0	UUPop top of stack into m16; increment stack pointer.
+            __cmd m32 (0x8f, 1);        // 8F /0	UUPop top of stack into m32; increment stack pointer.
+            __cmd m64 (0x8f, 1);        // 8F /0	UUPop top of stack into m64; increment stack pointer.
 
-        __cmd r64 (0x58, 1);    // 58+ rd   Pop top of stack into r32; increment stack pointer.
+            __cmd r64 (0x58, 1);        // 58+ rd   Pop top of stack into r32; increment stack pointer.
 
-        __cmd ds (0x1f, 1);     // 1F	    UUPop top of stack into DS; increment stack pointer.
-        __cmd es (0x07, 1);     // 07	    UUPop top of stack into ES; increment stack pointer.
-        __cmd ss (0x17, 1);     // 17	    UUPop top of stack into SS; increment stack pointer.
-        __cmd fs (0x0fa1, 2);   // 0F A1	UUPop top of stack into FS; increment stack pointer.
-        __cmd gs (0x0fa9, 2);   // 0F A9	UUPop top of stack into GS; increment stack pointer.
+            __cmd ds (0x1f, 1);         // 1F	    UUPop top of stack into DS; increment stack pointer.
+            __cmd es (0x07, 1);         // 07	    UUPop top of stack into ES; increment stack pointer.
+            __cmd ss (0x17, 1);         // 17	    UUPop top of stack into SS; increment stack pointer.
+            __cmd fs (0x0fa1, 2);       // 0F A1	UUPop top of stack into FS; increment stack pointer.
+            __cmd gs (0x0fa9, 2);       // 0F A9	UUPop top of stack into GS; increment stack pointer.
     }
-
-        __cmd nop     (0x90, 1);    // 90       NOP
-        __cmd syscall (0x0f05, 2);  // 0F05     SYSCALL
-        __cmd call    (0xe8, 1);    // E8 cd	CALL rel32	Call near, relative, displacement relative to next instruction
+    // [Little Command]-------------------------------------------------------------------------------------------------
+        __cmd nop     (0x90, 1);   // 90    NOP
+        __cmd syscall (0x0f05, 2); // 0F05  SYSCALL
+        __cmd call    (0xe8, 1);   // E8 cd CALL rel32  Call near, relative, displacement relative to next instruction
 
     // [XOR]------------------------------------------------------------------------------------------------------------
     namespace _xor {

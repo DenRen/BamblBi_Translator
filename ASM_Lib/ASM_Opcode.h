@@ -63,33 +63,33 @@ namespace opcode {
 
     // [MOV]------------------------------------------------------------------------------------------------------------
     namespace mov {
-        extern __cmd rm8_r8;      // 88 /r	MOV r/m8,  r8	    Move r8 to r/m8.
+        extern __cmd rm8_r8;        // 88 /r	MOV r/m8,  r8	    Move r8 to r/m8.
         extern __cmd rm16_r16;      // 89 /r	MOV r/m16, r16	    Move r16 to r/m16.
         extern __cmd rm32_r32;      // 89 /r	MOV r/m32, r32	    Move r32 to r/m32.
         extern __cmd rm64_r64;      // 89 /r	MOV r/m64, r64	    Move r64 to r/m64.
 
-        extern __cmd r8_rm8;     // 8A /r	MOV r8,  r/m8	    Move r/m8 to r8.
+        extern __cmd r8_rm8;        // 8A /r	MOV r8,  r/m8	    Move r/m8 to r8.
         extern __cmd r16_rm16;      // 8B /r	MOV r16, r/m16	    Move r/m16 to r16.
         extern __cmd r32_rm32;      // 8B /r	MOV r32, r/m32	    Move r/m32 to r32.
         extern __cmd r64_rm64;      // 8B /r	MOV r64, r/m64	    Move r/m64 to r64.
 
-        extern __cmd rm8_sr;      // 8C /r	MOV r/m16, Sreg**	Move segment register to r/m16.
-        extern __cmd sr_rm8;      // 8E /r	MOV Sreg, r/m16**	Move r/m16 to segment register.
+        extern __cmd rm8_sr;        // 8C /r	MOV r/m16, Sreg**	Move segment register to r/m16.
+        extern __cmd sr_rm8;        // 8E /r	MOV Sreg, r/m16**	Move r/m16 to segment register.
 
-        extern __cmd r8_moffs8 ;      // A0	    MOV AL, moffs8*	    Move byte at (seg:offset) to AL.
-        extern __cmd r16_moffs16;      // A1	    MOV AX, moffs16*	Move word at (seg:offset) to AX.
-        extern __cmd r32_moffs32;      // A1	    MOV EAX, moffs32*	Move dword at (seg:offset) to EAX.
+        extern __cmd r8_moffs8 ;    // A0	    MOV AL, moffs8*	    Move byte at (seg:offset) to AL.
+        extern __cmd r16_moffs16;   // A1	    MOV AX, moffs16*	Move word at (seg:offset) to AX.
+        extern __cmd r32_moffs32;   // A1	    MOV EAX, moffs32*	Move dword at (seg:offset) to EAX.
 
-        extern __cmd moffs8_r8;      // A2	    MOV moffs8*, AL	    Move AL to (seg:offset).
-        extern __cmd moffs16_r16;      // A3	    MOV moffs16*, AX	Move AX to (seg:offset).
-        extern __cmd moffs32_r32;      // A3	    MOV moffs32*, EAX	Move EAX to (seg:offset).
+        extern __cmd moffs8_r8;     // A2	    MOV moffs8*, AL	    Move AL to (seg:offset).
+        extern __cmd moffs16_r16;   // A3	    MOV moffs16*, AX	Move AX to (seg:offset).
+        extern __cmd moffs32_r32;   // A3	    MOV moffs32*, EAX	Move EAX to (seg:offset).
 
-        extern __cmd r8_i8;      // B0+ rb	MOV r8, imm8	    Move imm8 to r8.
-        extern __cmd r16_i16;      // B8+ rw	MOV r16, imm16	    Move imm16 to r16.
-        extern __cmd r32_i32;      // B8+ rd	MOV r32, imm32	    Move imm32 to r32.
-        extern __cmd r64_i64;      // B8+ rd	MOV r32, imm32	    Move imm32 to r32.
+        extern __cmd r8_i8;         // B0+ rb	MOV r8, imm8	    Move imm8 to r8.
+        extern __cmd r16_i16;       // B8+ rw	MOV r16, imm16	    Move imm16 to r16.
+        extern __cmd r32_i32;       // B8+ rd	MOV r32, imm32	    Move imm32 to r32.
+        extern __cmd r64_i64;       // B8+ rd	MOV r32, imm32	    Move imm32 to r32.
 
-        extern __cmd rm8_i8;      // C6 /0	MOV r/m8, imm8	    Move imm8 to r/m8.
+        extern __cmd rm8_i8;        // C6 /0	MOV r/m8, imm8	    Move imm8 to r/m8.
         extern __cmd rm16_i16;      // C7 /0	MOV r/m16, imm16	Move imm16 to r/m16.
         extern __cmd rm32_i32;      // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
         extern __cmd rm64_i64;      // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
@@ -164,28 +164,28 @@ namespace opcode {
     namespace imul {
         extern __cmd rm8;       // F6 /5	IMUL r/m8	            AX = AL * r/m byte
         extern __cmd rm16;      // F7 /5	IMUL r/m16	            DX:AX = AX * r/m word
-        extern __cmd rm32;      // F7 /5	IMUL r/m32	            EDX:EAX = EAX * r/m doubleword
-        extern __cmd rm64;      // F7 /5	IMUL r/m32	            EDX:EAX = EAX * r/m doubleword
+        extern __cmd rm32;      // F7 /5	IMUL r/m32	            EDX:EAX = EAX * r/m dword
+        extern __cmd rm64;      // F7 /5	IMUL r/m32	            EDX:EAX = EAX * r/m dword
 
         extern __cmd r_rm16;    // 0F AF /r	IMUL r16, r/m16	        word register = word register * r/m word
-        extern __cmd r_rm32;    // 0F AF /r	IMUL r32, r/m32	        doubleword register = doubleword register * r/m doubleword
-        extern __cmd r_rm64;    // 0F AF /r	IMUL r32, r/m32	        doubleword register = doubleword register * r/m doubleword
+        extern __cmd r_rm32;    // 0F AF /r	IMUL r32, r/m32	        dword register = dword register * r/m dword
+        extern __cmd r_rm64;    // 0F AF /r	IMUL r32, r/m32	        dword register = dword register * r/m dword
 
-        extern __cmd r16_rm_i8; // 6B /r ib	IMUL r16, r/m16, imm8	word register = r/m16 * sign-extended immediate byte
-        extern __cmd r32_rm_i8; // 6B /r ib	IMUL r32, r/m32, imm8	doubleword register = r/m32 * sign-extended immediate byte
-        extern __cmd r64_rm_i8; // 6B /r ib	IMUL r32, r/m32, imm8	doubleword register = r/m32 * sign-extended immediate byte
+        extern __cmd r16_rm_i8; // 6B /r ib	IMUL r16, r/m16, imm8	word register =  r/m16 * sign-extended immediate byte
+        extern __cmd r32_rm_i8; // 6B /r ib	IMUL r32, r/m32, imm8	dword register = r/m32 * sign-extended immediate byte
+        extern __cmd r64_rm_i8; // 6B /r ib	IMUL r32, r/m32, imm8	dword register = r/m32 * sign-extended immediate byte
 
-        extern __cmd r16_i8;    // 6B /r ib	IMUL r16, r/m16, imm8	word register = r/m16 * sign-extended immediate byte
-        extern __cmd r32_i8;    // 6B /r ib	IMUL r32, r/m32, imm8	doubleword register = r/m32 * sign-extended immediate byte
-        extern __cmd r64_i8;    // 6B /r ib	IMUL r32, r/m32, imm8	doubleword register = r/m32 * sign-extended immediate byte
+        extern __cmd r16_i8;    // 6B /r ib	IMUL r16, r/m16, imm8	word register =  r/m16 * sign-extended immediate byte
+        extern __cmd r32_i8;    // 6B /r ib	IMUL r32, r/m32, imm8	dword register = r/m32 * sign-extended immediate byte
+        extern __cmd r64_i8;    // 6B /r ib	IMUL r32, r/m32, imm8	dword register = r/m32 * sign-extended immediate byte
 
-        extern __cmd r_rm_i16;  // 69 /r iw	IMUL r16, r/m16, imm16	word register = r/m16 * immediate word
-        extern __cmd r_rm_i32;  // 69 /r id	IMUL r32, r/m32, imm32	doubleword register = r/m32 * immediate doubleword
-        extern __cmd r_rm_i64;  // 69 /r id	IMUL r32, r/m32, imm32	doubleword register = r/m32 * immediate doubleword
+        extern __cmd r_rm_i16;  // 69 /r iw	IMUL r16, r/m16, imm16	word register =  r/m16 * immediate word
+        extern __cmd r_rm_i32;  // 69 /r id	IMUL r32, r/m32, imm32	dword register = r/m32 * immediate dword
+        extern __cmd r_rm_i64;  // 69 /r id	IMUL r32, r/m32, imm32	dword register = r/m32 * immediate dword
 
-        extern __cmd r_i16;     // 69 /r iw	IMUL r16, imm16	        word register = r/m16 * immediate word
-        extern __cmd r_i32 ;    // 69 /r id	IMUL r32, imm32	        doubleword register = r/m32 * immediate doubleword
-        extern __cmd r_i64;     // 69 /r id	IMUL r32, imm32	        doubleword register = r/m32 * immediate doubleword
+        extern __cmd r_i16;     // 69 /r iw	IMUL r16, imm16	        word register =  r/m16 * immediate word
+        extern __cmd r_i32 ;    // 69 /r id	IMUL r32, imm32	        dword register = r/m32 * immediate dword
+        extern __cmd r_i64;     // 69 /r id	IMUL r32, imm32	        dword register = r/m32 * immediate dword
     }
     // [IDIV]-----------------------------------------------------------------------------------------------------------
     namespace idiv {
@@ -286,10 +286,10 @@ namespace opcode {
     }
     // [PUSH]-----------------------------------------------------------------------------------------------------------
     namespace push {
-        extern __cmd rm8 ;  // FF /6	    Push r/m8
-        extern __cmd rm16;  // FF /6	    Push r/m16
-        extern __cmd rm32;  // FF /6	    Push r/m32
-        extern __cmd rm64;  // FF /6	    Push r/m32
+        extern __cmd rm8    // FF /6	    Push r/m8
+        extern __cmd rm16   // FF /6	    Push r/m16
+        extern __cmd rm32   // FF /6	    Push r/m32
+        extern __cmd rm64   // FF /6	    Push r/m32
 
         extern __cmd r8;    // 50+rd	    Push r8
         extern __cmd r16;   // 50+rw	    Push r16
@@ -309,25 +309,24 @@ namespace opcode {
     }
     // [POP]------------------------------------------------------------------------------------------------------------
     namespace pop {
-        extern __cmd m16;    // 8F /0		Pop top of stack into m16; increment stack pointer.
-        extern __cmd m32;    // 8F /0		Pop top of stack into m32; increment stack pointer.
-        extern __cmd m64;    // 8F /0		Pop top of stack into m64; increment stack pointer.
+        extern __cmd m16;   // 8F /0		Pop top of stack into m16; increment stack pointer.
+        extern __cmd m32;   // 8F /0		Pop top of stack into m32; increment stack pointer.
+        extern __cmd m64;   // 8F /0		Pop top of stack into m64; increment stack pointer.
 
-        extern __cmd r16;    // 58+ rw    Pop top of stack into r16; increment stack pointer.
-        extern __cmd r32;    // 58+ rd    Pop top of stack into r32; increment stack pointer.
-        extern __cmd r64;    // 58+ rd    Pop top of stack into r32; increment stack pointer.
+        extern __cmd r16;   // 58+ rw    Pop top of stack into r16; increment stack pointer.
+        extern __cmd r32;   // 58+ rd    Pop top of stack into r32; increment stack pointer.
+        extern __cmd r64;   // 58+ rd    Pop top of stack into r32; increment stack pointer.
 
-        extern __cmd ds;        // 1F	    Pop top of stack into DS; increment stack pointer.
-        extern __cmd es;        // 07	    Pop top of stack into ES; increment stack pointer.
-        extern __cmd ss;        // 17	    Pop top of stack into SS; increment stack pointer.
-        extern __cmd fs;        // 0F A1	    Pop top of stack into FS; increment stack pointer.
-        extern __cmd gs;        // 0F A9	    Pop top of stack into GS; increment stack pointer.
+        extern __cmd ds;    // 1F	    Pop top of stack into DS; increment stack pointer.
+        extern __cmd es;    // 07	    Pop top of stack into ES; increment stack pointer.
+        extern __cmd ss;    // 17	    Pop top of stack into SS; increment stack pointer.
+        extern __cmd fs;    // 0F A1	    Pop top of stack into FS; increment stack pointer.
+        extern __cmd gs;    // 0F A9	    Pop top of stack into GS; increment stack pointer.
     }
     // [Little Command]-------------------------------------------------------------------------------------------------
     extern __cmd nop;       // 90       NOP
     extern __cmd syscall;   // 0F05     SYSCALL
     extern __cmd call;      // E8 cd	CALL rel32	Call near, relative, displacement relative to next instruction
-
     // [XOR]------------------------------------------------------------------------------------------------------------
     namespace _xor {
         extern __cmd i8_i8;     // 34 ib	XOR AL,imm8	AL XOR imm8.

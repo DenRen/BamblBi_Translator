@@ -2,7 +2,7 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6"/>
 	<Project>
-		<Option title="BamblBi_Translator"/>
+		<Option title="_Temp_BamblBi"/>
 		<Option makefile_is_custom="1"/>
 		<Option compiler="gcc"/>
 		<Option virtualFolders="CMake Files\;"/>
@@ -27,8 +27,8 @@
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/tester/Documents/GitHub/_Temp_BamblBi/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="BamblBi_Translator">
-				<Option output="/home/tester/Documents/GitHub/_Temp_BamblBi/cmake-build-debug/BamblBi_Translator" prefix_auto="0" extension_auto="0"/>
+			<Target title="_Temp_BamblBi">
+				<Option output="/home/tester/Documents/GitHub/_Temp_BamblBi/cmake-build-debug/_Temp_BamblBi" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/tester/Documents/GitHub/_Temp_BamblBi/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -44,14 +44,14 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/tester/Documents/GitHub/_Temp_BamblBi/cmake-build-debug/Makefile&quot;  VERBOSE=1 BamblBi_Translator"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/tester/Documents/GitHub/_Temp_BamblBi/cmake-build-debug/Makefile&quot;  VERBOSE=1 _Temp_BamblBi"/>
 					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/tester/Documents/GitHub/_Temp_BamblBi/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j8 -f &quot;/home/tester/Documents/GitHub/_Temp_BamblBi/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/tester/Documents/GitHub/_Temp_BamblBi/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
-			<Target title="BamblBi_Translator/fast">
-				<Option output="/home/tester/Documents/GitHub/_Temp_BamblBi/cmake-build-debug/BamblBi_Translator" prefix_auto="0" extension_auto="0"/>
+			<Target title="_Temp_BamblBi/fast">
+				<Option output="/home/tester/Documents/GitHub/_Temp_BamblBi/cmake-build-debug/_Temp_BamblBi" prefix_auto="0" extension_auto="0"/>
 				<Option working_dir="/home/tester/Documents/GitHub/_Temp_BamblBi/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
@@ -67,7 +67,7 @@
 					<Add directory="/usr/include"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j8 -f &quot;/home/tester/Documents/GitHub/_Temp_BamblBi/cmake-build-debug/Makefile&quot;  VERBOSE=1 BamblBi_Translator/fast"/>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/tester/Documents/GitHub/_Temp_BamblBi/cmake-build-debug/Makefile&quot;  VERBOSE=1 _Temp_BamblBi/fast"/>
 					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/tester/Documents/GitHub/_Temp_BamblBi/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
 					<Clean command="/usr/bin/make -j8 -f &quot;/home/tester/Documents/GitHub/_Temp_BamblBi/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 					<DistClean command="/usr/bin/make -j8 -f &quot;/home/tester/Documents/GitHub/_Temp_BamblBi/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
@@ -84,74 +84,8 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/ASM_Lib/ASM_ModR_M.h">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/ASM_Lib/ASM_Opcode.cpp">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/ASM_Lib/ASM_Opcode.h">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/ASM_Lib/ASM_Prefixes.cpp">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/ASM_Lib/ASM_Prefixes.h">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/ASM_Lib/ASM_Registers.h">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/ASM_Lib/ASM_SIB.h">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/ASM_Lib/NameCommands.cpp">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/ASM_Lib/NameCommands.h">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/ASM_Lib/Opcodes.cpp">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/ASM_Lib/Translate.cpp">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/ASM_Lib/Translate.h">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/ASM_Lib/directives.cpp">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/ASM_Lib/directives.h">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/ASM_MC_new.h">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/ASM_commands_name.h">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/ELF/elf_prog_header.cpp">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/ELF/elf_prog_header.h">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/SourceCodeNasm.cpp">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/SourceCodeNasm.h">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
 		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/main.cpp">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/main_lib.cpp">
-			<Option target="BamblBi_Translator"/>
-		</Unit>
-		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/main_lib.h">
-			<Option target="BamblBi_Translator"/>
+			<Option target="_Temp_BamblBi"/>
 		</Unit>
 		<Unit filename="/home/tester/Documents/GitHub/_Temp_BamblBi/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>

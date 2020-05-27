@@ -5,8 +5,6 @@
 #include "main_lib.h"
 #include "ASM_Lib/Translate.h"
 
-
-
 int main () {
 
     const char path_asm[] = "../asm/test.s";
