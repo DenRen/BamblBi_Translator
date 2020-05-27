@@ -6,12 +6,12 @@ mov rsi, my_label
 mov r15, 78
 ;nop
 ;nop
-
+call my_label
 L1
 add rax, r13
-
+xor rax, rax
 mov rax, 60
-mov rdi, 0
+xor rdi, rdi
 
 syscall
 ;global _start

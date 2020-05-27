@@ -350,6 +350,7 @@ __word Translate (SourceCodeNasm &code, FILE *temp_file, __uint32_t cur_pos, __u
 #define _RM (!_first.mem &&  _second.mem && _first.val_on[0])
 #define _RR (!_first.mem && !_second.mem && _first.val_on[0] && _second.val_on[0])
 #define _RI (!_first.mem && !_second.mem && _first.val_on[0] && _second.val_on[2])
+#define _II (!_first.mem && !_second.mem && _first.val_on[2] && _second.val_on[2])
 
 #define _R_RM_I (!_first.mem && _first.val_on[0] && _third.val_on[2])
 #define _R_or_M (instr.num_args == 1)
@@ -510,9 +511,36 @@ __word createComand (instuction_t instr, __uint32_t locate_prog) {
             if (_I) {
                 if (_first.sparseness[2] < 32)
                     _first.sparseness[2] = 32;
-                                _first.val[2] -= 5;
+                _first.val[2] -= 5;
                                 GenerateCmd (jmp::rel8, jmp::rel32)
             }
+            break;
+        case opcode::_cmds::CALL:
+            instr.rel = true;
+            if (_I) {
+                if (_first.sparseness[2] < 32)
+                    _first.sparseness[2] = 32;
+                _first.val[2] -= 5;
+                                GenerateCmd (call, call)
+            }
+            break;
+        case opcode::_cmds::XOR:
+            assert (instr.num_args <= 2);
+
+                 if (_RR)            GenerateCmd (_xor::r8_r8, _xor::r64_r64)
+            else if (_RM) {
+                arg_t temp_arg = _second;
+                _second = _first;
+                _first = temp_arg;
+
+                                    GenerateCmd (_xor::r8_rm8, _xor::r64_rm64)
+            }
+            else if (_RI) {
+                if (_first.label_on || _second.label_on)
+                    return movabs (instr, locate_prog);
+                else                GenerateCmd (_xor::rm8_i8, _xor::rm64_i64)
+            }
+            else if (_II)           GenerateCmd (_xor::i8_i8,  _xor::i64_i64)
             break;
         default:                    // Jcc
             instr.rel = true;

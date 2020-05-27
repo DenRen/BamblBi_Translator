@@ -47,7 +47,8 @@ namespace opcode {
         ADD, SUB,
         MUL, DIV, IMUL, IDIV,
         PUSH, POP,
-        NOP, RET, SYSCALL,
+        XOR,
+        NOP, CALL, RET, SYSCALL,
 
         JMP,
         JA,     JAE,    JB,     JBE,    JC,     JCXZ,   JECXZ,   JE,
@@ -60,7 +61,7 @@ namespace opcode {
 
     extern char _name_cmds [__Quantity_Types_Commands][max_len_name_cmd];
 
-    // [MOV]----------------------------------------------------------------------------------------------------------------
+    // [MOV]------------------------------------------------------------------------------------------------------------
     namespace mov {
         extern __cmd rm8_r8;      // 88 /r	MOV r/m8,  r8	    Move r8 to r/m8.
         extern __cmd rm16_r16;      // 89 /r	MOV r/m16, r16	    Move r16 to r/m16.
@@ -93,7 +94,7 @@ namespace opcode {
         extern __cmd rm32_i32;      // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
         extern __cmd rm64_i64;      // C7 /0	MOV r/m32, imm32	Move imm32 to r/m32.
     }
-    // [ADD]----------------------------------------------------------------------------------------------------------------
+    // [ADD]------------------------------------------------------------------------------------------------------------
     namespace add {
         extern __cmd r8_i8;         // 04 ib	    ADD AL,    imm8	    Add imm8 to AL
         extern __cmd r16_i16;       // 05 iw	    ADD AX,    imm16	Add imm16 to AX
@@ -119,7 +120,7 @@ namespace opcode {
         extern __cmd r32_rm32;      // 03 /r	    ADD r32, r/m32	    Add r/m32 to r32
         extern __cmd r64_rm64;      // 03 /r	    ADD r32, r/m32	    Add r/m32 to r32
     }
-    // [SUB]----------------------------------------------------------------------------------------------------------------
+    // [SUB]------------------------------------------------------------------------------------------------------------
     namespace sub {
         extern __cmd r8_i8;         // 2C ib	    SUB AL,    imm8	    Subtract imm8  from AL
         extern __cmd r16_i16;       // 2D iw	    SUB AX,    imm16	Subtract imm16 from AX
@@ -145,21 +146,21 @@ namespace opcode {
         extern __cmd r32_rm32;      // 2B /r	    SUB r32,   r/m32	Subtract r/m32 from r32
         extern __cmd r64_rm64;      // 2B /r	    SUB r32,   r/m32	Subtract r/m32 from r32
     }
-    // [MUL]----------------------------------------------------------------------------------------------------------------
+    // [MUL]------------------------------------------------------------------------------------------------------------
     namespace mul {
         extern __cmd rm8;     // F6 /4	MUL r/m8	Unsigned multiply (AX = AL * r/m8).
         extern __cmd rm16;    // F7 /4	MUL r/m16	Unsigned multiply (DX:AX = AX * r/m16).
         extern __cmd rm32;    // F7 /4	MUL r/m32	Unsigned multiply (EDX:EAX = EAX * r/m32)
         extern __cmd rm64;    // F7 /4	MUL r/m32	Unsigned multiply (EDX:EAX = EAX * r/m32)
     }
-    // [DIV]----------------------------------------------------------------------------------------------------------------
+    // [DIV]------------------------------------------------------------------------------------------------------------
     namespace div {
         extern __cmd rm8;    // F6 /6	DIV r/m8	Unsigned divide AX by r/m8, with result stored in AL = Quotient, AH = Remainder
         extern __cmd rm16;   // F7 /6	DIV r/m16	Unsigned divide DX:AX by r/m16, with result stored in AX = Quotient, DX = Remainder
         extern __cmd rm32;   // F7 /6	DIV r/m32	Unsigned divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
         extern __cmd rm64;   // F7 /6	DIV r/m32	Unsigned divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
     }
-    // [IMUL]----------------------------------------------------------------------------------------------------------------
+    // [IMUL]-----------------------------------------------------------------------------------------------------------
     namespace imul {
         extern __cmd rm8;       // F6 /5	IMUL r/m8	            AX = AL * r/m byte
         extern __cmd rm16;      // F7 /5	IMUL r/m16	            DX:AX = AX * r/m word
@@ -186,14 +187,14 @@ namespace opcode {
         extern __cmd r_i32 ;    // 69 /r id	IMUL r32, imm32	        doubleword register = r/m32 * immediate doubleword
         extern __cmd r_i64;     // 69 /r id	IMUL r32, imm32	        doubleword register = r/m32 * immediate doubleword
     }
-    // [IDIV]----------------------------------------------------------------------------------------------------------------
+    // [IDIV]-----------------------------------------------------------------------------------------------------------
     namespace idiv {
         extern __cmd rm8 ;      // F6 /7	IDIV r/m8       Signed divide AX by r/m8, with result stored in AL = Quotient, AH = Remainder
         extern __cmd rm16;      // F7 /7	IDIV r/m16      Signed divide DX:AX by r/m16, with result stored in AX = Quotient, DX = Remainder
         extern __cmd rm32;      // F7 /7	IDIV r/m32      Signed divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
         extern __cmd rm64;      // F7 /7	IDIV r/m32      Signed divide EDX:EAX by r/m32, with result stored in EAX = Quotient, EDX = Remainder
     }
-    // [Jcc]----------------------------------------------------------------------------------------------------------------
+    // [Jcc]------------------------------------------------------------------------------------------------------------
     namespace jcc {
         extern __cmd ja_s;          // 77 cb	JA rel8	J           Jump short if above (CF=0 and ZF=0)
         extern __cmd jae_s;         // 73 cb	JAE rel8	        Jump short if above or equal (CF=0)
@@ -260,7 +261,7 @@ namespace opcode {
         extern __cmd js_n;          // 0F 88 cw/cd	JS rel16/32	Jump near if sign (SF=1).
 
     }
-    // [JMP]----------------------------------------------------------------------------------------------------------------
+    // [JMP]------------------------------------------------------------------------------------------------------------
     namespace jmp {
         extern __cmd rel8;      // EB cb	JMP rel8	 Jump short, relative, displacement relative to next instruction.
         extern __cmd rel16;     // E9 cw	JMP rel16	 Jump near, relative, displacement relative to next instruction.
@@ -276,14 +277,14 @@ namespace opcode {
         extern __cmd m16_16;    // FF /5	JMP m16:16	 Jump far, absolute indirect, address given in m16:16.
         extern __cmd m16_32;    // FF /5	JMP m16:32	 Jump far, absolute indirect, address given in m16:32.
     }
-    // [RET]----------------------------------------------------------------------------------------------------------------
+    // [RET]------------------------------------------------------------------------------------------------------------
     namespace ret {
         extern __cmd ret_near;      // C3	    RET	Near return to calling procedure
         extern __cmd ret_far;       // CB       RET	Far  return to calling procedure
         extern __cmd ret_ni16;      // C2 iw  UURET imm16 Near return to calling procedure and pop imm16 bytes from stack
         extern __cmd ret_nf16;      // CA iw  UURET imm16 Far  return to calling procedure and pop imm16 bytes from stack
     }
-    // [PUSH]---------------------------------------------------------------------------------------------------------------
+    // [PUSH]-----------------------------------------------------------------------------------------------------------
     namespace push {
         extern __cmd rm8 ;  // FF /6	    Push r/m8
         extern __cmd rm16;  // FF /6	    Push r/m16
@@ -306,7 +307,7 @@ namespace opcode {
         extern __cmd fs;    // 0F A0	    Push FS
         extern __cmd gs;    // 0F A8	    Push GS
     }
-    // [POP]---------------------------------------------------------------------------------------------------------------
+    // [POP]------------------------------------------------------------------------------------------------------------
     namespace pop {
         extern __cmd m16;    // 8F /0		Pop top of stack into m16; increment stack pointer.
         extern __cmd m32;    // 8F /0		Pop top of stack into m32; increment stack pointer.
@@ -322,11 +323,37 @@ namespace opcode {
         extern __cmd fs;        // 0F A1	    Pop top of stack into FS; increment stack pointer.
         extern __cmd gs;        // 0F A9	    Pop top of stack into GS; increment stack pointer.
     }
-    // [NOP]---------------------------------------------------------------------------------------------------------------
-    extern __cmd nop;
-    // []---------------------------------------------------------------------------------------------------------------
-    extern __cmd syscall;
-    // []---------------------------------------------------------------------------------------------------------------
+    // [Little Command]-------------------------------------------------------------------------------------------------
+    extern __cmd nop;       // 90       NOP
+    extern __cmd syscall;   // 0F05     SYSCALL
+    extern __cmd call;      // E8 cd	CALL rel32	Call near, relative, displacement relative to next instruction
+
+    // [XOR]------------------------------------------------------------------------------------------------------------
+    namespace _xor {
+        extern __cmd i8_i8;     // 34 ib	XOR AL,imm8	AL XOR imm8.
+        extern __cmd i16_i16;   // 35 iw	XOR AX,imm16	AX XOR imm16.
+        extern __cmd i32_i32;   // 35 id	XOR EAX,imm32	EAX XOR imm32.
+        extern __cmd i64_i64;   // 35 id	XOR EAX,imm32	EAX XOR imm32.
+
+        extern __cmd rm8_i8;    // 80 /6 ib	XOR r/m8,imm8   r/m8  XOR imm8.
+        extern __cmd rm16_i16;  // 81 /6 iw	XOR r/m16,imm16	r/m16 XOR imm16.
+        extern __cmd rm32_i32;  // 81 /6 id	XOR r/m32,imm32	r/m32 XOR imm32.
+        extern __cmd rm64_i64;  // 81 /6 id	XOR r/m32,imm32	r/m32 XOR imm32.
+
+        extern __cmd rm16_i8;   // 83 /6 ib	XOR r/m16,imm8	r/m16 XOR imm8 (sign-extended).
+        extern __cmd rm32_i8;   // 83 /6 ib	XOR r/m32,imm8	r/m32 XOR imm8 (sign-extended).
+        extern __cmd rm64_i8;   // 83 /6 ib	XOR r/m32,imm8	r/m32 XOR imm8 (sign-extended).
+
+        extern __cmd r8_r8;     // 30 /r	XOR r/m8,r8	    r/m8 XOR r8.
+        extern __cmd r16_r16;   // 31 /r	XOR r/m16,r16	r/m16 XOR r16.
+        extern __cmd r32_r32;   // 31 /r	XOR r/m32,r32	r/m32 XOR r32.
+        extern __cmd r64_r64;   // 31 /r	XOR r/m32,r32	r/m32 XOR r32.
+
+        extern __cmd r8_rm8;    // 32 /r	XOR r8,r/m8	    r8  XOR r/m8.
+        extern __cmd r16_rm16;  // 33 /r	XOR r16,r/m16	r16 XOR r/m16.
+        extern __cmd r32_rm32;  // 33 /r	XOR r32,r/m32	r32 XOR r/m32.
+        extern __cmd r64_rm64;  // 33 /r	XOR r32,r/m32	r32 XOR r/m32.
+    }
 }
 
 #endif //BAMBLBI_TRANSLATOR_ASM_OPCODE_H
