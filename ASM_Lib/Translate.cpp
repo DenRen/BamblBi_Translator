@@ -317,10 +317,10 @@ __word Translate (SourceCodeNasm &code, FILE *temp_file, __uint32_t cur_pos, __u
 
         __uint32_t position = labels.label[num_label].position;
 
-        if (cell_empty_labels.label[i].rel == false)
-            position += locate_prog;
+        //if (cell_empty_labels.label[i].rel == false)
+//            position += locate_prog;
 
-        MC.word[num_cell] = position;
+        //*(__uint32_t *) &MC.word[num_cell] = position;
 
     }
 
@@ -394,8 +394,8 @@ __word createComand (instuction_t instr) {
 
                                 GenerateCmd (mov::r8_rm8, mov::r64_rm64)
             }
-            else if (_RI || _MI)
-                                GenerateCmd (mov::rm8_i8, mov::rm64_i64)
+            else if (_RI)       GenerateCmd (mov::r8_i8, mov::r64_i64)
+            else if (_MI)       GenerateCmd (mov::rm8_i8, mov::rm64_i64)
             break;
         case opcode::_cmds::ADD:
             if (_MR || _RR)     GenerateCmd (add::rm8_r8, add::rm64_r64)
@@ -671,7 +671,7 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
         cmd.Imm     = _second.val[2]        + _third.val[2];
         cmd.sizeImm = _second.sparseness[2] + _third.sparseness[2];
 
-        cmd.sizeImm = fmax (cmd.sizeImm, 4);             // Because x86_64
+        cmd.sizeImm = fmax (cmd.sizeImm, _first.sparseness[0]);             // Because x86_64
 
         cmd.Disp     = _first.val[2];
         if (_first.sparseness[2] > 4)
@@ -697,7 +697,11 @@ __word genCmd (opcode::__cmd command, instuction_t instr) {
             if (_second.label_on) {
                 cmd.ImmLabel_On = true;
                 cmd.ImmLabel = _second.label;
-                cmd.sizeImm = 4;
+
+                if (instr.rel)
+                    cmd.sizeImm = 4;
+                else
+                    cmd.sizeImm = 8;
             }
 
 

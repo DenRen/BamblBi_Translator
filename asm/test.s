@@ -6,9 +6,9 @@ section .text
     nop
     nop
 
-    mov rax, rbx
-	mov rsi, my_label
-
+    mov rax, my_label
+	mov rsi, 4
+    mov qword [rax], 5
     nop
     nop
     nop
